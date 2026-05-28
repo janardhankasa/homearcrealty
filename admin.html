@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Homearc Admin</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#F4F2EE;color:#1a1a2e;min-height:100vh}
+
+/* ── LOGIN ── */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#0D1B2A 0%,#162033 100%)}
+.login-card{background:#fff;border-radius:20px;padding:48px 40px;width:100%;max-width:400px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.3)}
+.login-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:32px}
+.login-logo-box{width:44px;height:44px;background:linear-gradient(135deg,#C8A96E,#D9BC82);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.login-title{font-family:"Cormorant Garamond",serif;font-size:1.6rem;font-weight:700;color:#0D1B2A;margin-bottom:6px}
+.login-sub{font-size:13px;color:#9CA3AF;margin-bottom:28px}
+.login-input{width:100%;border:1.5px solid #E8E4DC;border-radius:10px;padding:13px 16px;font-family:"DM Sans",sans-serif;font-size:15px;text-align:center;letter-spacing:.1em;transition:border-color .2s;margin-bottom:14px}
+.login-input:focus{outline:none;border-color:#C8A96E;box-shadow:0 0 0 3px rgba(200,169,110,.12)}
+.login-btn{width:100%;padding:14px 0;background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-weight:700;font-size:16px;border:none;border-radius:10px;cursor:pointer;transition:all .2s;font-family:"DM Sans",sans-serif}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(200,169,110,.4)}
+.login-err{color:#dc2626;font-size:13px;margin-top:8px;display:none}
+
+/* ── TOPBAR ── */
+.topbar{background:#0D1B2A;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:200;box-shadow:0 2px 16px rgba(0,0,0,.3)}
+.tlogo{display:flex;align-items:center;gap:10px}
+.tbox{width:34px;height:34px;background:linear-gradient(135deg,#C8A96E,#D9BC82);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.t-name{font-family:"Cormorant Garamond",serif;font-size:17px;color:#fff;font-weight:700}
+.t-sub{font-size:10px;color:#C8A96E;letter-spacing:.14em}
+.save-pill{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;transition:all .4s}
+.save-pill.saved{background:rgba(22,163,74,.15);color:#16a34a;border:1px solid rgba(22,163,74,.3)}
+.save-pill.saving{background:rgba(200,169,110,.15);color:#92400e;border:1px solid rgba(200,169,110,.3)}
+.save-dot{width:7px;height:7px;border-radius:50%}
+.save-pill.saved .save-dot{background:#16a34a}
+.save-pill.saving .save-dot{background:#C8A96E;animation:pulse .8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── BUTTONS ── */
+.btn{padding:9px 18px;border-radius:8px;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-gold{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,169,110,.4)}
+.btn-navy{background:#0D1B2A;color:#fff}
+.btn-navy:hover{background:#162033}
+.btn-green{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff}
+.btn-green:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(22,163,74,.4)}
+.btn-red{background:#fee2e2;color:#dc2626;border:1px solid #fca5a5}
+.btn-red:hover{background:#fca5a5}
+.btn-sm{padding:7px 13px;font-size:12px;border-radius:7px;border:1.5px solid #DDD9D0;background:#fff;color:#0D1B2A;font-family:"DM Sans",sans-serif;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn-sm:hover{border-color:#C8A96E;color:#C8A96E}
+.btn-ghost{background:none;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.7);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:"DM Sans",sans-serif;display:inline-flex;align-items:center;gap:6px}
+.btn-ghost:hover{border-color:rgba(255,255,255,.6);color:#fff}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1200px;margin:0 auto;padding:28px 24px}
+.page-title{font-family:"Cormorant Garamond",serif;font-size:1.9rem;color:#0D1B2A;margin-bottom:5px}
+.page-sub{color:#6B7280;font-size:14px;margin-bottom:22px}
+.cols{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+
+/* ── GITHUB SETTINGS CARD ── */
+.gh-card{background:#fff;border:1px solid #EDE9E0;border-radius:14px;overflow:hidden;margin-bottom:20px}
+.gh-card-hdr{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.gh-card-title{font-weight:700;color:#0D1B2A;font-size:15px;display:flex;align-items:center;gap:8px}
+.gh-status{width:8px;height:8px;border-radius:50%;background:#9CA3AF}
+.gh-status.ok{background:#16a34a}
+.gh-status.err{background:#dc2626}
+.gh-card-body{display:none;padding:0 20px 20px;border-top:1px solid #F0EDE6}
+.gh-card-body.open{display:block}
+.gh-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.gh-grid.full{grid-template-columns:1fr}
+label{display:block;font-size:11.5px;font-weight:600;color:#6B7280;letter-spacing:.04em;margin-bottom:4px;text-transform:uppercase}
+input,select,textarea{width:100%;border:1.5px solid #E8E4DC;border-radius:8px;padding:9px 12px;font-family:"DM Sans",sans-serif;font-size:14px;color:#1a1a2e;background:#fff;transition:border-color .2s;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#C8A96E;box-shadow:0 0 0 3px rgba(200,169,110,.1)}
+textarea{min-height:80px}
+
+/* ── PROPERTY CARDS ── */
+.prop-list{display:flex;flex-direction:column;gap:14px}
+.prop-item{background:#fff;border:1.5px solid #EDE9E0;border-radius:14px;overflow:hidden;transition:border-color .2s,box-shadow .2s;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.prop-item:hover{box-shadow:0 6px 22px rgba(13,27,42,.08);border-color:#C8A96E}
+.prop-hdr{padding:16px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.prop-tr{display:flex;align-items:center;gap:11px}
+.pnum{width:29px;height:29px;border-radius:50%;background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pname{font-weight:600;color:#0D1B2A;font-size:15px}
+.pmeta{font-size:12px;color:#9CA3AF;margin-top:1px}
+.tag{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:10px}
+.tag-buy{background:#0D1B2A;color:#C8A96E}
+.tag-rent{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A}
+.chevron{color:#9CA3AF;transition:transform .25s;font-size:17px}
+.prop-body{display:none;padding:0 18px 20px;border-top:1px solid #F0EDE6}
+.prop-body.open{display:block}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:12px}
+.fg1{grid-template-columns:1fr}
+.field{margin-bottom:0}
+.sl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C8A96E;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid #F0EDE6;display:flex;align-items:center;gap:8px}
+.sl-badge{background:rgba(200,169,110,.12);border:1px solid rgba(200,169,110,.25);color:#7A5C1E;font-size:9.5px;padding:2px 7px;border-radius:8px;font-weight:700}
+
+/* ── IMAGE SLOTS ── */
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:10px}
+.img-slot{border-radius:10px;overflow:hidden;border:1.5px dashed #D5D0C8;background:#FAFAF8;transition:border-color .2s}
+.img-slot:hover{border-color:#C8A96E}
+.img-slot-hdr{display:flex;align-items:center;justify-content:space-between;padding:7px 9px;background:#F5F3EF;border-bottom:1px solid #EDE9E0}
+.img-slot-num{font-size:10px;font-weight:700;color:#9CA3AF;letter-spacing:.06em}
+.main-badge{font-size:9px;background:#0D1B2A;color:#C8A96E;padding:2px 6px;border-radius:5px;font-weight:700}
+.img-ph{height:68px;display:flex;align-items:center;justify-content:center;font-size:26px;color:#D5D0C8;background:#FAFAF8}
+.img-prev{width:100%;height:90px;object-fit:cover;display:none;border-top:1px solid #EDE9E0}
+.img-prev.on{display:block}
+.img-input{border:none!important;border-top:1px solid #EDE9E0!important;border-radius:0!important;font-size:12px!important;padding:7px 9px!important;box-shadow:none!important}
+.img-input:focus{border-color:#EDE9E0!important;background:#FFFDF8!important;box-shadow:none!important}
+.img-remove{position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:50%;background:rgba(220,38,38,.85);border:none;color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.img-preview-wrap{position:relative}
+.img-preview{width:100%;height:110px;object-fit:cover;display:block}
+.upload-zone{height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:5px;transition:background .2s;position:relative}
+.upload-zone:hover{background:#F0EDE6}
+.uz-icon{font-size:26px;line-height:1}
+.uz-txt{font-size:11px;color:#9CA3AF;font-weight:500;text-align:center;line-height:1.4;padding:0 6px}
+.uz-txt strong{color:#C8A96E;display:block;font-size:12px}
+.img-progress{height:3px;background:linear-gradient(90deg,#C8A96E,#D9BC82);width:0;transition:width .3s;display:none}
+
+/* ── MAP PREVIEW ── */
+.map-bar{display:none;margin-top:8px;border-radius:8px;overflow:hidden;border:1px solid #EDE9E0}
+.map-bar.on{display:block}
+.map-bar a{display:flex;align-items:center;gap:9px;padding:9px 12px;background:#F8F6F1;text-decoration:none;transition:background .15s}
+.map-bar a:hover{background:#EDE9E0}
+.map-icon{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#C8A96E,#D9BC82);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px}
+
+/* ── AMENITIES ── */
+.amen-grid{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.chip{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:18px;border:1.5px solid #E8E4DC;font-size:13px;cursor:pointer;user-select:none;transition:all .2s;background:#fff}
+.chip.on{background:rgba(200,169,110,.1);border-color:#C8A96E;color:#0D1B2A;font-weight:600}
+.dot{width:8px;height:8px;border-radius:50%;border:2px solid #D5D0C8;flex-shrink:0;transition:all .2s}
+.chip.on .dot{background:#C8A96E;border-color:#C8A96E}
+.prop-actions{display:flex;gap:8px;margin-top:16px;padding-top:13px;border-top:1px solid #F0EDE6}
+
+/* ── RIGHT PANEL ── */
+.panel{background:#fff;border:1px solid #EDE9E0;border-radius:14px;padding:22px;position:sticky;top:76px}
+.panel-title{font-family:"Cormorant Garamond",serif;font-size:1.2rem;color:#0D1B2A;margin-bottom:5px}
+.panel-sub{font-size:13px;color:#6B7280;margin-bottom:14px;line-height:1.55}
+.step{display:flex;gap:9px;margin-bottom:10px;align-items:flex-start}
+.sn{width:21px;height:21px;border-radius:50%;background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.st{font-size:12.5px;color:#4B5563;line-height:1.55}
+.st strong{color:#0D1B2A}
+code{background:#F0EDE6;padding:1px 4px;border-radius:4px;font-size:11px}
+
+/* ── DEPLOY STATUS ── */
+.deploy-box{background:linear-gradient(135deg,#0D1B2A,#162033);border-radius:12px;padding:20px;text-align:center;margin-bottom:14px}
+.deploy-icon{font-size:36px;margin-bottom:8px}
+.deploy-title{font-family:"Cormorant Garamond",serif;font-size:18px;color:#fff;font-weight:700;margin-bottom:6px}
+.deploy-sub{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:16px;line-height:1.5}
+.deploy-status{background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.25);border-radius:8px;padding:10px;font-size:12px;color:#C8A96E;min-height:40px;line-height:1.6;margin-top:12px;text-align:left;display:none}
+.deploy-status.on{display:block}
+.countdown{font-size:28px;font-weight:700;color:#C8A96E;font-family:"Cormorant Garamond",serif;margin:8px 0}
+
+/* ── MISC ── */
+.add-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.count-badge{background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#7A5C1E;font-size:13px;font-weight:600;padding:5px 13px;border-radius:18px}
+.alert{background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:12px 15px;font-size:13px;color:#92400e;line-height:1.65;margin-bottom:20px}
+.alert strong{color:#b45309}
+.tip{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:9px 12px;font-size:12px;color:#1e40af;line-height:1.6;margin-top:8px}
+.tip strong{color:#1d4ed8}
+.tip a{color:#1d4ed8;font-weight:600}
+.success-banner{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:9px;padding:12px 15px;font-size:13px;color:#15803D;line-height:1.65;margin-bottom:20px;display:none}
+.success-banner.on{display:block}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0D1B2A;color:#fff;padding:11px 22px;border-radius:30px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.ch-badge{background:#0D1B2A;color:#C8A96E;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;letter-spacing:.06em}
+
+/* ── PUBLISH OVERLAY ── */
+.publish-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:center;justify-content:center}
+.publish-overlay.on{display:flex}
+.publish-modal{background:#fff;border-radius:20px;padding:36px 32px;max-width:420px;width:100%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.3)}
+.publish-modal h2{font-family:"Cormorant Garamond",serif;font-size:1.8rem;color:#0D1B2A;margin-bottom:8px}
+.publish-modal p{color:#6B7280;font-size:14px;line-height:1.65;margin-bottom:16px}
+.pub-step{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;margin-bottom:8px;text-align:left;font-size:13px;background:#F8F6F1}
+.pub-step.active{background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#7A5C1E;font-weight:600}
+.pub-step.done{background:#F0FDF4;border:1px solid #BBF7D0;color:#15803D;font-weight:600}
+.pub-step.error{background:#FEF2F2;border:1px solid #FECACA;color:#dc2626;font-weight:600}
+.pub-icon{font-size:18px;flex-shrink:0;width:24px;text-align:center}
+.pub-spin{animation:spin .8s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:900px){.cols{grid-template-columns:1fr}.panel{position:static}.fg{grid-template-columns:1fr}.img-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══════════ LOGIN SCREEN ══════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-box">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0D1B2A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div style="text-align:left">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:#0D1B2A">Homearc Reality</div>
+        <div style="font-size:10px;color:#C8A96E;letter-spacing:.14em">ADMIN PANEL</div>
+      </div>
+    </div>
+    <div class="login-title">Welcome back</div>
+    <div class="login-sub">Enter your admin password to manage listings</div>
+    <input type="password" id="pwInput" class="login-input" placeholder="••••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-err" id="loginErr">Incorrect password. Try again.</div>
+    <div style="margin-top:24px;font-size:12px;color:#9CA3AF">Default password: <code style="background:#F8F6F1;padding:2px 7px;border-radius:4px;color:#0D1B2A">Homearc@2024</code></div>
+  </div>
+</div>
+
+<!-- ══════════ ADMIN PANEL ══════════ -->
+<div id="adminPanel" style="display:none">
+
+  <!-- PUBLISH OVERLAY -->
+  <div class="publish-overlay" id="pubOverlay">
+    <div class="publish-modal">
+      <div style="font-size:42px;margin-bottom:12px" id="pubEmoji">🚀</div>
+      <h2 id="pubTitle">Publishing...</h2>
+      <p id="pubMsg">Pushing your listings to GitHub. Netlify will auto-deploy in ~30 seconds.</p>
+      <div id="pubSteps">
+        <div class="pub-step" id="ps1"><span class="pub-icon">⏳</span> Building website file</div>
+        <div class="pub-step" id="ps2"><span class="pub-icon">⏳</span> Connecting to GitHub</div>
+        <div class="pub-step" id="ps3"><span class="pub-icon">⏳</span> Uploading to repository</div>
+        <div class="pub-step" id="ps4"><span class="pub-icon">⏳</span> Netlify deploying...</div>
+      </div>
+      <div id="pubCountdown" style="display:none">
+        <div class="countdown" id="countNum">30</div>
+        <div style="font-size:13px;color:#6B7280">seconds until site updates</div>
+        <a id="pubSiteLink" href="https://homearcrealty.com" target="_blank" class="btn btn-green" style="margin-top:16px;justify-content:center;width:100%;text-decoration:none">
+          🌐 Open homearcrealty.com
+        </a>
+        <button class="btn btn-sm" style="width:100%;justify-content:center;margin-top:8px" onclick="closePubOverlay()">Done</button>
+      </div>
+      <div id="pubError" style="display:none">
+        <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:12px;font-size:13px;color:#dc2626;margin-top:8px;text-align:left" id="pubErrMsg"></div>
+        <button class="btn btn-sm" style="width:100%;justify-content:center;margin-top:12px" onclick="closePubOverlay()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tlogo">
+      <div class="tbox">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0D1B2A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div>
+        <div class="t-name">Homearc Admin</div>
+        <div class="t-sub">PROPERTY MANAGER</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="save-pill saved" id="savePill"><div class="save-dot"></div><span id="saveText">All changes saved</span></div>
+      <button class="btn-ghost" onclick="loadFromGitHub()" id="loadBtn">⬇ Load from GitHub</button>
+      <button class="btn btn-green" onclick="publishToGitHub()" id="publishBtn">🚀 Publish to Site</button>
+      <button class="btn-ghost" onclick="doLogout()" style="padding:7px 12px">↩ Logout</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="page-title">Property Manager</div>
+    <p class="page-sub">Add or edit your listings. Click <strong>🚀 Publish to Site</strong> when ready — your website updates automatically.</p>
+
+    <!-- GITHUB SETTINGS -->
+    <div class="gh-card" id="ghCard">
+      <div class="gh-card-hdr" onclick="toggleGhCard()">
+        <div class="gh-card-title">
+          <div class="gh-status" id="ghStatus"></div>
+          ⚙️ GitHub Settings
+          <span id="ghConfigBadge" style="font-size:11px;color:#9CA3AF;font-weight:400">— configure once to enable publishing</span>
+        </div>
+        <span id="ghChev" style="color:#9CA3AF;font-size:17px;transition:transform .2s">▾</span>
+      </div>
+      <div class="gh-card-body open" id="ghBody">
+        <div class="tip" style="margin-top:12px">
+          <strong>One-time setup:</strong> Fill in your GitHub details below to enable one-click publishing. 
+          Need help? <a href="https://github.com" target="_blank">Create a GitHub account</a> → create a repo named <code>homearc-website</code> → upload your <code>index.html</code> → 
+          <a href="https://github.com/settings/tokens/new" target="_blank">Create a token</a> (select <strong>repo</strong> permission).
+        </div>
+        <div class="gh-grid" style="margin-top:14px">
+          <div><label>GitHub Username</label><input id="ghUser" placeholder="e.g. homearcrealty" oninput="saveGhSettings()"/></div>
+          <div><label>Repository Name</label><input id="ghRepo" placeholder="e.g. homearc-website" oninput="saveGhSettings()"/></div>
+          <div style="grid-column:1/-1"><label>Personal Access Token <span style="color:#9CA3AF;font-weight:400;text-transform:none">(stored only in your browser)</span></label>
+            <div style="display:flex;gap:8px">
+              <input id="ghToken" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" oninput="saveGhSettings()" style="flex:1"/>
+              <button class="btn-sm" onclick="testGitHub()">Test Connection</button>
+            </div>
+          </div>
+          <div><label>Branch</label><input id="ghBranch" placeholder="main" value="main" oninput="saveGhSettings()"/></div>
+          <div><label>File path in repo</label><input id="ghFile" placeholder="index.html" value="index.html" oninput="saveGhSettings()"/></div>
+        </div>
+        <div id="ghTestResult" style="display:none;margin-top:10px;font-size:13px;padding:8px 12px;border-radius:8px"></div>
+      </div>
+    </div>
+
+    <!-- MAIN COLS -->
+    <div class="cols">
+      <div>
+        <div class="add-row">
+          <span class="count-badge" id="countBadge">0 Properties</span>
+          <button class="btn btn-gold" onclick="addProperty()">+ Add New Property</button>
+        </div>
+        <div id="propList" class="prop-list"></div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="panel">
+        <div class="deploy-box">
+          <div class="deploy-icon">🚀</div>
+          <div class="deploy-title">One-Click Publish</div>
+          <div class="deploy-sub">Your changes go live on<br/><strong style="color:#C8A96E">homearcrealty.com</strong><br/>in about 30 seconds.</div>
+          <button class="btn btn-green" style="width:100%;justify-content:center;font-size:15px;padding:13px 0" onclick="publishToGitHub()">
+            🚀 Publish to Site
+          </button>
+        </div>
+        <div style="margin-top:4px">
+          <div style="font-weight:700;font-size:13px;color:#0D1B2A;margin-bottom:11px">How it works</div>
+          <div class="step"><div class="sn">1</div><div class="st">Add or edit your property listings</div></div>
+          <div class="step"><div class="sn">2</div><div class="st">Click <strong>🚀 Publish to Site</strong></div></div>
+          <div class="step"><div class="sn">3</div><div class="st">GitHub receives the update → Netlify auto-deploys</div></div>
+          <div class="step"><div class="sn">4</div><div class="st"><strong>homearcrealty.com</strong> is updated in ~30 seconds ✅</div></div>
+        </div>
+        <div style="margin-top:16px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px 13px;font-size:12px;color:#166534;line-height:1.6">
+          ✅ <strong>No downloads. No drag & drop.</strong><br/>Everything happens automatically once GitHub is configured.
+        </div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid #EDE9E0">
+          <a href="https://homearcrealty.com" target="_blank" class="btn btn-sm" style="width:100%;justify-content:center">🌐 View Live Site</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   SITE TEMPLATE
+══════════════════════════════════════════ */
+const SITE_BEFORE = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\"/>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n  <title>Homearc Reality | Find Homes You Always Dreamed Of<\/title>\n  <meta name=\"description\" content=\"Discover luxury apartments and villas for sale and rent near Mallampet, Bachupally, Dundigal &amp; more. Verified properties, best pricing, trusted agents.\"/>\n  <meta name=\"robots\" content=\"index, follow\"/>\n  <meta property=\"og:title\" content=\"Homearc Reality | Find Homes You Always Dreamed Of\"/>\n  <meta property=\"og:image\" content=\"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200\"/>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"/>\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin/>\n  <link href=\"https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap\" rel=\"stylesheet\"/>\n  <style>\n    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}\n    html{scroll-behavior:smooth}\n    body{font-family:'DM Sans',sans-serif;background:#fff;color:#1a1a2e;overflow-x:hidden}\n    :root{--navy:#0D1B2A;--gold:#C8A96E;--gold2:#D9BC82;--cream:#F8F6F1;--border:#EDE9E0}\n    .ff{font-family:'Cormorant Garamond',Georgia,serif}\n    .hero-bg{min-height:100vh;background:linear-gradient(160deg,rgba(13,27,42,.93) 0%,rgba(13,27,42,.72) 55%,rgba(13,27,42,.88) 100%),url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=85') center/cover no-repeat;display:flex;flex-direction:column}\n    .glass{background:rgba(255,255,255,.10);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.18)}\n    .btn-gold{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-weight:600;letter-spacing:.02em;border:none;cursor:pointer;transition:all .3s ease;font-family:'DM Sans',sans-serif}\n    .btn-gold:hover{background:linear-gradient(135deg,#D9BC82,#EAD098);transform:translateY(-2px);box-shadow:0 12px 32px rgba(200,169,110,.45)}\n    .btn-navy{background:#0D1B2A;color:#fff;font-weight:600;border:none;cursor:pointer;transition:all .3s ease;font-family:'DM Sans',sans-serif}\n    .btn-navy:hover{background:#162033;transform:translateY(-2px)}\n    .btn-outline-white{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55);font-weight:600;cursor:pointer;transition:all .3s ease;font-family:'DM Sans',sans-serif}\n    .btn-outline-white:hover{background:rgba(255,255,255,.12)}\n    .btn-wa{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-weight:600;border:none;cursor:pointer;transition:all .3s ease;font-family:'DM Sans',sans-serif}\n    .btn-wa:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(37,211,102,.4)}\n    .prop-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 22px rgba(13,27,42,.07);transition:all .4s ease}\n    .prop-card:hover{transform:translateY(-8px);box-shadow:0 24px 60px rgba(13,27,42,.14)}\n    .prop-img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;position:absolute;top:0;left:0}\n    .prop-card:hover .prop-img{transform:scale(1.06)}\n    .why-card{background:#fff;border-radius:16px;border:1px solid var(--border);transition:all .3s ease;padding:30px 26px}\n    .why-card:hover{border-color:#C8A96E;transform:translateY(-4px);box-shadow:0 16px 40px rgba(200,169,110,.12)}\n    .why-icon{background:rgba(200,169,110,.1);color:#C8A96E;border-radius:14px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;transition:all .3s ease}\n    .why-card:hover .why-icon{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A}\n    .test-card{background:linear-gradient(145deg,#fff 0%,#F8F6F1 100%);border:1px solid var(--border);border-radius:20px;transition:all .3s ease;padding:26px 22px}\n    .test-card:hover{box-shadow:0 16px 40px rgba(13,27,42,.1);border-color:#C8A96E;transform:translateY(-4px)}\n    .badge-buy{background:linear-gradient(135deg,#0D1B2A,#162033);color:#C8A96E;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}\n    .badge-rent{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}\n    .nav{transition:all .3s ease;position:fixed;top:0;left:0;right:0;z-index:50;font-family:'DM Sans',sans-serif}\n    .nav-solid{background:rgba(13,27,42,.97)!important;backdrop-filter:blur(20px);box-shadow:0 4px 30px rgba(0,0,0,.3)}\n    .ftab-on{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-weight:700}\n    .ftab-off{background:rgba(255,255,255,.15);color:rgba(255,255,255,.85)}\n    .ftab-off:hover{background:rgba(255,255,255,.25);color:#fff}\n    .fsel{border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:14px;background:rgba(255,255,255,.96);color:#1a1a2e;width:100%;cursor:pointer;appearance:none;-webkit-appearance:none}\n    .fsel:focus{outline:none;border-color:#C8A96E}\n    .finput{border:1.5px solid #E8E4DC;border-radius:8px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;background:#fff;color:#1a1a2e;width:100%;transition:border-color .2s}\n    .finput:focus{outline:none;border-color:#C8A96E;box-shadow:0 0 0 3px rgba(200,169,110,.12)}\n    .car-btn{background:rgba(13,27,42,.7);color:#fff;border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:absolute;top:50%;transform:translateY(-50%)}\n    .car-btn:hover{background:#C8A96E}\n    .loc-card{border-radius:16px;overflow:hidden;position:relative;cursor:pointer;transition:all .4s ease;height:258px}\n    .loc-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(13,27,42,.2)}\n    .loc-img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;position:absolute;top:0;left:0}\n    .loc-card:hover .loc-img{transform:scale(1.07)}\n    .loc-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,42,.92) 0%,rgba(13,27,42,.25) 55%,transparent 100%)}\n    .vid-card{border-radius:16px;overflow:hidden;position:relative;cursor:pointer;transition:all .4s ease;height:280px}\n    .vid-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.25)}\n    .vid-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.15) 55%,transparent 100%)}\n    .play-btn{transition:all .3s ease;background:rgba(200,169,110,.85);border-radius:50%;width:64px;height:64px;display:flex;align-items:center;justify-content:center}\n    .vid-card:hover .play-btn{transform:scale(1.15);background:rgba(200,169,110,1)}\n    .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;animation:mFadeIn .2s ease}\n    @keyframes mFadeIn{from{opacity:0}to{opacity:1}}\n    .modal-box{background:#fff;border-radius:20px;max-width:900px;width:100%;max-height:92vh;overflow-y:auto;animation:mSlideUp .3s ease}\n    @keyframes mSlideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}\n    .am-badge{background:rgba(200,169,110,.1);color:#7A5C1E;border:1px solid rgba(200,169,110,.3);border-radius:20px;padding:5px 13px;font-size:13px;display:inline-flex;align-items:center;gap:5px;margin:4px}\n    .wa-float{position:fixed;bottom:26px;right:26px;z-index:999;border-radius:50%;width:58px;height:58px;border:none;cursor:pointer;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,.45);animation:waPulse 2.5s infinite;text-decoration:none}\n    @keyframes waPulse{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}50%{box-shadow:0 0 0 14px rgba(37,211,102,0)}}\n    .footer-bg{background:linear-gradient(135deg,#0D1B2A 0%,#081422 100%)}\n    .grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:26px}\n    .grid-why{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:22px}\n    .grid-loc{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:22px}\n    .grid-test{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:22px}\n    .grid-vid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}\n    .grid-contact{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}\n    .grid-footer{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px}\n    .section-tag{color:#C8A96E;font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}\n    .section-sub{color:#6B7280;font-size:16px;max-width:540px;margin:0 auto}\n    @media(max-width:900px){\n      .grid-contact{grid-template-columns:1fr!important}\n      .grid-footer{grid-template-columns:1fr 1fr!important}\n      .nav-links,.nav-phone{display:none!important}\n      .mob-menu-btn{display:flex!important}\n      .filter-grid{grid-template-columns:1fr 1fr!important}\n    }\n    @media(max-width:600px){\n      .grid-footer{grid-template-columns:1fr!important}\n      .filter-grid{grid-template-columns:1fr!important}\n      .stats-row{gap:20px!important}\n      .hero-ctas{flex-direction:column;align-items:center}\n      .modal-nearby{grid-template-columns:1fr!important}\n      .modal-ctas{flex-direction:column}\n    }\n    ::-webkit-scrollbar{width:5px}\n    ::-webkit-scrollbar-track{background:#F1EFE9}\n    ::-webkit-scrollbar-thumb{background:#C8A96E;border-radius:10px}\n  <\/style>\n<\/head>\n<body>\n<div id=\"root\"><\/div>\n<script src=\"https://unpkg.com/react@18.3.1/umd/react.production.min.js\" crossorigin><\/script>\n<script src=\"https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js\" crossorigin><\/script>\n<script src=\"https://unpkg.com/@babel/standalone@7.24.7/babel.min.js\"><\/script>\n\n<script>\n// Property listings \u2014 injected by editor\n";
+const SITE_AFTER  = "\n<\/script>\n<script type=\"text/babel\">\n\nconst { useState, useEffect } = React;\n\n// SVG ICONS\nconst Ico=({d,d2,d3,cx,cy,r,pts,size=18,color=\"currentColor\",fill=\"none\",sw=2})=>(\n  <svg width={size} height={size} viewBox=\"0 0 24 24\" fill={fill} stroke={color} strokeWidth={sw} strokeLinecap=\"round\" strokeLinejoin=\"round\">\n    {d&&<path d={d}/>}{d2&&<path d={d2}/>}{d3&&<path d={d3}/>}\n    {cx!==undefined&&<circle cx={cx} cy={cy} r={r}/>}{pts&&<polygon points={pts}/>}\n  <\/svg>\n);\nconst IcoHome=p=><Ico {...p} d=\"m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" d2=\"M9 22V12h6v10\"/>;\nconst IcoBld=p=><Ico {...p} d=\"M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z\" d2=\"M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2\" d3=\"M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2\"/>;\nconst IcoSearch=p=><Ico {...p} d=\"m21 21-4.3-4.3\" cx={11} cy={11} r={8}/>;\nconst IcoPin=p=><Ico {...p} d=\"M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z\" cx={12} cy={10} r={3}/>;\nconst IcoBed=p=><Ico {...p} d=\"M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9\"/>;\nconst IcoBath=p=><Ico {...p} d=\"M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5M2 12h20\"/>;\nconst IcoSq=p=><svg width={p.size||18} height={p.size||18} viewBox=\"0 0 24 24\" fill=\"none\" stroke={p.color||\"currentColor\"} strokeWidth=\"2\" strokeLinecap=\"round\" strokeLinejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><\/svg>;\nconst IcoPhone=p=><Ico {...p} d=\"M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.99 9.18 19.79 19.79 0 0 1 1.92 4.5 2 2 0 0 1 4 2.41l3.07-.07a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z\"/>;\nconst IcoMsg=p=><Ico {...p} d=\"M7.9 20A9 9 0 1 0 4 16.1L2 22Z\"/>;\nconst IcoPlay=p=><Ico {...p} pts=\"5 3 19 12 5 21 5 3\" fill={p.fill||\"none\"}/>;\nconst IcoStar=p=><Ico {...p} pts=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\" fill={p.fill||\"none\"}/>;\nconst IcoChL=p=><Ico {...p} d=\"m15 18-6-6 6-6\"/>;\nconst IcoChR=p=><Ico {...p} d=\"m9 18 6-6-6-6\"/>;\nconst IcoX=p=><Ico {...p} d=\"M18 6 6 18\" d2=\"m6 6 12 12\"/>;\nconst IcoMenu=p=><Ico {...p} d=\"M4 12h16M4 6h16M4 18h16\"/>;\nconst IcoShield=p=><Ico {...p} d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/>;\nconst IcoAward=p=><Ico {...p} d=\"M15.477 12.89 17 22l-5-3-5 3 1.523-9.11\" cx={12} cy={8} r={6}/>;\nconst IcoFile=p=><Ico {...p} d=\"M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2zM14 2v6h6M16 13H8M16 17H8\"/>;\nconst IcoArr=p=><Ico {...p} d=\"M5 12h14\" d2=\"m12 5 7 7-7 7\"/>;\nconst IcoIG=p=><svg width={p.size||18} height={p.size||18} viewBox=\"0 0 24 24\" fill=\"none\" stroke={p.color||\"currentColor\"} strokeWidth=\"2\" strokeLinecap=\"round\" strokeLinejoin=\"round\"><rect x=\"2\" y=\"2\" width=\"20\" height=\"20\" rx=\"5\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/><circle cx=\"17.5\" cy=\"6.5\" r=\".5\" fill={p.color||\"currentColor\"}/><\/svg>;\nconst IcoFB=p=><Ico {...p} d=\"M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z\"/>;\nconst IcoTW=p=><Ico {...p} d=\"M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z\"/>;\nconst IcoYT=p=><Ico {...p} d=\"M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17\" d2=\"m10 15 5-3-5-3z\"/>;\nconst IcoMail=p=><svg width={p.size||18} height={p.size||18} viewBox=\"0 0 24 24\" fill=\"none\" stroke={p.color||\"currentColor\"} strokeWidth=\"2\" strokeLinecap=\"round\" strokeLinejoin=\"round\"><rect x=\"2\" y=\"4\" width=\"20\" height=\"16\" rx=\"2\"/><path d=\"m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7\"/><\/svg>;\nconst IcoEye=p=><Ico {...p} d=\"M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z\" cx={12} cy={12} r={3}/>;\nconst IcoOK=p=><Ico {...p} d=\"M22 11.08V12a10 10 0 1 1-5.93-9.14\" d2=\"m22 4-10 10.01-3-3.01\"/>;\n\n// DATA\nconst LOCS=[\"All Locations\",\"Mallampet\",\"Bachupally\",\"Gagilapur\",\"Dundigal\",\"Rameshwaram Banda\",\"Patancheru\",\"Miyapur\",\"Kukatpally\",\"Hitech City\",\"Gachibowli\",\"Kondapur\"];\nconst BB=[\"Any Budget\",\"Under \u20b950L\",\"\u20b950L\u2013\u20b91Cr\",\"\u20b91Cr\u2013\u20b92Cr\",\"\u20b92Cr\u2013\u20b95Cr\",\"\u20b95Cr+\"];\nconst BR=[\"Any Budget\",\"Under \u20b915K\",\"\u20b915K\u2013\u20b930K\",\"\u20b930K\u2013\u20b960K\",\"\u20b960K\u2013\u20b91L\",\"\u20b91L+\"];\n\nconst LOC_CARDS=[\n  {name:\"Mallampet\",count:38,img:\"https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80\"},\n  {name:\"Bachupally\",count:45,img:\"https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80\"},\n  {name:\"Gagilapur\",count:22,img:\"https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&q=80\"},\n  {name:\"Dundigal\",count:18,img:\"https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=600&q=80\"},\n  {name:\"Rameshwaram Banda\",count:14,img:\"https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80\"},\n  {name:\"Patancheru\",count:29,img:\"https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=80\"},\n];\nconst TESTI=[\n  {name:\"Rajesh Kumar\",role:\"NRI Investor, USA\",stars:5,img:\"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80\",review:\"Homearc made my dream of owning a luxury villa in Hyderabad possible from the US. Their team handled everything \u2014 from documentation to possession \u2014 with remarkable professionalism. Truly world-class service!\"},\n  {name:\"Priya Sharma\",role:\"IT Professional, Gachibowli\",stars:5,img:\"https://images.unsplash.com/photo-1494790108755-2616b612b6e4?w=120&q=80\",review:\"Found my perfect 3BHK through Homearc in just 2 weeks! Incredibly helpful, fully transparent on pricing, and the process was seamless. Highly recommended!\"},\n  {name:\"Venkat & Sunitha\",role:\"Family, Kondapur\",stars:5,img:\"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=120&q=80\",review:\"After months of searching elsewhere, Homearc helped us find the perfect family home in our preferred location and budget. Their understanding of what families need made all the difference.\"},\n  {name:\"Arjun Mehta\",role:\"Real Estate Investor\",stars:5,img:\"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80\",review:\"As an investor I need reliable data and honest advice. Homearc delivers both. I've purchased 3 apartments through them \u2014 every transaction has been flawless.\"},\n];\nconst VIDS=[\n  {title:\"Skyline Residences \u2014 Full Tour\",sub:\"3BHK Luxury Apartment \u00b7 Gachibowli\",thumb:\"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700&q=80\",url:\"https://www.youtube.com/embed/ScMzIvxBSi4\"},\n  {title:\"Emerald Villa \u2014 Walkthrough\",sub:\"4BHK Premium Villa \u00b7 Kokapet\",thumb:\"https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=700&q=80\",url:\"https://www.youtube.com/embed/ScMzIvxBSi4\"},\n  {title:\"Azure Heights \u2014 Community Tour\",sub:\"Premium Apartments \u00b7 Madhapur\",thumb:\"https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=700&q=80\",url:\"https://www.youtube.com/embed/ScMzIvxBSi4\"},\n];\nconst WHY=[\n  {icon:<IcoShield size={26}/>,title:\"Verified Properties\",desc:\"Every listing undergoes rigorous legal and physical verification. No disputed or fraudulent properties \u2014 ever.\"},\n  {icon:<IcoAward size={26}/>,title:\"Best Pricing\",desc:\"We guarantee fair market pricing with complete transparency. No hidden fees, no last-minute surprises.\"},\n  {icon:<IcoStar size={26}/>,title:\"Trusted Agents\",desc:\"Our RERA-certified agents bring deep local expertise and a genuine commitment to your satisfaction.\"},\n  {icon:<IcoPin size={26}/>,title:\"Premium Locations\",desc:\"Curated portfolio across Hyderabad's most sought-after and highest-growth micro-markets.\"},\n  {icon:<IcoFile size={26}/>,title:\"Easy Documentation\",desc:\"We manage all paperwork, registrations, and legal due diligence \u2014 swiftly and seamlessly.\"},\n  {icon:<IcoHome size={26}/>,title:\"Rental Assistance\",desc:\"From tenant verification to lease agreements, end-to-end rental management at no extra cost.\"},\n];\n\n// NAVBAR\nfunction Navbar(){\n  const [sc,setSc]=useState(false);\n  const [op,setOp]=useState(false);\n  useEffect(()=>{const fn=()=>setSc(window.scrollY>60);window.addEventListener(\"scroll\",fn);return()=>window.removeEventListener(\"scroll\",fn);},[]);\n  const go=(id)=>{setOp(false);document.getElementById(id)?.scrollIntoView({behavior:\"smooth\"});};\n  const links=[[\"Properties\",\"properties\"],[\"Locations\",\"locations\"],[\"Why Us\",\"why-us\"],[\"Testimonials\",\"testimonials\"],[\"Contact\",\"contact\"]];\n  return(\n    <nav className={`nav ${sc?\"nav-solid\":\"\"}`}>\n      <div style={{maxWidth:1280,margin:\"0 auto\",padding:\"0 24px\"}}>\n        <div style={{display:\"flex\",alignItems:\"center\",justifyContent:\"space-between\",height:72}}>\n          <div style={{display:\"flex\",alignItems:\"center\",gap:10,cursor:\"pointer\"}} onClick={()=>window.scrollTo({top:0,behavior:\"smooth\"})}>\n            <svg width=\"210\" height=\"54\" viewBox=\"0 0 210 54\" xmlns=\"http://www.w3.org/2000/svg\">\n              <defs><linearGradient id=\"navArc\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" stopColor=\"#C8A96E\"/><stop offset=\"100%\" stopColor=\"#E2C98A\"/><\/linearGradient><\/defs>\n              <path d=\"M6 44 Q28 6 50 44\" stroke=\"url(#navArc)\" strokeWidth=\"3.6\" fill=\"none\" strokeLinecap=\"round\"/>\n              <rect x=\"10\" y=\"44\" width=\"34\" height=\"21\" rx=\"2\" fill=\"none\" stroke=\"#C8A96E\" strokeWidth=\"2.2\"/>\n              <rect x=\"18\" y=\"53\" width=\"18\" height=\"12\" rx=\"1.5\" fill=\"#C8A96E\" opacity=\".65\"/>\n              <circle cx=\"28\" cy=\"3\" r=\"3\" fill=\"#D9BC82\"/>\n              <text x=\"62\" y=\"31\" fontFamily=\"Georgia,serif\" fontSize=\"24\" fontWeight=\"700\" fill=\"#ffffff\" letterSpacing=\"0.5\">HOMEARC<\/text>\n              <text x=\"62\" y=\"48\" fontFamily=\"Georgia,serif\" fontSize=\"14\" fill=\"#C8A96E\" letterSpacing=\"3.5\">REALITY<\/text>\n            <\/svg>\n          <\/div>\n          <div className=\"nav-links\" style={{display:\"flex\",gap:28,alignItems:\"center\"}}>\n            {links.map(([l,id])=><button key={id} onClick={()=>go(id)} style={{background:\"none\",border:\"none\",color:\"rgba(255,255,255,.82)\",fontSize:14,fontWeight:500,cursor:\"pointer\",transition:\"color .2s\"}} onMouseEnter={e=>e.target.style.color=\"#C8A96E\"} onMouseLeave={e=>e.target.style.color=\"rgba(255,255,255,.82)\"}>{l}<\/button>)}\n          <\/div>\n          <div style={{display:\"flex\",gap:12,alignItems:\"center\"}}>\n            <a href=\"tel:+918019992233\" className=\"nav-phone\" style={{display:\"flex\",alignItems:\"center\",gap:6,color:\"#C8A96E\",fontSize:14,fontWeight:600,textDecoration:\"none\"}}><IcoPhone size={15}/> +91 80199 92233<\/a>\n            <button className=\"btn-gold\" onClick={()=>go(\"contact\")} style={{padding:\"10px 20px\",borderRadius:8,fontSize:14}}>Free Consultation<\/button>\n            <button onClick={()=>setOp(!op)} className=\"mob-menu-btn\" style={{background:\"none\",border:\"none\",color:\"#fff\",cursor:\"pointer\",padding:4,display:\"none\"}}>{op?<IcoX size={24}/>:<IcoMenu size={24}/>}<\/button>\n          <\/div>\n        <\/div>\n        {op&&<div style={{background:\"rgba(13,27,42,.98)\",backdropFilter:\"blur(20px)\",borderTop:\"1px solid rgba(200,169,110,.2)\",padding:\"12px 0 20px\"}}>\n          {links.map(([l,id])=><button key={id} onClick={()=>go(id)} style={{display:\"block\",width:\"100%\",textAlign:\"left\",background:\"none\",border:\"none\",color:\"rgba(255,255,255,.82)\",padding:\"12px 0\",fontSize:16,cursor:\"pointer\",borderBottom:\"1px solid rgba(255,255,255,.06)\"}}>{l}<\/button>)}\n          <a href=\"tel:+918019992233\" style={{display:\"flex\",alignItems:\"center\",gap:8,color:\"#C8A96E\",padding:\"14px 0\",fontSize:15,textDecoration:\"none\",fontWeight:600}}><IcoPhone size={16}/> +91 80199 92233<\/a>\n        <\/div>}\n      <\/div>\n    <\/nav>\n  );\n}\n\n// CAROUSEL\nfunction Car({imgs,h}){\n  const [i,si]=useState(0);\n  const prev=e=>{e?.stopPropagation();si((i-1+imgs.length)%imgs.length)};\n  const next=e=>{e?.stopPropagation();si((i+1)%imgs.length)};\n  return(\n    <div style={{position:\"relative\",height:h,overflow:\"hidden\"}}>\n      <img src={imgs[i]} alt=\"\" loading=\"lazy\" className=\"prop-img\"/>\n      {imgs.length>1&&<>\n        <button className=\"car-btn\" onClick={prev} style={{left:10}}><IcoChL size={17}/><\/button>\n        <button className=\"car-btn\" onClick={next} style={{right:10}}><IcoChR size={17}/><\/button>\n        <div style={{position:\"absolute\",bottom:10,left:\"50%\",transform:\"translateX(-50%)\",display:\"flex\",gap:5}}>\n          {imgs.map((_,j)=><button key={j} onClick={e=>{e.stopPropagation();si(j);}} style={{width:j===i?20:6,height:6,borderRadius:3,border:\"none\",cursor:\"pointer\",background:j===i?\"#C8A96E\":\"rgba(255,255,255,.65)\",transition:\"all .2s\"}}/>)}\n        <\/div>\n      <\/>}\n    <\/div>\n  );\n}\n\n// PROP CARD\nfunction PCard({p,onV}){\n  const wa=encodeURIComponent(`Hi! I'm interested in ${p.title} at ${p.location}. Please share more details.`);\n  return(\n    <div className=\"prop-card\">\n      <div style={{position:\"relative\",height:240}}><Car imgs={p.imgs} h={240}/>\n        <span className={p.listing===\"Buy\"?\"badge-buy\":\"badge-rent\"} style={{position:\"absolute\",top:14,left:14,zIndex:5,padding:\"5px 13px\",borderRadius:20}}>{p.listing===\"Buy\"?\"For Sale\":\"For Rent\"}<\/span>\n        <span style={{position:\"absolute\",top:14,right:14,zIndex:5,background:\"rgba(0,0,0,.5)\",backdropFilter:\"blur(8px)\",color:\"#fff\",fontSize:12,padding:\"5px 11px\",borderRadius:20}}>{p.type}<\/span>\n      <\/div>\n      <div style={{padding:\"20px 22px 22px\"}}>\n        <h3 className=\"ff\" style={{fontSize:20,fontWeight:700,color:\"#0D1B2A\",marginBottom:8,lineHeight:1.2}}>{p.title}<\/h3>\n        <div style={{display:\"flex\",alignItems:\"center\",gap:5,marginBottom:12}}><IcoPin size={14} color=\"#C8A96E\"/><span style={{color:\"#6B7280\",fontSize:13}}>{p.location}, Hyderabad<\/span><\/div>\n        <div className=\"ff\" style={{fontSize:27,fontWeight:700,color:\"#C8A96E\",marginBottom:14}}>{p.price}<\/div>\n        <div style={{display:\"flex\",gap:16,paddingBottom:16,borderBottom:\"1px solid #F0EDE6\",marginBottom:16}}>\n          {[[<IcoBed size={14}/>,`${p.bedrooms} BHK`],[<IcoBath size={14}/>,`${p.bathrooms} Bath`],[<IcoSq size={14}/>,`${p.area} sqft`]].map(([ic,tx],j)=>(\n            <div key={j} style={{display:\"flex\",alignItems:\"center\",gap:5,color:\"#4B5563\",fontSize:13}}><span style={{color:\"#9CA3AF\"}}>{ic}<\/span>{tx}<\/div>\n          ))}\n        <\/div>\n        <div style={{display:\"flex\",gap:10}}>\n          <button className=\"btn-navy\" onClick={()=>onV(p)} style={{flex:1,padding:\"11px 0\",borderRadius:8,fontSize:14,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:6}}><IcoEye size={15}/> View Details<\/button>\n          <a href={`https://wa.me/${p.wp}?text=${wa}`} target=\"_blank\" rel=\"noopener noreferrer\" className=\"btn-wa\" style={{flex:1,padding:\"11px 0\",borderRadius:8,fontSize:14,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:6,textDecoration:\"none\"}}><IcoMsg size={15}/> WhatsApp<\/a>\n        <\/div>\n      <\/div>\n    <\/div>\n  );\n}\n\n// PROP MODAL\nfunction PMod({p,onC}){\n  const [ii,sii]=useState(0);\n  const [sv,ssv]=useState(false);\n  useEffect(()=>{document.body.style.overflow=\"hidden\";return()=>{document.body.style.overflow=\"\";};},[]);\n  const wa=encodeURIComponent(`Hi! I'm interested in ${p.title} at ${p.location}. Please share more details.`);\n  return(\n    <div className=\"modal-wrap\" onClick={onC}>\n      <div className=\"modal-box\" onClick={e=>e.stopPropagation()}>\n        <div style={{position:\"relative\"}}>\n          {!sv?(\n            <div style={{position:\"relative\",height:380}}>\n              <img src={p.imgs[ii]} alt=\"\" style={{width:\"100%\",height:\"100%\",objectFit:\"cover\"}}/>\n              <div style={{position:\"absolute\",inset:0,background:\"linear-gradient(to top,rgba(13,27,42,.55) 0%,transparent 50%)\"}}/>\n              <button className=\"car-btn\" onClick={()=>sii((ii-1+p.imgs.length)%p.imgs.length)} style={{left:16,width:44,height:44}}><IcoChL size={20}/><\/button>\n              <button className=\"car-btn\" onClick={()=>sii((ii+1)%p.imgs.length)} style={{right:16,width:44,height:44}}><IcoChR size={20}/><\/button>\n              <span className={p.listing===\"Buy\"?\"badge-buy\":\"badge-rent\"} style={{position:\"absolute\",top:16,left:16,padding:\"6px 14px\",borderRadius:20}}>{p.listing===\"Buy\"?\"For Sale\":\"For Rent\"}<\/span>\n              <button onClick={()=>ssv(true)} style={{position:\"absolute\",bottom:20,right:20,background:\"rgba(200,169,110,.9)\",border:\"none\",borderRadius:8,padding:\"10px 18px\",color:\"#0D1B2A\",fontWeight:700,fontSize:14,cursor:\"pointer\",display:\"flex\",alignItems:\"center\",gap:7,fontFamily:\"'DM Sans',sans-serif\"}}><IcoPlay size={15} fill=\"#0D1B2A\" color=\"#0D1B2A\"/> Watch Video Tour<\/button>\n              <div style={{position:\"absolute\",bottom:20,left:\"50%\",transform:\"translateX(-50%)\",display:\"flex\",gap:6}}>\n                {p.imgs.map((_,j)=><button key={j} onClick={()=>sii(j)} style={{width:j===ii?22:7,height:7,borderRadius:4,border:\"none\",cursor:\"pointer\",background:j===ii?\"#C8A96E\":\"rgba(255,255,255,.6)\",transition:\"all .2s\"}}/>)}\n              <\/div>\n            <\/div>\n          ):(\n            <div style={{height:380,position:\"relative\",background:\"#000\"}}>\n              <iframe src={p.video} title=\"Property Video\" allow=\"autoplay;encrypted-media\" style={{width:\"100%\",height:\"100%\",border:\"none\"}}/>\n              <button onClick={()=>ssv(false)} style={{position:\"absolute\",top:12,right:12,background:\"rgba(0,0,0,.6)\",border:\"none\",borderRadius:\"50%\",width:36,height:36,color:\"#fff\",cursor:\"pointer\",display:\"flex\",alignItems:\"center\",justifyContent:\"center\"}}><IcoX size={18}/><\/button>\n            <\/div>\n          )}\n          <button onClick={onC} style={{position:\"absolute\",top:16,right:16,background:\"rgba(13,27,42,.75)\",backdropFilter:\"blur(8px)\",border:\"none\",borderRadius:\"50%\",width:40,height:40,color:\"#fff\",cursor:\"pointer\",display:\"flex\",alignItems:\"center\",justifyContent:\"center\",zIndex:10}}><IcoX size={20}/><\/button>\n        <\/div>\n        <div style={{padding:\"28px 30px\"}}>\n          <div style={{display:\"flex\",justifyContent:\"space-between\",alignItems:\"flex-start\",flexWrap:\"wrap\",gap:12,marginBottom:20}}>\n            <div><h2 className=\"ff\" style={{fontSize:28,fontWeight:700,color:\"#0D1B2A\",marginBottom:6}}>{p.title}<\/h2><div style={{display:\"flex\",alignItems:\"center\",gap:6,color:\"#6B7280\",fontSize:14}}><IcoPin size={15} color=\"#C8A96E\"/> {p.location}, Hyderabad<\/div><\/div>\n            <div className=\"ff\" style={{fontSize:32,fontWeight:700,color:\"#C8A96E\"}}>{p.price}<\/div>\n          <\/div>\n          <div style={{display:\"flex\",flexWrap:\"wrap\",padding:\"16px 0\",background:\"#F8F6F1\",borderRadius:12,marginBottom:24}}>\n            {[[<IcoBed size={18}/>,\"Bedrooms\",p.bedrooms],[<IcoBath size={18}/>,\"Bathrooms\",p.bathrooms],[<IcoSq size={18}/>,\"Area\",`${p.area} sqft`],[<IcoHome size={18}/>,\"Furnished\",p.furnished]].map(([ic,lb,vl],j)=>(\n              <div key={j} style={{flex:1,minWidth:80,textAlign:\"center\",padding:\"8px 6px\"}}>\n                <div style={{color:\"#C8A96E\",marginBottom:5}}>{ic}<\/div>\n                <div style={{fontSize:12,color:\"#9CA3AF\",marginBottom:3}}>{lb}<\/div>\n                <div style={{fontWeight:700,color:\"#0D1B2A\",fontSize:15}}>{vl}<\/div>\n              <\/div>\n            ))}\n          <\/div>\n          <div style={{marginBottom:24}}><h3 className=\"ff\" style={{fontSize:20,fontWeight:700,color:\"#0D1B2A\",marginBottom:10}}>About this Property<\/h3><p style={{color:\"#4B5563\",lineHeight:1.78,fontSize:15}}>{p.desc}<\/p><\/div>\n          <div style={{marginBottom:24}}><h3 className=\"ff\" style={{fontSize:20,fontWeight:700,color:\"#0D1B2A\",marginBottom:12}}>Amenities<\/h3><div>{p.amen.map(a=><span key={a} className=\"am-badge\"><IcoOK size={12} color=\"#C8A96E\"/>{a}<\/span>)}<\/div><\/div>\n          <div className=\"modal-nearby\" style={{display:\"grid\",gridTemplateColumns:\"1fr 1fr\",gap:14,marginBottom:24}}>\n            {[[\"\ud83c\udfeb Nearby Schools\",p.nearby.schools],[\"\ud83c\udfe5 Nearby Hospitals\",p.nearby.hospitals]].map(([t,its])=>(\n              <div key={t} style={{padding:\"14px 16px\",background:\"#F8F6F1\",borderRadius:10}}><div style={{fontWeight:700,fontSize:14,color:\"#0D1B2A\",marginBottom:8}}>{t}<\/div>{its.map(it=><div key={it} style={{color:\"#4B5563\",fontSize:13,marginBottom:4,display:\"flex\",alignItems:\"center\",gap:5}}><span style={{color:\"#C8A96E\"}}>\u2022<\/span>{it}<\/div>)}<\/div>\n            ))}\n          <\/div>\n          <div style={{marginBottom:24}}><h3 className=\"ff\" style={{fontSize:20,fontWeight:700,color:\"#0D1B2A\",marginBottom:10}}>Location<\/h3><iframe src={`https://maps.google.com/maps?q=${encodeURIComponent(p.location+\", Hyderabad\")}&output=embed`} style={{width:\"100%\",height:220,borderRadius:12,border:\"none\"}} title=\"Map\"/><\/div>\n          <div className=\"modal-ctas\" style={{display:\"flex\",gap:12,flexWrap:\"wrap\"}}>\n            <a href={`https://wa.me/${p.wp}?text=${wa}`} target=\"_blank\" rel=\"noopener noreferrer\" className=\"btn-wa\" style={{flex:1,minWidth:150,padding:\"13px 20px\",borderRadius:10,fontSize:15,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:8,textDecoration:\"none\"}}><IcoMsg size={17}/> WhatsApp Inquiry<\/a>\n            <a href=\"tel:+918019992233\" className=\"btn-gold\" style={{flex:1,minWidth:150,padding:\"13px 20px\",borderRadius:10,fontSize:15,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:8,textDecoration:\"none\"}}><IcoPhone size={17}/> Call Now<\/a>\n            <a href={p.mapUrl} target=\"_blank\" rel=\"noopener noreferrer\" style={{flex:1,minWidth:150,padding:\"13px 20px\",borderRadius:10,fontSize:15,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:8,textDecoration:\"none\",background:\"#F8F6F1\",color:\"#0D1B2A\",fontWeight:600,border:\"1px solid #EDE9E0\"}}><IcoPin size={17} color=\"#C8A96E\"/> View on Maps<\/a>\n          <\/div>\n        <\/div>\n      <\/div>\n    <\/div>\n  );\n}\n\n// HERO\nfunction Hero({onFilter}){\n  const [tab,st]=useState(\"Buy\");\n  const [f,sf]=useState({type:\"\",location:\"\",budget:\"\",bedrooms:\"\",furnished:\"\"});\n  const go=()=>{onFilter({...f,listing:tab});document.getElementById(\"properties\")?.scrollIntoView({behavior:\"smooth\"});};\n  const Lbl=({t})=><label style={{display:\"block\",color:\"rgba(255,255,255,.72)\",fontSize:12,fontWeight:600,letterSpacing:\".07em\",marginBottom:6}}>{t}<\/label>;\n  return(\n    <section className=\"hero-bg\">\n      <div style={{flex:1,display:\"flex\",flexDirection:\"column\",alignItems:\"center\",justifyContent:\"center\",padding:\"120px 24px 36px\",textAlign:\"center\"}}>\n        <div style={{display:\"inline-flex\",alignItems:\"center\",gap:8,background:\"rgba(200,169,110,.14)\",border:\"1px solid rgba(200,169,110,.35)\",borderRadius:40,padding:\"8px 18px\",marginBottom:28}}>\n          <div style={{width:6,height:6,borderRadius:\"50%\",background:\"#C8A96E\"}}/><span style={{color:\"#C8A96E\",fontSize:12,fontWeight:700,letterSpacing:\".12em\"}}>HYDERABAD'S #1 FIND HOMES YOU ALWAYS DREAMED OF<\/span>\n        <\/div>\n        <h1 className=\"ff\" style={{fontSize:\"clamp(2.6rem,5.5vw,4.5rem)\",fontWeight:700,color:\"#fff\",lineHeight:1.14,marginBottom:20}}>\n          Find Your Perfect Home<br/><span style={{background:\"linear-gradient(135deg,#C8A96E,#EAD098)\",WebkitBackgroundClip:\"text\",WebkitTextFillColor:\"transparent\",backgroundClip:\"text\"}}>with Homearc Reality<\/span>\n        <\/h1>\n        <p style={{color:\"rgba(255,255,255,.72)\",fontSize:\"clamp(15px,2vw,18px)\",lineHeight:1.72,maxWidth:580,marginBottom:40}}>Discover verified apartments and villas near Mallampet, Bachupally, Dundigal &amp; surrounding areas. Trusted by families, IT professionals, and investors.<\/p>\n        <div className=\"hero-ctas\" style={{display:\"flex\",gap:16,justifyContent:\"center\",flexWrap:\"wrap\",marginBottom:52}}>\n          <button className=\"btn-gold\" onClick={()=>{st(\"Buy\");go();}} style={{padding:\"14px 32px\",borderRadius:10,fontSize:16,display:\"flex\",alignItems:\"center\",gap:8}}><IcoBld size={18}/> Buy Property<\/button>\n          <button className=\"btn-outline-white\" onClick={()=>{st(\"Rent\");go();}} style={{padding:\"14px 32px\",borderRadius:10,fontSize:16,display:\"flex\",alignItems:\"center\",gap:8}}><IcoHome size={18}/> Rent Property<\/button>\n        <\/div>\n        <div className=\"stats-row\" style={{display:\"flex\",gap:\"clamp(24px,5vw,52px)\",flexWrap:\"wrap\",justifyContent:\"center\",marginBottom:52}}>\n          {[[\"500+\",\"Properties Listed\"],[\"2,000+\",\"Happy Families\"],[\"15+\",\"Years Experience\"],[\"98%\",\"Client Satisfaction\"]].map(([n,l])=>(\n            <div key={l} style={{textAlign:\"center\"}}><div className=\"ff\" style={{fontSize:34,fontWeight:700,color:\"#C8A96E\"}}>{n}<\/div><div style={{color:\"rgba(255,255,255,.6)\",fontSize:13}}>{l}<\/div><\/div>\n          ))}\n        <\/div>\n      <\/div>\n      <div style={{width:\"100%\",maxWidth:1100,margin:\"0 auto\",padding:\"0 24px 64px\"}}>\n        <div className=\"glass\" style={{borderRadius:20,padding:\"26px 30px\"}}>\n          <div style={{display:\"flex\",gap:8,marginBottom:22}}>\n            {[\"Buy\",\"Rent\"].map(t=><button key={t} className={t===tab?\"ftab-on\":\"ftab-off\"} onClick={()=>st(t)} style={{padding:\"10px 28px\",borderRadius:8,fontSize:15,border:\"none\",cursor:\"pointer\",transition:\"all .2s\",fontFamily:\"'DM Sans',sans-serif\"}}>{t}<\/button>)}\n          <\/div>\n          <div className=\"filter-grid\" style={{display:\"grid\",gridTemplateColumns:\"repeat(auto-fit,minmax(145px,1fr))\",gap:12}}>\n            <div><Lbl t=\"PROPERTY TYPE\"/><select className=\"fsel\" value={f.type} onChange={e=>sf({...f,type:e.target.value})}><option value=\"\">All Types<\/option><option>Apartment<\/option><option>Villa<\/option><option>Gated Community<\/option><\/select><\/div>\n            <div><Lbl t=\"LOCATION\"/><select className=\"fsel\" value={f.location} onChange={e=>sf({...f,location:e.target.value})}>{LOCS.map(l=><option key={l}>{l}<\/option>)}<\/select><\/div>\n            <div><Lbl t=\"BUDGET\"/><select className=\"fsel\" value={f.budget} onChange={e=>sf({...f,budget:e.target.value})}>{(tab===\"Buy\"?BB:BR).map(b=><option key={b}>{b}<\/option>)}<\/select><\/div>\n            <div><Lbl t=\"BEDROOMS\"/><select className=\"fsel\" value={f.bedrooms} onChange={e=>sf({...f,bedrooms:e.target.value})}>{[\"Any\",\"1 BHK\",\"2 BHK\",\"3 BHK\",\"4 BHK\",\"4+ BHK\"].map(b=><option key={b}>{b}<\/option>)}<\/select><\/div>\n            <div><Lbl t=\"FURNISHING\"/><select className=\"fsel\" value={f.furnished} onChange={e=>sf({...f,furnished:e.target.value})}>{[\"Any\",\"Furnished\",\"Semi Furnished\",\"Unfurnished\"].map(x=><option key={x}>{x}<\/option>)}<\/select><\/div>\n            <div style={{display:\"flex\",alignItems:\"flex-end\"}}><button className=\"btn-gold\" onClick={go} style={{width:\"100%\",padding:\"12px 0\",borderRadius:8,fontSize:15,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:8}}><IcoSearch size={17}/> Search<\/button><\/div>\n          <\/div>\n        <\/div>\n      <\/div>\n    <\/section>\n  );\n}\n\nfunction SH({tag,title,sub,light=false}){\n  return(\n    <div style={{textAlign:\"center\",marginBottom:52}}>\n      <div className=\"section-tag\">{tag}<\/div>\n      <h2 className=\"ff\" style={{fontSize:\"clamp(2rem,4vw,3rem)\",fontWeight:700,color:light?\"#fff\":\"#0D1B2A\",marginBottom:12}}>{title}<\/h2>\n      {sub&&<p className=\"section-sub\" style={{color:light?\"rgba(255,255,255,.6)\":\"#6B7280\"}}>{sub}<\/p>}\n    <\/div>\n  );\n}\n\nfunction Featured({filters}){\n  const [sel,ssel]=useState(null);\n  const fp=PROPS.filter(p=>{\n    if(filters?.listing&&p.listing!==filters.listing)return false;\n    if(filters?.type&&filters.type!==\"\"&&p.type!==filters.type)return false;\n    if(filters?.location&&filters.location!==\"\"&&filters.location!==\"All Locations\"&&p.location!==filters.location)return false;\n    if(filters?.furnished&&filters.furnished!==\"Any\"&&filters.furnished!==\"\"&&p.furnished!==filters.furnished)return false;\n    return true;\n  });\n  return(\n    <section id=\"properties\" style={{padding:\"80px 24px\",background:\"#F8F6F1\"}}>\n      <div style={{maxWidth:1280,margin:\"0 auto\"}}>\n        <SH tag=\"CURATED LISTINGS\" title=\"Featured Properties\" sub=\"Hand-picked luxury apartments and villas in Hyderabad's most prestigious locations.\"/>\n        {fp.length===0?(\n          <div style={{textAlign:\"center\",padding:\"60px 0\",color:\"#9CA3AF\"}}><IcoHome size={48}/><div style={{fontSize:18,fontWeight:600,marginTop:16}}>No properties match your search.<\/div><div style={{fontSize:14,marginTop:8}}>Try adjusting your filter criteria.<\/div><\/div>\n        ):(\n          <div className=\"grid-3\">{fp.map(p=><PCard key={p.id} p={p} onV={ssel}/>)}<\/div>\n        )}\n      <\/div>\n      {sel&&<PMod p={sel} onC={()=>ssel(null)}/>}\n    <\/section>\n  );\n}\n\nfunction WhyUs(){\n  return(\n    <section id=\"why-us\" style={{padding:\"80px 24px\",background:\"#fff\"}}>\n      <div style={{maxWidth:1280,margin:\"0 auto\"}}>\n        <SH tag=\"OUR PROMISE\" title=\"Why Choose Homearc Reality\" sub=\"We combine deep market expertise with genuine care \u2014 delivering outcomes that exceed expectations.\"/>\n        <div className=\"grid-why\">\n          {WHY.map((c,i)=><div key={i} className=\"why-card\"><div className=\"why-icon\">{c.icon}<\/div><h3 className=\"ff\" style={{fontSize:21,fontWeight:700,color:\"#0D1B2A\",marginBottom:10}}>{c.title}<\/h3><p style={{color:\"#6B7280\",fontSize:14,lineHeight:1.72}}>{c.desc}<\/p><\/div>)}\n        <\/div>\n      <\/div>\n    <\/section>\n  );\n}\n\nfunction Locations(){\n  const sc=()=>document.getElementById(\"properties\")?.scrollIntoView({behavior:\"smooth\"});\n  return(\n    <section id=\"locations\" style={{padding:\"80px 24px\",background:\"#F8F6F1\"}}>\n      <div style={{maxWidth:1280,margin:\"0 auto\"}}>\n        <SH tag=\"EXPLORE BY AREA\" title=\"Popular Locations\" sub=\"Discover premium properties across Hyderabad's fastest-growing neighbourhoods.\"/>\n        <div className=\"grid-loc\">\n          {LOC_CARDS.map((lc,i)=>(\n            <div key={i} className=\"loc-card\">\n              <img src={lc.img} alt={lc.name} loading=\"lazy\" className=\"loc-img\"/>\n              <div className=\"loc-overlay\"/>\n              <div style={{position:\"absolute\",bottom:0,left:0,right:0,padding:\"22px 20px\"}}>\n                <div className=\"ff\" style={{fontSize:24,fontWeight:700,color:\"#fff\",marginBottom:4}}>{lc.name}<\/div>\n                <div style={{color:\"#C8A96E\",fontSize:13,fontWeight:600,marginBottom:14}}>{lc.count} Properties<\/div>\n                <button onClick={sc} style={{background:\"transparent\",border:\"1.5px solid rgba(200,169,110,.7)\",color:\"#C8A96E\",padding:\"7px 17px\",borderRadius:20,fontSize:13,fontWeight:600,cursor:\"pointer\",display:\"flex\",alignItems:\"center\",gap:6,transition:\"all .2s\",fontFamily:\"'DM Sans',sans-serif\"}} onMouseEnter={e=>{e.currentTarget.style.background=\"#C8A96E\";e.currentTarget.style.color=\"#0D1B2A\";}} onMouseLeave={e=>{e.currentTarget.style.background=\"transparent\";e.currentTarget.style.color=\"#C8A96E\";}}>Explore <IcoArr size={14}/><\/button>\n              <\/div>\n            <\/div>\n          ))}\n        <\/div>\n      <\/div>\n    <\/section>\n  );\n}\n\nfunction Testi(){\n  return(\n    <section id=\"testimonials\" style={{padding:\"80px 24px\",background:\"#fff\"}}>\n      <div style={{maxWidth:1100,margin:\"0 auto\"}}>\n        <SH tag=\"CLIENT STORIES\" title=\"What Our Clients Say\"/>\n        <div className=\"grid-test\">\n          {TESTI.map((t,i)=>(\n            <div key={i} className=\"test-card\">\n              <div style={{display:\"flex\",gap:3,marginBottom:14}}>{Array.from({length:t.stars}).map((_,j)=><IcoStar key={j} size={15} fill=\"#C8A96E\" color=\"#C8A96E\"/>)}<\/div>\n              <p style={{color:\"#4B5563\",fontSize:14,lineHeight:1.78,fontStyle:\"italic\",marginBottom:20}}>\"{t.review}\"<\/p>\n              <div style={{display:\"flex\",alignItems:\"center\",gap:12}}>\n                <img src={t.img} alt={t.name} loading=\"lazy\" style={{width:48,height:48,borderRadius:\"50%\",objectFit:\"cover\",border:\"2px solid #C8A96E\"}}/>\n                <div><div style={{fontWeight:700,color:\"#0D1B2A\",fontSize:15}}>{t.name}<\/div><div style={{color:\"#C8A96E\",fontSize:12}}>{t.role}<\/div><\/div>\n              <\/div>\n            <\/div>\n          ))}\n        <\/div>\n      <\/div>\n    <\/section>\n  );\n}\n\nfunction Videos(){\n  const [av,sav]=useState(null);\n  return(\n    <section style={{padding:\"80px 24px\",background:\"#0D1B2A\"}}>\n      <div style={{maxWidth:1280,margin:\"0 auto\"}}>\n        <SH light tag=\"VIRTUAL TOURS\" title=\"Property Video Showcase\" sub=\"Explore our properties from the comfort of your home with immersive video walkthroughs.\"/>\n        <div className=\"grid-vid\">\n          {VIDS.map((v,i)=>(\n            <div key={i} className=\"vid-card\" onClick={()=>sav(v)}>\n              <img src={v.thumb} alt={v.title} loading=\"lazy\" style={{position:\"absolute\",top:0,left:0,width:\"100%\",height:\"100%\",objectFit:\"cover\"}}/>\n              <div className=\"vid-overlay\"/>\n              <div style={{position:\"absolute\",inset:0,display:\"flex\",alignItems:\"center\",justifyContent:\"center\"}}><div className=\"play-btn\"><IcoPlay size={26} fill=\"#fff\" color=\"#fff\"/><\/div><\/div>\n              <div style={{position:\"absolute\",bottom:0,left:0,right:0,padding:\"20px 20px\"}}>\n                <div className=\"ff\" style={{fontSize:20,fontWeight:700,color:\"#fff\",marginBottom:4}}>{v.title}<\/div>\n                <div style={{color:\"#C8A96E\",fontSize:13}}>{v.sub}<\/div>\n              <\/div>\n            <\/div>\n          ))}\n        <\/div>\n      <\/div>\n      {av&&<div className=\"modal-wrap\" onClick={()=>sav(null)}><div style={{background:\"#000\",borderRadius:16,maxWidth:860,width:\"100%\",position:\"relative\"}} onClick={e=>e.stopPropagation()}><button onClick={()=>sav(null)} style={{position:\"absolute\",top:-42,right:0,background:\"transparent\",border:\"none\",color:\"#fff\",cursor:\"pointer\",fontSize:14,display:\"flex\",alignItems:\"center\",gap:6,fontFamily:\"'DM Sans',sans-serif\"}}><IcoX size={18}/> Close<\/button><iframe src={av.url} title={av.title} allow=\"autoplay;encrypted-media\" style={{width:\"100%\",height:480,borderRadius:16,border:\"none\"}}/><\/div><\/div>}\n    <\/section>\n  );\n}\n\nfunction Lead(){\n  const [f,sf]=useState({name:\"\",phone:\"\",email:\"\",interested:\"Buy\",location:\"\",budget:\"\"});\n  const [done,sd]=useState(false);\n  const set=(k,v)=>sf(p=>({...p,[k]:v}));\n  const sub=()=>{if(!f.name||!f.phone){alert(\"Please fill in your name and phone number.\");return;}sd(true);};\n  const wa=encodeURIComponent(`Hi! I'm looking for a property to ${f.interested}${f.location?\" in \"+f.location:\"\"}. Budget: ${f.budget||\"flexible\"}.`);\n  return(\n    <section id=\"contact\" style={{padding:\"80px 24px\",background:\"#F8F6F1\"}}>\n      <div style={{maxWidth:1080,margin:\"0 auto\"}}>\n        <div className=\"grid-contact\">\n          <div>\n            <div className=\"section-tag\">GET IN TOUCH<\/div>\n            <h2 className=\"ff\" style={{fontSize:\"clamp(2rem,3.5vw,2.8rem)\",fontWeight:700,color:\"#0D1B2A\",marginBottom:16,lineHeight:1.22}}>Find Your Dream Home Today<\/h2>\n            <p style={{color:\"#6B7280\",fontSize:15,lineHeight:1.76,marginBottom:34}}>Share your requirements and our expert advisors will call you back within 2 hours. Free consultation, no obligations \u2014 ever.<\/p>\n            <div style={{display:\"flex\",flexDirection:\"column\",gap:16}}>\n              {[[<IcoPhone size={20}/>,\"Call Us\",\"+91 80199 92233\",\"tel:+918019992233\"],[<IcoMsg size={20}/>,\"WhatsApp\",\"Chat Instantly\",`https://wa.me/918019992233?text=${wa}`],[<IcoMail size={20}/>,\"Email\",\"homearcreality@gmail.com\",\"mailto:homearcreality@gmail.com\"],[<IcoPin size={20}/>,\"Office\",\"Kasas Kala Kunj, Praneeth Nature Bounty, Hyderabad\",\"#\"]].map(([ic,lb,vl,hr],i)=>(\n                <a key={i} href={hr} target={hr.startsWith(\"http\")?\"_blank\":\"_self\"} rel=\"noopener noreferrer\"\n                  style={{display:\"flex\",alignItems:\"center\",gap:14,textDecoration:\"none\",padding:\"14px 18px\",background:\"#fff\",borderRadius:12,border:\"1px solid #EDE9E0\",transition:\"all .2s\"}}\n                  onMouseEnter={e=>{e.currentTarget.style.borderColor=\"#C8A96E\";e.currentTarget.style.boxShadow=\"0 8px 20px rgba(200,169,110,.1)\";}}\n                  onMouseLeave={e=>{e.currentTarget.style.borderColor=\"#EDE9E0\";e.currentTarget.style.boxShadow=\"none\";}}>\n                  <div style={{width:44,height:44,borderRadius:10,background:\"rgba(200,169,110,.1)\",display:\"flex\",alignItems:\"center\",justifyContent:\"center\",color:\"#C8A96E\",flexShrink:0}}>{ic}<\/div>\n                  <div><div style={{color:\"#9CA3AF\",fontSize:12,fontWeight:600}}>{lb}<\/div><div style={{color:\"#0D1B2A\",fontWeight:700,fontSize:14}}>{vl}<\/div><\/div>\n                <\/a>\n              ))}\n            <\/div>\n          <\/div>\n          <div style={{background:\"#fff\",borderRadius:20,padding:\"34px 30px\",boxShadow:\"0 8px 40px rgba(13,27,42,.07)\",border:\"1px solid #EDE9E0\"}}>\n            {done?(\n              <div style={{textAlign:\"center\",padding:\"40px 0\"}}>\n                <div style={{fontSize:56,marginBottom:16}}>\ud83c\udf89<\/div>\n                <h3 className=\"ff\" style={{fontSize:26,fontWeight:700,color:\"#0D1B2A\",marginBottom:10}}>Thank You!<\/h3>\n                <p style={{color:\"#6B7280\",lineHeight:1.72}}>Our advisor will contact you within 2 hours.<\/p>\n                <a href={`https://wa.me/918019992233?text=${wa}`} target=\"_blank\" rel=\"noopener noreferrer\" className=\"btn-wa\" style={{display:\"inline-flex\",alignItems:\"center\",gap:8,marginTop:24,padding:\"13px 28px\",borderRadius:10,fontSize:15,textDecoration:\"none\"}}><IcoMsg size={18}/> Chat on WhatsApp<\/a>\n              <\/div>\n            ):(\n              <>\n                <h3 className=\"ff\" style={{fontSize:24,fontWeight:700,color:\"#0D1B2A\",marginBottom:22}}>Free Consultation Request<\/h3>\n                <div style={{display:\"flex\",flexDirection:\"column\",gap:14}}>\n                  <input className=\"finput\" placeholder=\"Full Name *\" value={f.name} onChange={e=>set(\"name\",e.target.value)}/>\n                  <input className=\"finput\" placeholder=\"Phone Number *\" type=\"tel\" value={f.phone} onChange={e=>set(\"phone\",e.target.value)}/>\n                  <input className=\"finput\" placeholder=\"Email Address\" type=\"email\" value={f.email} onChange={e=>set(\"email\",e.target.value)}/>\n                  <div>\n                    <label style={{fontSize:13,color:\"#6B7280\",fontWeight:600,display:\"block\",marginBottom:8}}>Interested In<\/label>\n                    <div style={{display:\"flex\",gap:10}}>\n                      {[\"Buy\",\"Rent\"].map(opt=><button key={opt} onClick={()=>set(\"interested\",opt)} style={{flex:1,padding:\"11px 0\",borderRadius:8,border:`1.5px solid ${f.interested===opt?\"#C8A96E\":\"#E8E4DC\"}`,background:f.interested===opt?\"rgba(200,169,110,.08)\":\"#fff\",color:f.interested===opt?\"#C8A96E\":\"#6B7280\",fontWeight:600,fontSize:14,cursor:\"pointer\",transition:\"all .2s\",fontFamily:\"'DM Sans',sans-serif\"}}>{opt}<\/button>)}\n                    <\/div>\n                  <\/div>\n                  <select className=\"finput\" style={{cursor:\"pointer\",appearance:\"none\"}} value={f.location} onChange={e=>set(\"location\",e.target.value)}><option value=\"\">Preferred Location<\/option>{LOCS.slice(1).map(l=><option key={l}>{l}<\/option>)}<\/select>\n                  <select className=\"finput\" style={{cursor:\"pointer\",appearance:\"none\"}} value={f.budget} onChange={e=>set(\"budget\",e.target.value)}><option value=\"\">Budget Range<\/option>{(f.interested===\"Buy\"?BB:BR).slice(1).map(b=><option key={b}>{b}<\/option>)}<\/select>\n                  <button className=\"btn-gold\" onClick={sub} style={{padding:\"14px 0\",borderRadius:10,fontSize:16,width:\"100%\",marginTop:2}}>Get Free Consultation<\/button>\n                  <div style={{display:\"flex\",gap:10}}>\n                    <a href={`https://wa.me/918019992233?text=${wa}`} target=\"_blank\" rel=\"noopener noreferrer\" className=\"btn-wa\" style={{flex:1,padding:\"12px 0\",borderRadius:10,fontSize:14,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:7,textDecoration:\"none\"}}><IcoMsg size={16}/> WhatsApp<\/a>\n                    <a href=\"tel:+918019992233\" className=\"btn-navy\" style={{flex:1,padding:\"12px 0\",borderRadius:10,fontSize:14,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:7,textDecoration:\"none\"}}><IcoPhone size={16}/> Call Us<\/a>\n                  <\/div>\n                <\/div>\n              <\/>\n            )}\n          <\/div>\n        <\/div>\n      <\/div>\n    <\/section>\n  );\n}\n\nfunction Footer(){\n  const y=new Date().getFullYear();\n  const hov=(e,on)=>{e.currentTarget.style.color=on?\"#C8A96E\":\"rgba(255,255,255,.58)\";};\n  return(\n    <footer className=\"footer-bg\" style={{padding:\"60px 24px 0\",color:\"rgba(255,255,255,.62)\",fontFamily:\"'DM Sans',sans-serif\"}}>\n      <div style={{maxWidth:1280,margin:\"0 auto\"}}>\n        <div className=\"grid-footer\" style={{marginBottom:48}}>\n          <div>\n            <div style={{display:\"flex\",alignItems:\"center\",gap:10,marginBottom:16}}>\n              <svg width=\"210\" height=\"54\" viewBox=\"0 0 210 54\" xmlns=\"http://www.w3.org/2000/svg\">\n                <defs><linearGradient id=\"footArc\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" stopColor=\"#C8A96E\"/><stop offset=\"100%\" stopColor=\"#E2C98A\"/><\/linearGradient><\/defs>\n                <path d=\"M6 44 Q28 6 50 44\" stroke=\"url(#footArc)\" strokeWidth=\"3.6\" fill=\"none\" strokeLinecap=\"round\"/>\n                <rect x=\"10\" y=\"44\" width=\"34\" height=\"21\" rx=\"2\" fill=\"none\" stroke=\"#C8A96E\" strokeWidth=\"2.2\"/>\n                <rect x=\"18\" y=\"53\" width=\"18\" height=\"12\" rx=\"1.5\" fill=\"#C8A96E\" opacity=\".65\"/>\n                <circle cx=\"28\" cy=\"3\" r=\"3\" fill=\"#D9BC82\"/>\n                <text x=\"62\" y=\"31\" fontFamily=\"Georgia,serif\" fontSize=\"24\" fontWeight=\"700\" fill=\"#ffffff\" letterSpacing=\"0.5\">HOMEARC<\/text>\n                <text x=\"62\" y=\"48\" fontFamily=\"Georgia,serif\" fontSize=\"14\" fill=\"#C8A96E\" letterSpacing=\"3.5\">REALITY<\/text>\n              <\/svg>\n            <\/div>\n            <p style={{fontSize:14,lineHeight:1.8,marginBottom:22,maxWidth:280}}>Trusted real estate experts near Mallampet, Bachupally &amp; Dundigal. We help families, investors &amp; professionals find homes they always dreamed of.<\/p>\n            <div style={{display:\"flex\",gap:10}}>\n              {[[<IcoFB size={17}/>,\"#\"],[<IcoIG size={17}/>,\"#\"],[<IcoTW size={17}/>,\"#\"],[<IcoYT size={17}/>,\"#\"]].map(([ic,hr],i)=>(\n                <a key={i} href={hr} target=\"_blank\" rel=\"noopener noreferrer\" style={{width:38,height:38,borderRadius:8,background:\"rgba(255,255,255,.08)\",display:\"flex\",alignItems:\"center\",justifyContent:\"center\",color:\"rgba(255,255,255,.7)\",textDecoration:\"none\",transition:\"all .2s\"}} onMouseEnter={e=>{e.currentTarget.style.background=\"#C8A96E\";e.currentTarget.style.color=\"#0D1B2A\";}} onMouseLeave={e=>{e.currentTarget.style.background=\"rgba(255,255,255,.08)\";e.currentTarget.style.color=\"rgba(255,255,255,.7)\";}}>{ic}<\/a>\n              ))}\n            <\/div>\n          <\/div>\n          <div>\n            <div style={{color:\"#fff\",fontWeight:700,fontSize:15,marginBottom:16}}>Quick Links<\/div>\n            {[\"Properties\",\"Apartments for Sale\",\"Villas for Sale\",\"Apartments for Rent\",\"Villas for Rent\",\"Contact Us\"].map(l=><a key={l} href=\"#\" style={{display:\"block\",color:\"rgba(255,255,255,.58)\",fontSize:14,marginBottom:10,textDecoration:\"none\",transition:\"color .2s\"}} onMouseEnter={e=>hov(e,true)} onMouseLeave={e=>hov(e,false)}>{l}<\/a>)}\n          <\/div>\n          <div>\n            <div style={{color:\"#fff\",fontWeight:700,fontSize:15,marginBottom:16}}>Top Locations<\/div>\n            {LOCS.slice(1,8).map(l=><a key={l} href=\"#\" style={{display:\"block\",color:\"rgba(255,255,255,.58)\",fontSize:14,marginBottom:10,textDecoration:\"none\",transition:\"color .2s\"}} onMouseEnter={e=>hov(e,true)} onMouseLeave={e=>hov(e,false)}>{l}<\/a>)}\n          <\/div>\n          <div>\n            <div style={{color:\"#fff\",fontWeight:700,fontSize:15,marginBottom:16}}>Contact Info<\/div>\n            {[[<IcoPin size={15}/>,\"Kasas Kala Kunj, Praneeth Nature Bounty, Near Mallampet ORR Exit 4A, Hyderabad \u2014 500043\"],[<IcoPhone size={15}/>,\" +91 80199 92233\"],[<IcoMail size={15}/>,\"homearcreality@gmail.com\"]].map(([ic,tx],i)=>(\n              <div key={i} style={{display:\"flex\",gap:10,marginBottom:14,alignItems:\"flex-start\"}}><span style={{color:\"#C8A96E\",marginTop:2,flexShrink:0}}>{ic}<\/span><span style={{fontSize:14,lineHeight:1.52}}>{tx}<\/span><\/div>\n            ))}\n            <div style={{marginTop:20,padding:\"12px 15px\",background:\"rgba(200,169,110,.09)\",borderRadius:10,border:\"1px solid rgba(200,169,110,.2)\"}}>\n              <div style={{color:\"#C8A96E\",fontSize:12,fontWeight:600,marginBottom:5}}>Office Hours<\/div>\n              <div style={{fontSize:13}}>Mon \u2013 Sat: 9:00 AM \u2013 7:00 PM<\/div>\n              <div style={{fontSize:13}}>Sunday: 10:00 AM \u2013 4:00 PM<\/div>\n            <\/div>\n          <\/div>\n        <\/div>\n        <div style={{borderTop:\"1px solid rgba(255,255,255,.08)\",padding:\"18px 0\",display:\"flex\",justifyContent:\"space-between\",alignItems:\"center\",flexWrap:\"wrap\",gap:12}}>\n          <div style={{fontSize:13}}>\u00a9 {y} Homearc Reality. All rights reserved.<\/div>\n          <div style={{display:\"flex\",gap:22}}>{[\"Privacy Policy\",\"Terms of Service\",\"Sitemap\"].map(l=><a key={l} href=\"#\" style={{color:\"rgba(255,255,255,.45)\",fontSize:13,textDecoration:\"none\"}}>{l}<\/a>)}<\/div>\n        <\/div>\n      <\/div>\n    <\/footer>\n  );\n}\n\nfunction App(){\n  const [filters,sf]=useState(null);\n  return(\n    <>\n      <Navbar/>\n      <main>\n        <Hero onFilter={sf}/>\n        <Featured filters={filters}/>\n        <WhyUs/>\n        <Locations/>\n        <Testi/>\n        <Videos/>\n        <Lead/>\n      <\/main>\n      <Footer/>\n      <a href=\"https://wa.me/918019992233?text=Hi! I found Homearc Reality online and I'm looking for a property. Can you help me?\" target=\"_blank\" rel=\"noopener noreferrer\" className=\"wa-float\" title=\"Chat on WhatsApp\">\n        <IcoMsg size={28} fill=\"#fff\" color=\"#fff\"/>\n      <\/a>\n    <\/>\n  );\n}\n\nReactDOM.createRoot(document.getElementById('root')).render(<App/>);\n<\/script>\n<\/body>\n<\/html>\n";
+
+/* ══════════════════════════════════════════
+   CONFIG
+══════════════════════════════════════════ */
+const ADMIN_PASSWORD_B64 = "SG9tZWFyY0AyMDI0"; /* Homearc@2024 */
+const STORE_KEY = 'homearc_admin_v1';
+const GH_KEY    = 'homearc_github_v1';
+const AMENITIES = ["Swimming Pool","Gymnasium","Clubhouse","24/7 Security","Power Backup","Covered Parking","Children's Play Area","Landscaped Gardens","Fully Furnished","Modular Kitchen","Smart Home","Home Theater","Private Pool","Terrace Garden","Servant Quarters","CCTV Security","EV Charging","Concierge","Pet-Friendly","High-Speed Internet","Solar Water Heater","Jogging Track","Jacuzzi","Rain Water Harvesting","Intercom","Lift / Elevator","Gas Pipeline","Vastu Compliant"];
+const LOCATIONS = ["Mallampet","Bachupally","Gagilapur","Dundigal","Rameshwaram Banda","Patancheru","Miyapur","Kukatpally","Hitech City","Gachibowli","Kondapur"];
+const N = 10;
+const FB = ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80','https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80'];
+const FV = 'https://www.youtube.com/embed/ScMzIvxBSi4';
+
+let props = [], idc = 1, saveTimer = null;
+
+/* ══════════════════════════════════════════
+   PASSWORD
+══════════════════════════════════════════ */
+/* password check uses btoa — no crypto.subtle needed */
+
+function doLogin(){
+  const pw = document.getElementById('pwInput').value;
+  if(btoa(unescape(encodeURIComponent(pw))) === ADMIN_PASSWORD_B64){
+    sessionStorage.setItem('ha_auth','1');
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    initAdmin();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+    document.getElementById('pwInput').value='';
+    document.getElementById('pwInput').focus();
+  }
+}
+
+function doLogout(){
+  sessionStorage.removeItem('ha_auth');
+  document.getElementById('adminPanel').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('pwInput').value='';
+}
+
+function checkAuth(){
+  if(sessionStorage.getItem('ha_auth')==='1'){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    initAdmin();
+  }
+}
+
+/* ══════════════════════════════════════════
+   GITHUB SETTINGS
+══════════════════════════════════════════ */
+function saveGhSettings(){
+  const s={ user:document.getElementById('ghUser').value, repo:document.getElementById('ghRepo').value, token:document.getElementById('ghToken').value, branch:document.getElementById('ghBranch').value||'main', file:document.getElementById('ghFile').value||'index.html' };
+  localStorage.setItem(GH_KEY, JSON.stringify(s));
+  updateGhStatus();
+}
+
+function loadGhSettings(){
+  try{
+    const s=JSON.parse(localStorage.getItem(GH_KEY)||'{}');
+    if(s.user)  document.getElementById('ghUser').value=s.user;
+    if(s.repo)  document.getElementById('ghRepo').value=s.repo;
+    if(s.token) document.getElementById('ghToken').value=s.token;
+    if(s.branch)document.getElementById('ghBranch').value=s.branch;
+    if(s.file)  document.getElementById('ghFile').value=s.file;
+    updateGhStatus();
+    if(s.user && s.repo && s.token) collapseGhCard();
+  }catch(e){}
+}
+
+function getGhSettings(){
+  try{ return JSON.parse(localStorage.getItem(GH_KEY)||'{}'); }catch(e){ return {}; }
+}
+
+function updateGhStatus(){
+  const s=getGhSettings();
+  const ok = s.user && s.repo && s.token;
+  const st=document.getElementById('ghStatus');
+  const badge=document.getElementById('ghConfigBadge');
+  st.className='gh-status '+(ok?'ok':'');
+  badge.textContent = ok ? '— connected ✓' : '— configure once to enable publishing';
+  badge.style.color = ok ? '#16a34a' : '#9CA3AF';
+}
+
+function toggleGhCard(){
+  const b=document.getElementById('ghBody'), c=document.getElementById('ghChev');
+  const open=b.classList.contains('open');
+  b.classList.toggle('open',!open);
+  c.style.transform=open?'':'rotate(180deg)';
+}
+function collapseGhCard(){
+  document.getElementById('ghBody').classList.remove('open');
+  document.getElementById('ghChev').style.transform='';
+}
+
+async function testGitHub(){
+  const s=getGhSettings();
+  const res=document.getElementById('ghTestResult');
+  res.style.display='block';
+  res.style.background='#EFF6FF';res.style.border='1px solid #BFDBFE';res.style.color='#1e40af';
+  res.textContent='Testing connection...';
+  try{
+    const r=await fetch(`https://api.github.com/repos/${s.user}/${s.repo}`,{headers:{Authorization:'Bearer '+s.token,'Accept':'application/vnd.github.v3+json'}});
+    const d=await r.json();
+    if(r.ok){
+      res.style.background='#F0FDF4';res.style.border='1px solid #BBF7D0';res.style.color='#15803D';
+      res.textContent='✅ Connected to '+d.full_name+' — ready to publish!';
+      updateGhStatus();
+      setTimeout(collapseGhCard,1500);
+    } else {
+      res.style.background='#FEF2F2';res.style.border='1px solid #FECACA';res.style.color='#dc2626';
+      res.textContent='❌ Error: '+(d.message||'Check your username, repo name and token.');
+    }
+  }catch(e){
+    res.style.background='#FEF2F2';res.style.border='1px solid #FECACA';res.style.color='#dc2626';
+    res.textContent='❌ Network error. Check your internet connection.';
+  }
+}
+
+/* ══════════════════════════════════════════
+   LOAD FROM GITHUB
+══════════════════════════════════════════ */
+async function loadFromGitHub(){
+  const s=getGhSettings();
+  if(!s.user||!s.repo||!s.token){ showToast('⚙️ Configure GitHub settings first'); toggleGhCard(); return; }
+  const btn=document.getElementById('loadBtn');
+  btn.textContent='⏳ Loading...'; btn.disabled=true;
+  try{
+    const url=`https://raw.githubusercontent.com/${s.user}/${s.repo}/${s.branch||'main'}/${s.file||'index.html'}?t=${Date.now()}`;
+    const r=await fetch(url);
+    if(!r.ok) throw new Error('File not found in repo. Make sure index.html is uploaded.');
+    const html=await r.text();
+    const ps=html.indexOf('const PROPS=[');
+    if(ps===-1) throw new Error('Could not find property listings in the file.');
+    const pe=html.indexOf('];',ps)+2;
+    const propsJs=html.substring(ps,pe).replace('const PROPS=','').replace(/;$/,'');
+    const loaded = new Function('return '+propsJs)();
+    if(!Array.isArray(loaded)) throw new Error('Could not parse listings from file.');
+
+    // Convert loaded props to editor format
+    props=loaded.map((p,i)=>{
+      const ep=blank(idc++);
+      Object.assign(ep,{id:p.id,title:p.title||'',type:p.type||'Apartment',listing:p.listing||'Buy',price:p.price||'',location:p.location||'Mallampet',bedrooms:String(p.bedrooms||2),bathrooms:String(p.bathrooms||2),area:String(p.area||''),furnished:p.furnished||'Semi Furnished',desc:p.desc||'',amen:p.amen||[],videoUrl:p.video||'',mapUrl:p.mapUrl||'',wp:p.wp||'918019992233',schools:(p.nearby&&p.nearby.schools)||[],hospitals:(p.nearby&&p.nearby.hospitals)||[]});
+      if(p.imgs) p.imgs.forEach((img,j)=>{ if(j<N) ep['img'+(j+1)]=img; });
+      return ep;
+    });
+    renderList();
+    scheduleSave();
+    showToast('✅ '+loaded.length+' listings loaded from GitHub!');
+  }catch(e){
+    showToast('❌ '+e.message);
+  }
+  btn.textContent='⬇ Load from GitHub'; btn.disabled=false;
+}
+
+/* ══════════════════════════════════════════
+   PUBLISH TO GITHUB
+══════════════════════════════════════════ */
+async function publishToGitHub(){
+  const s=getGhSettings();
+  if(!s.user||!s.repo||!s.token){ showToast('⚙️ Configure GitHub settings first'); toggleGhCard(); return; }
+  if(!props.length){ showToast('Add at least one property first.'); return; }
+
+  // Show overlay
+  const ov=document.getElementById('pubOverlay');
+  ov.classList.add('on');
+  setStep(1,'active');setStep(2,'');setStep(3,'');setStep(4,'');
+  document.getElementById('pubCountdown').style.display='none';
+  document.getElementById('pubError').style.display='none';
+  document.getElementById('pubTitle').textContent='Publishing...';
+  document.getElementById('pubMsg').textContent='Pushing your listings to GitHub. Netlify will auto-deploy in ~30 seconds.';
+  document.getElementById('pubEmoji').textContent='🚀';
+  document.getElementById('pubSteps').style.display='block';
+
+  try{
+    // Step 1: Build HTML
+    setStep(1,'active');
+    const html=buildHtml();
+    setStep(1,'done');
+
+    // Step 2: Get current SHA
+    setStep(2,'active');
+    const shaRes=await fetch(`https://api.github.com/repos/${s.user}/${s.repo}/contents/${s.file||'index.html'}`,{headers:{Authorization:'Bearer '+s.token,'Accept':'application/vnd.github.v3+json'}});
+    let sha=null;
+    if(shaRes.ok){ const d=await shaRes.json(); sha=d.sha; }
+    setStep(2,'done');
+
+    // Step 3: Upload
+    setStep(3,'active');
+    const b64=btoa(unescape(encodeURIComponent(html)));
+    const body={message:'Update property listings — '+new Date().toLocaleString('en-IN'),content:b64,branch:s.branch||'main'};
+    if(sha) body.sha=sha;
+    const upRes=await fetch(`https://api.github.com/repos/${s.user}/${s.repo}/contents/${s.file||'index.html'}`,{method:'PUT',headers:{Authorization:'Bearer '+s.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!upRes.ok){ const err=await upRes.json(); throw new Error(err.message||'Upload failed'); }
+    setStep(3,'done');
+
+    // Step 4: Countdown
+    setStep(4,'active');
+    document.getElementById('pubSteps').style.display='none';
+    document.getElementById('pubTitle').textContent='Published! 🎉';
+    document.getElementById('pubMsg').textContent='Netlify is deploying your site...';
+    document.getElementById('pubEmoji').textContent='✅';
+    document.getElementById('pubCountdown').style.display='block';
+    setStep(4,'done');
+
+    let t=35;
+    const ct=setInterval(()=>{
+      t--;
+      document.getElementById('countNum').textContent=t;
+      if(t<=0){ clearInterval(ct); document.getElementById('countNum').textContent='Live!'; }
+    },1000);
+
+  }catch(e){
+    document.getElementById('pubSteps').style.display='none';
+    document.getElementById('pubError').style.display='block';
+    document.getElementById('pubErrMsg').textContent='❌ '+e.message+' — Check your GitHub token has repo write access.';
+    document.getElementById('pubTitle').textContent='Publish failed';
+    document.getElementById('pubEmoji').textContent='⚠️';
+  }
+}
+
+function setStep(n,state){
+  const el=document.getElementById('ps'+n);
+  if(!el) return;
+  const icons={active:'<span class="pub-spin">⏳</span>',done:'✅',error:'❌','':{1:'⏳',2:'⏳',3:'⏳',4:'⏳'}['']};
+  const labels={1:'Building website file',2:'Connecting to GitHub',3:'Uploading to repository',4:'Netlify deploying...'};
+  el.className='pub-step'+(state?' '+state:'');
+  el.innerHTML='<span class="pub-icon">'+(state==='active'?'<span class="pub-spin">⟳</span>':state==='done'?'✅':state==='error'?'❌':'⏳')+'</span> '+labels[n];
+}
+
+function closePubOverlay(){
+  document.getElementById('pubOverlay').classList.remove('on');
+}
+
+/* ══════════════════════════════════════════
+   BUILD HTML
+══════════════════════════════════════════ */
+function esc(s){
+  if(Array.isArray(s)) return s;
+  s=s||'';
+  s=s.split('\\').join('\\\\');
+  s=s.split('"').join('\\"');
+  s=s.split('`').join('\\`');
+  s=s.split('$').join('\\$');
+  s=s.split('\n').join('\\n');
+  s=s.split('\r').join('');
+  return s;
+}
+function toEmbedUrl(raw){
+  if(!raw) return '';
+  raw=raw.trim();
+  if(raw.includes('youtube.com/embed/')) return raw;
+  let id='', m;
+  m=raw.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,15})/); if(m) id=m[1];
+  if(!id){m=raw.match(/youtu\.be\/([a-zA-Z0-9_-]{6,15})/); if(m) id=m[1];}
+  if(!id){m=raw.match(/[?&]v=([a-zA-Z0-9_-]{6,15})/); if(m) id=m[1];}
+  return id?'https://www.youtube.com/embed/'+id:raw;
+}
+
+function buildHtml(){
+  let code='const PROPS=[\n';
+  props.forEach((p,idx)=>{
+    const imgs=[];
+    for(let i=1;i<=N;i++){if(p['img'+i]) imgs.push(p['img'+i]);}
+    if(!imgs.length) imgs.push(...FB);
+    else if(imgs.length===1){imgs.push(FB[1]);imgs.push(FB[2]);}
+    else if(imgs.length===2) imgs.push(FB[2]);
+    const vid=toEmbedUrl(p.videoUrl)||FV;
+    const map=p.mapUrl||`https://maps.google.com/?q=${encodeURIComponent(p.location+', Hyderabad')}`;
+    const amen=p.amen.length?p.amen:['Covered Parking','Power Backup','24/7 Security'];
+    const sch=Array.isArray(p.schools)&&p.schools.length?p.schools:['Nearby School'];
+    const hos=Array.isArray(p.hospitals)&&p.hospitals.length?p.hospitals:['Nearby Hospital'];
+    code+=`  {id:${idx+1},title:"${esc(p.title)||'Property '+(idx+1)}",type:"${p.type}",listing:"${p.listing}",price:"${esc(p.price)||'Price on Request'}",location:"${p.location}",bedrooms:${p.bedrooms||2},bathrooms:${p.bathrooms||2},area:${p.area||1000},furnished:"${p.furnished}",\n`;
+    code+=`   desc:"${esc(p.desc)||'A property in '+p.location+', Hyderabad.'}",\n`;
+    code+=`   amen:[${amen.map(a=>`"${esc(a)}"`).join(',')}],\n`;
+    code+=`   imgs:[${imgs.map(u=>`"${u.startsWith('data:')?u:esc(u)}"`).join(',')}],\n`;
+    code+=`   video:"${esc(vid)}",mapUrl:"${esc(map)}",\n`;
+    code+=`   nearby:{schools:[${sch.map(s=>`"${esc(s)}"`).join(',')}],hospitals:[${hos.map(h=>`"${esc(h)}"`).join(',')}]},wp:"${p.wp||'918019992233'}"},\n`;
+  });
+  code+='];';
+  return SITE_BEFORE + code + SITE_AFTER;
+}
+
+/* ══════════════════════════════════════════
+   EDITOR CORE
+══════════════════════════════════════════ */
+function blank(id){
+  const p={_id:id,id,title:'',type:'Apartment',listing:'Buy',price:'',location:'Mallampet',bedrooms:'2',bathrooms:'2',area:'',furnished:'Semi Furnished',desc:'',amen:[],videoUrl:'',mapUrl:'',wp:'918019992233',schools:[],hospitals:[]};
+  for(let i=1;i<=N;i++) p['img'+i]='';
+  return p;
+}
+
+function markSaving(){
+  const p=document.getElementById('savePill'),t=document.getElementById('saveText');
+  if(p){p.className='save-pill saving';t.textContent='Saving...';}
+}
+function markSaved(){
+  const p=document.getElementById('savePill'),t=document.getElementById('saveText');
+  if(p){p.className='save-pill saved';t.textContent='All changes saved';}
+}
+function scheduleSave(){
+  markSaving(); clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    try{ localStorage.setItem(STORE_KEY,JSON.stringify({props,idc})); markSaved(); }
+    catch(e){ markSaved(); }
+  },800);
+}
+
+function showToast(msg,dur=3000){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+function addProperty(data){
+  const id=idc++;
+  const p=Object.assign(blank(id),data||{},{_id:id});
+  props.push(p);
+  renderList();
+  scheduleSave();
+  setTimeout(()=>toggleBody(id),60);
+}
+
+function removeProperty(id){
+  if(!confirm('Remove this property?')) return;
+  props=props.filter(p=>p._id!==id);
+  renderList(); scheduleSave();
+  showToast('🗑 Property removed');
+}
+
+function dupProperty(id){
+  const p=props.find(p=>p._id===id); if(!p) return;
+  const c=JSON.parse(JSON.stringify(p));
+  c.title=(c.title||'Property')+' (Copy)';
+  addProperty(c); showToast('⧉ Property duplicated');
+}
+
+function toggleBody(id){
+  const b=document.getElementById('body_'+id),v=document.getElementById('chev_'+id);
+  if(!b) return;
+  const was=b.classList.contains('open');
+  document.querySelectorAll('.prop-body').forEach(x=>x.classList.remove('open'));
+  document.querySelectorAll('.chevron').forEach(x=>x.style.transform='');
+  if(!was){b.classList.add('open');v.style.transform='rotate(180deg)';}
+}
+
+function up(id,field,val){
+  const p=props.find(p=>p._id===id); if(!p) return;
+  p[field]=val;
+  const ne=document.getElementById('pname_'+id), me=document.getElementById('pmeta_'+id), te=document.getElementById('ptag_'+id);
+  if(ne) ne.textContent=p.title||'Untitled Property';
+  if(me) me.textContent=[p.type,p.location,p.bedrooms?p.bedrooms+' BHK':''].filter(Boolean).join(' · ');
+  if(te){te.textContent=p.listing==='Buy'?'For Sale':'For Rent';te.className='tag '+(p.listing==='Buy'?'tag-buy':'tag-rent');}
+  scheduleSave();
+}
+
+function upList(id,field,val){ up(id,field,val.split(',').map(s=>s.trim()).filter(Boolean)); }
+
+function upVideo(id,val){
+  const converted=toEmbedUrl(val);
+  const p=props.find(p=>p._id===id); if(p) p.videoUrl=converted;
+  if(converted&&converted!==val){
+    const inp=document.getElementById('vid_'+id); if(inp) inp.value=converted;
+    showToast('✅ YouTube link converted!');
+  }
+  scheduleSave();
+}
+
+function upMap(id,val){
+  const p=props.find(p=>p._id===id); if(p) p.mapUrl=val;
+  const bar=document.getElementById('mapbar_'+id), lnk=document.getElementById('maplnk_'+id), txt=document.getElementById('maptxt_'+id);
+  if(!bar) return;
+  if(val.trim()){if(lnk) lnk.href=val; if(txt) txt.textContent=val.length>52?val.substring(0,52)+'...':val; bar.classList.add('on');}
+  else bar.classList.remove('on');
+  scheduleSave();
+}
+
+function autoMap(id){
+  const p=props.find(p=>p._id===id); if(!p) return;
+  const url=`https://maps.google.com/?q=${encodeURIComponent(p.location+', Hyderabad')}`;
+  const inp=document.getElementById(id+'_mapUrl'); if(inp){inp.value=url;upMap(id,url);}
+  showToast('📍 Map link auto-filled!');
+}
+
+function togAmen(pid,a){
+  const p=props.find(p=>p._id===pid); if(!p) return;
+  const i=p.amen.indexOf(a);
+  if(i>-1) p.amen.splice(i,1); else p.amen.push(a);
+  const chip=document.getElementById('chip_'+pid+'_'+a.replace(/[^a-z0-9]/gi,''));
+  if(chip) chip.classList.toggle('on');
+  scheduleSave();
+}
+
+/* ── IMAGE UPLOAD ── */
+async function compressImage(file,maxW=900,maxH=700,q=0.78){
+  return new Promise((res,rej)=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+        if(h>maxH){w=Math.round(w*maxH/h);h=maxH;}
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg',q));
+      };
+      img.onerror=rej; img.src=e.target.result;
+    };
+    reader.onerror=rej; reader.readAsDataURL(file);
+  });
+}
+
+async function handleImageUpload(id,num,input){
+  const file=input.files[0]; if(!file) return;
+  if(!file.type.startsWith('image/')){showToast('⚠️ Please select an image file');return;}
+  const prog=document.getElementById('prog_'+id+'_'+num);
+  if(prog){prog.style.display='block';prog.style.width='40%';}
+  try{
+    const b64=await compressImage(file);
+    if(prog) prog.style.width='100%';
+    const p=props.find(p=>p._id===id); if(p) p['img'+num]=b64;
+    renderImgSlot(id,num,b64);
+    scheduleSave();
+    showToast('✅ Photo '+num+' uploaded!');
+  }catch(e){ showToast('❌ Upload failed — try again'); }
+  setTimeout(()=>{if(prog){prog.style.display='none';prog.style.width='0';}},600);
+}
+
+function removeImg(id,num){
+  const p=props.find(p=>p._id===id); if(p) p['img'+num]='';
+  renderImgSlot(id,num,''); scheduleSave();
+}
+
+function renderImgSlot(id,num,src){
+  const slot=document.getElementById('slot_'+id+'_'+num); if(!slot) return;
+  const isMain=num===1;
+  if(src){
+    slot.innerHTML=`<div class="img-slot-hdr"><span class="img-slot-num">PHOTO ${num}</span>${isMain?'<span class="main-badge">MAIN</span>':''}</div><div class="img-preview-wrap"><img class="img-preview" src="${src}" alt="Photo ${num}"/><button class="img-remove" onclick="removeImg(${id},${num})" title="Remove">✕</button></div>`;
+  } else {
+    slot.innerHTML=`<div class="img-slot-hdr"><span class="img-slot-num">PHOTO ${num}</span>${isMain?'<span class="main-badge">MAIN</span>':''}</div><div class="upload-zone" onclick="document.getElementById('fi_${id}_${num}').click()"><input type="file" id="fi_${id}_${num}" accept="image/*" style="display:none" onchange="handleImageUpload(${id},${num},this)"/><div class="uz-icon">📷</div><div class="uz-txt"><strong>Tap to upload</strong>from phone or computer</div></div><div class="img-progress" id="prog_${id}_${num}"></div>`;
+  }
+}
+
+/* ── RENDER ── */
+function renderList(){
+  const list=document.getElementById('propList'), badge=document.getElementById('countBadge');
+  badge.textContent=props.length+' Propert'+(props.length===1?'y':'ies');
+  if(!props.length){
+    list.innerHTML=`<div style="text-align:center;padding:60px 20px;background:#fff;border-radius:14px;border:2px dashed #DDD9D0;color:#9CA3AF"><div style="font-size:48px;margin-bottom:12px">🏠</div><div style="font-size:16px;font-weight:600;margin-bottom:6px">No properties yet</div><div style="font-size:13px">Click "+ Add New Property" to get started</div></div>`;
+    return;
+  }
+  list.innerHTML=props.map((p,idx)=>`
+  <div class="prop-item" id="item_${p._id}">
+    <div class="prop-hdr" onclick="toggleBody(${p._id})">
+      <div class="prop-tr"><div class="pnum">${idx+1}</div><div><div class="pname" id="pname_${p._id}">${p.title||'Untitled Property'}</div><div class="pmeta" id="pmeta_${p._id}">${[p.type,p.location,p.bedrooms?p.bedrooms+' BHK':''].filter(Boolean).join(' · ')}</div></div></div>
+      <div style="display:flex;align-items:center;gap:9px"><span class="tag ${p.listing==='Buy'?'tag-buy':'tag-rent'}" id="ptag_${p._id}">${p.listing==='Buy'?'For Sale':'For Rent'}</span><span class="chevron" id="chev_${p._id}">▾</span></div>
+    </div>
+    <div class="prop-body" id="body_${p._id}">
+      <div class="sl">🏠 Basic Details</div>
+      <div class="fg">
+        <div class="field" style="grid-column:1/-1"><label>Property Title</label><input value="${esc(p.title)}" placeholder="e.g. Sunrise Heights — 3BHK Apartment" oninput="up(${p._id},'title',this.value)"/></div>
+        <div class="field"><label>Type</label><select onchange="up(${p._id},'type',this.value)">${['Apartment','Villa','Gated Community'].map(t=>`<option ${p.type===t?'selected':''}>${t}</option>`).join('')}</select></div>
+        <div class="field"><label>Listing</label><select onchange="up(${p._id},'listing',this.value)"><option ${p.listing==='Buy'?'selected':''}>Buy</option><option ${p.listing==='Rent'?'selected':''}>Rent</option></select></div>
+        <div class="field"><label>Price</label><input value="${esc(p.price)}" placeholder="₹85 Lakhs or ₹20,000/mo" oninput="up(${p._id},'price',this.value)"/></div>
+        <div class="field"><label>Location</label><select onchange="up(${p._id},'location',this.value)">${LOCATIONS.map(l=>`<option ${p.location===l?'selected':''}>${l}</option>`).join('')}</select></div>
+        <div class="field"><label>Bedrooms</label><select onchange="up(${p._id},'bedrooms',this.value)">${['1','2','3','4','5','6'].map(n=>`<option ${p.bedrooms==n?'selected':''}>${n} BHK</option>`).join('')}</select></div>
+        <div class="field"><label>Bathrooms</label><select onchange="up(${p._id},'bathrooms',this.value)">${['1','2','3','4','5','6'].map(n=>`<option ${p.bathrooms==n?'selected':''}>${n}</option>`).join('')}</select></div>
+        <div class="field"><label>Area (sqft)</label><input value="${p.area}" placeholder="1450" type="number" oninput="up(${p._id},'area',this.value)"/></div>
+        <div class="field"><label>Furnishing</label><select onchange="up(${p._id},'furnished',this.value)">${['Furnished','Semi Furnished','Unfurnished'].map(f=>`<option ${p.furnished===f?'selected':''}>${f}</option>`).join('')}</select></div>
+      </div>
+      <div class="sl">📝 Description</div>
+      <textarea placeholder="Describe the property..." oninput="up(${p._id},'desc',this.value)" style="margin-top:4px">${esc(p.desc)}</textarea>
+      <div class="sl">📸 Photos <span class="sl-badge">UP TO 10</span></div>
+      <div class="img-grid" id="imgGrid_${p._id}">
+        ${Array.from({length:N},(_,i)=>{const n=i+1,v=p['img'+n]||'',isMain=n===1;
+          if(v) return `<div class="img-slot" id="slot_${p._id}_${n}"><div class="img-slot-hdr"><span class="img-slot-num">PHOTO ${n}</span>${isMain?'<span class="main-badge">MAIN</span>':''}</div><div class="img-preview-wrap"><img class="img-preview" src="${v}"/><button class="img-remove" onclick="removeImg(${p._id},${n})">✕</button></div></div>`;
+          return `<div class="img-slot" id="slot_${p._id}_${n}"><div class="img-slot-hdr"><span class="img-slot-num">PHOTO ${n}</span>${isMain?'<span class="main-badge">MAIN</span>':''}</div><div class="upload-zone" onclick="document.getElementById('fi_${p._id}_${n}').click()"><input type="file" id="fi_${p._id}_${n}" accept="image/*" style="display:none" onchange="handleImageUpload(${p._id},${n},this)"/><div class="uz-icon">📷</div><div class="uz-txt"><strong>Tap to upload</strong>phone or computer</div></div><div class="img-progress" id="prog_${p._id}_${n}"></div></div>`;
+        }).join('')}
+      </div>
+      <div class="sl">🎬 Video</div>
+      <div class="field" style="margin-top:4px"><label>YouTube / Shorts link — auto converted</label><input id="vid_${p._id}" value="${esc(p.videoUrl)}" placeholder="Paste any YouTube link..." oninput="upVideo(${p._id},this.value)"/></div>
+      <div class="sl">📍 Location Link</div>
+      <div class="field" style="margin-top:4px">
+        <label>Google Maps link</label>
+        <div style="display:flex;gap:8px"><input id="${p._id}_mapUrl" value="${esc(p.mapUrl)}" placeholder="https://maps.google.com/?q=..." style="flex:1" oninput="upMap(${p._id},this.value)"/><button class="btn-sm" onclick="autoMap(${p._id})">⚡ Auto</button></div>
+      </div>
+      <div class="map-bar ${p.mapUrl?'on':''}" id="mapbar_${p._id}"><a href="${p.mapUrl||'#'}" id="maplnk_${p._id}" target="_blank"><div class="map-icon">📍</div><span id="maptxt_${p._id}" style="font-size:12px;color:#374151;flex:1">${p.mapUrl?(p.mapUrl.length>52?p.mapUrl.substring(0,52)+'...':p.mapUrl):''}</span><span style="font-size:11px;color:#9CA3AF">Open ↗</span></a></div>
+      <div class="sl">✅ Amenities <span class="sl-badge">CLICK TO SELECT</span></div>
+      <div class="amen-grid">${AMENITIES.map(a=>{const k=a.replace(/[^a-z0-9]/gi,''),on=p.amen.includes(a)?'on':'';return `<div class="chip ${on}" id="chip_${p._id}_${k}" onclick="togAmen(${p._id},'${a}')"><span class="dot"></span>${a}</div>`;}).join('')}</div>
+      <div class="sl">📞 Contact & Nearby</div>
+      <div class="fg" style="margin-top:4px">
+        <div class="field"><label>WhatsApp Number</label><input value="${p.wp}" placeholder="918019992233" oninput="up(${p._id},'wp',this.value)"/></div>
+        <div class="field"><label>Nearby Schools <small style="font-weight:400;text-transform:none;color:#9CA3AF">(comma separated)</small></label><input value="${(p.schools||[]).join(', ')}" placeholder="DAV School, St. Mary's" oninput="upList(${p._id},'schools',this.value)"/></div>
+        <div class="field"><label>Nearby Hospitals <small style="font-weight:400;text-transform:none;color:#9CA3AF">(comma separated)</small></label><input value="${(p.hospitals||[]).join(', ')}" placeholder="Apollo, Care Hospital" oninput="upList(${p._id},'hospitals',this.value)"/></div>
+      </div>
+      <div class="prop-actions"><button class="btn btn-red" onclick="removeProperty(${p._id})">🗑 Remove</button><button class="btn-sm" onclick="dupProperty(${p._id})">⧉ Duplicate</button></div>
+    </div>
+  </div>`).join('');
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+function initAdmin(){
+  loadGhSettings();
+  try{
+    const d=JSON.parse(localStorage.getItem(STORE_KEY)||'{}');
+    if(d.props&&d.props.length){ props=d.props; idc=d.idc||props.length+1; renderList(); markSaved(); return; }
+  }catch(e){}
+  markSaved();
+  renderList();
+}
+
+checkAuth();
+</script>
+</body>
+</html>
