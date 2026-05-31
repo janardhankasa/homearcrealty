@@ -529,15 +529,7 @@ async function publishToGitHub(){
 
     // Step 3: Upload
     setStep(3,'active');
-    // Chunked base64 encoder — handles large files reliably
-    const bytes = new TextEncoder().encode(html);
-    let binary = '';
-    const chunkSize = 8192;
-    for(let i=0; i<bytes.length; i+=chunkSize){
-      const chunk = bytes.subarray(i, i+chunkSize);
-      binary += String.fromCharCode(...chunk);
-    }
-    const b64 = btoa(binary);
+    const b64 = btoa(unescape(encodeURIComponent(html)));
     const body={message:'Update property listings — '+new Date().toLocaleString('en-IN'),content:b64,branch:s.branch||'main'};
     if(sha) body.sha=sha;
     const upRes=await fetch(`https://api.github.com/repos/${s.user}/${s.repo}/contents/${s.file||'index.html'}`,{method:'PUT',headers:{Authorization:'Bearer '+s.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
@@ -586,15 +578,8 @@ function closePubOverlay(){
    BUILD HTML
 ══════════════════════════════════════════ */
 function esc(s){
-  if(Array.isArray(s)) return s;
-  s=s||'';
-  s=s.split('\\').join('\\\\');
-  s=s.split('"').join('\\"');
-  s=s.split('`').join('\\`');
-  s=s.split('$').join('\\$');
-  s=s.split('\n').join('\\n');
-  s=s.split('\r').join('');
-  return s;
+  if(!s||Array.isArray(s)) return s||'';
+  return String(s).replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\r?\n/g,' ');
 }
 function toEmbedUrl(raw){
   if(!raw) return '';
@@ -609,26 +594,34 @@ function toEmbedUrl(raw){
 
 function buildHtml(){
   let code='const PROPS=[\n';
-  props.forEach((p,idx)=>{
+  props.forEach(function(p,idx){
     const imgs=[];
     for(let i=1;i<=N;i++){if(p['img'+i]) imgs.push(p['img'+i]);}
-    if(!imgs.length) imgs.push(...FB);
-    else if(imgs.length===1){imgs.push(FB[1]);imgs.push(FB[2]);}
+    if(!imgs.length) imgs.push(FB[0],FB[1],FB[2]);
+    else if(imgs.length===1){imgs.push(FB[1],FB[2]);}
     else if(imgs.length===2) imgs.push(FB[2]);
     const vid=toEmbedUrl(p.videoUrl)||FV;
-    const map=p.mapUrl||`https://maps.google.com/?q=${encodeURIComponent(p.location+', Hyderabad')}`;
+    const map=p.mapUrl||('https://maps.google.com/?q='+encodeURIComponent(p.location+', Hyderabad'));
     const amen=p.amen.length?p.amen:['Covered Parking','Power Backup','24/7 Security'];
     const sch=Array.isArray(p.schools)&&p.schools.length?p.schools:['Nearby School'];
     const hos=Array.isArray(p.hospitals)&&p.hospitals.length?p.hospitals:['Nearby Hospital'];
-    code+=`  {id:${idx+1},title:"${esc(p.title)||'Property '+(idx+1)}",type:"${p.type}",listing:"${p.listing}",price:"${esc(p.price)||'Price on Request'}",location:"${p.location}",bedrooms:${p.bedrooms||2},bathrooms:${p.bathrooms||2},area:${p.area||1000},furnished:"${p.furnished}",\n`;
-    code+=`   desc:"${esc(p.desc)||'A property in '+p.location+', Hyderabad.'}",\n`;
-    code+=`   amen:[${amen.map(a=>`"${esc(a)}"`).join(',')}],\n`;
-    code+=`   imgs:[${imgs.map(u=>`"${u.startsWith('data:')?u:esc(u)}"`).join(',')}],\n`;
-    code+=`   video:"${esc(vid)}",mapUrl:"${esc(map)}",\n`;
-    code+=`   nearby:{schools:[${sch.map(s=>`"${esc(s)}"`).join(',')}],hospitals:[${hos.map(h=>`"${esc(h)}"`).join(',')}]},wp:"${p.wp||'918019992233'}"},\n`;
+    code+='  {id:'+(idx+1)+',';
+    code+='title:"'+esc(p.title||'Property '+(idx+1))+'",';
+    code+='type:"'+p.type+'",listing:"'+p.listing+'",';
+    code+='price:"'+esc(p.price||'Price on Request')+'",';
+    code+='location:"'+p.location+'",';
+    code+='bedrooms:'+(p.bedrooms||2)+',bathrooms:'+(p.bathrooms||2)+',';
+    code+='area:'+(p.area||1000)+',furnished:"'+p.furnished+'",\n';
+    code+='   desc:"'+esc(p.desc||'A property in '+p.location+', Hyderabad.')+'",\n';
+    code+='   amen:['+amen.map(function(a){return '"'+esc(a)+'"';}).join(',')+'],\n';
+    code+='   imgs:['+imgs.map(function(u){return '"'+esc(u)+'"';}).join(',')+'],\n';
+    code+='   video:"'+esc(vid)+'",mapUrl:"'+esc(map)+'",\n';
+    code+='   nearby:{schools:['+sch.map(function(s){return '"'+esc(s)+'"';}).join(',')+'],';
+    code+='hospitals:['+hos.map(function(h){return '"'+esc(h)+'"';}).join(',')+']},';
+    code+='wp:"'+(p.wp||'918019992233')+'"},\n';
   });
   code+='];';
-  return SITE_BEFORE + code + SITE_AFTER;
+  return SITE_BEFORE+code+SITE_AFTER;
 }
 
 /* ══════════════════════════════════════════
