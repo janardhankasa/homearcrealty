@@ -529,9 +529,22 @@ async function publishToGitHub(){
 
     // Step 3: Upload
     setStep(3,'active');
-    const b64=btoa(unescape(encodeURIComponent(html)));
+    // Chunked base64 encoder — handles large files reliably
+    const bytes = new TextEncoder().encode(html);
+    let binary = '';
+    const chunkSize = 8192;
+    for(let i=0; i<bytes.length; i+=chunkSize){
+      const chunk = bytes.subarray(i, i+chunkSize);
+      binary += String.fromCharCode(...chunk);
+    }
+    const b64 = btoa(binary);
     const body={message:'Update property listings — '+new Date().toLocaleString('en-IN'),content:b64,branch:s.branch||'main'};
     if(sha) body.sha=sha;
+    // Warn if file is very large
+    const sizeMB = (html.length/1024/1024).toFixed(1);
+    if(parseFloat(sizeMB) > 8){
+      if(!confirm(`Warning: Your website file is ${sizeMB}MB (large due to embedded photos). This may be slow to upload. Continue?`)) return;
+    }
     const upRes=await fetch(`https://api.github.com/repos/${s.user}/${s.repo}/contents/${s.file||'index.html'}`,{method:'PUT',headers:{Authorization:'Bearer '+s.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
     if(!upRes.ok){ const err=await upRes.json(); throw new Error(err.message||'Upload failed'); }
     setStep(3,'done');
@@ -734,7 +747,7 @@ function togAmen(pid,a){
 }
 
 /* ── IMAGE UPLOAD ── */
-async function compressImage(file,maxW=900,maxH=700,q=0.78){
+async function compressImage(file,maxW=600,maxH=450,q=0.65){
   return new Promise((res,rej)=>{
     const reader=new FileReader();
     reader.onload=e=>{
