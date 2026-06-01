@@ -104,12 +104,11 @@
 <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
 
 <script>
-// Property listings — loaded dynamically from listings.js
-// This keeps the website file small and easy to update
+// Property listings — loaded from GitHub raw content
 var PROPS = [];
 var PROPS_SCRIPT = document.createElement('script');
-PROPS_SCRIPT.src = 'listings.js?v=' + Date.now();
-PROPS_SCRIPT.onerror = function(){ console.log('listings.js not found, using empty listings'); };
+PROPS_SCRIPT.src = 'https://raw.githubusercontent.com/janardhankasa/homearcrealty/main/listings.js?v=' + Date.now();
+PROPS_SCRIPT.onerror = function(){ console.log('Could not load listings.js'); };
 document.head.appendChild(PROPS_SCRIPT);
 </script>
 <script type="text/babel">
