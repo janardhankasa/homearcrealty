@@ -8,9 +8,26 @@ var PROPS = [
    furnished:"Semi Furnished",
    desc:"A beautifully designed 3BHK apartment in Bachupally with excellent connectivity to Hitech City. Features modern interiors and premium amenities ideal for IT professionals and families.",
    amen:["Swimming Pool","Clubhouse","24/7 Security","Power Backup","Covered Parking","Children Play Area"],
-   imgs:["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
-         "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
-         "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80"],
+   imgs:[https://ibb.co/N5FLrKK
+https://ibb.co/DgRDt437
+https://ibb.co/84dpMNpW
+https://ibb.co/3YSH3qsq
+https://ibb.co/W4sQ11D1
+https://ibb.co/VYjJdyZ3
+https://ibb.co/zhrvd439
+https://ibb.co/VcXXqDYR
+https://ibb.co/wrbMy9qT
+https://ibb.co/RGNzkVtt
+https://ibb.co/cSHDXFzS
+https://ibb.co/Vc1cGyC3
+https://ibb.co/dsF3D4K4
+https://ibb.co/8LzT47cv
+https://ibb.co/rf6ks4pn
+https://ibb.co/wN1NfQRX
+https://ibb.co/pB57mPBG
+https://ibb.co/JFbV6zy7
+https://ibb.co/Ndxzt8vp
+https://ibb.co/FfvH9tb,
    video:"https://www.youtube.com/embed/ScMzIvxBSi4",
    mapUrl:"https://maps.google.com/?q=Bachupally,Hyderabad",
    nearby:{schools:["DAV Public School","St. Marys School"],hospitals:["Apollo Hospital","Care Hospital"]},
