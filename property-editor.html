@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Homearc — Property Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#F4F2EE;min-height:100vh}
+.top{background:#0D1B2A;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:100}
+.tlogo{display:flex;align-items:center;gap:10px}
+.tbox{width:34px;height:34px;background:linear-gradient(135deg,#C8A96E,#D9BC82);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.t1{font-family:'Cormorant Garamond',serif;font-size:18px;color:#fff;font-weight:700}
+.t2{font-size:10px;color:#C8A96E;letter-spacing:.14em}
+.pill{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;background:rgba(22,163,74,.15);color:#16a34a;border:1px solid rgba(22,163,74,.3)}
+.pill-dot{width:7px;height:7px;border-radius:50%;background:#16a34a}
+.wrap{max-width:900px;margin:0 auto;padding:24px}
+.card{background:#fff;border-radius:14px;border:1px solid #EDE9E0;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.card-hdr{padding:16px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.card-hdr:hover{background:#FAFAF8}
+.card-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:10px}
+.card-name{font-weight:600;color:#0D1B2A;font-size:15px}
+.card-meta{font-size:12px;color:#9CA3AF;margin-top:2px}
+.tag-buy{background:#0D1B2A;color:#C8A96E;font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;letter-spacing:.06em}
+.tag-rent{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;letter-spacing:.06em}
+.chev{color:#9CA3AF;font-size:17px;transition:transform .2s}
+.card-body{display:none;padding:0 18px 20px;border-top:1px solid #F0EDE6}
+.card-body.open{display:block}
+label{display:block;font-size:11px;font-weight:600;color:#6B7280;letter-spacing:.05em;margin-bottom:4px;text-transform:uppercase;margin-top:14px}
+input,select,textarea{width:100%;border:1.5px solid #E8E4DC;border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:#1a1a2e;background:#fff;transition:border-color .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#C8A96E;box-shadow:0 0 0 3px rgba(200,169,110,.1)}
+textarea{min-height:80px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.sec{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C8A96E;margin:18px 0 4px;padding-bottom:6px;border-bottom:1px solid #F0EDE6}
+/* image slots */
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:8px}
+.img-slot{border-radius:10px;overflow:hidden;border:1.5px dashed #D5D0C8;background:#FAFAF8}
+.img-slot:hover{border-color:#C8A96E}
+.islot-hdr{display:flex;align-items:center;justify-content:space-between;padding:7px 9px;background:#F5F3EF;border-bottom:1px solid #EDE9E0;font-size:10px;font-weight:700;color:#9CA3AF;letter-spacing:.05em}
+.main-b{font-size:9px;background:#0D1B2A;color:#C8A96E;padding:2px 6px;border-radius:5px;font-weight:700}
+.upload-z{height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:4px;position:relative;transition:background .2s}
+.upload-z:hover{background:#F0EDE6}
+.uz-icon{font-size:24px}
+.uz-txt{font-size:11px;color:#9CA3AF;text-align:center;line-height:1.4}
+.uz-txt strong{color:#C8A96E;display:block;font-size:12px}
+.img-prev{width:100%;height:100px;object-fit:cover;display:block}
+.img-wrap{position:relative}
+.img-rm{position:absolute;top:4px;right:4px;background:rgba(220,38,38,.85);border:none;color:#fff;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.prog{height:3px;background:linear-gradient(90deg,#C8A96E,#D9BC82);width:0;transition:width .3s;display:none}
+/* buttons */
+.btn{padding:9px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-gold{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,169,110,.4)}
+.btn-navy{background:#0D1B2A;color:#fff}
+.btn-red{background:#fee2e2;color:#dc2626;border:1px solid #fca5a5}
+.btn-sm{padding:7px 12px;font-size:12px;border-radius:7px;border:1.5px solid #DDD9D0;background:#fff;color:#0D1B2A;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn-sm:hover{border-color:#C8A96E;color:#C8A96E}
+.acts{display:flex;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid #F0EDE6}
+/* top row */
+.top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.cnt{background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#7A5C1E;font-size:13px;font-weight:600;padding:5px 13px;border-radius:18px}
+/* instructions panel */
+.inst{background:#fff;border-radius:14px;border:1px solid #EDE9E0;padding:22px;margin-bottom:20px}
+.inst h2{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:#0D1B2A;margin-bottom:14px}
+.step{display:flex;gap:9px;margin-bottom:10px;align-items:flex-start}
+.sn{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.st{font-size:13px;color:#4B5563;line-height:1.55}
+.st strong{color:#0D1B2A}
+.tip{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;font-size:13px;color:#1e40af;line-height:1.6;margin-top:10px}
+.tip a{color:#1d4ed8;font-weight:600}
+.success{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px 14px;font-size:13px;color:#15803D;margin-top:10px}
+/* amenity chips */
+.amen-grid{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.chip{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:18px;border:1.5px solid #E8E4DC;font-size:13px;cursor:pointer;user-select:none;background:#fff;transition:all .2s}
+.chip.on{background:rgba(200,169,110,.1);border-color:#C8A96E;color:#0D1B2A;font-weight:600}
+.dot{width:8px;height:8px;border-radius:50%;border:2px solid #D5D0C8;flex-shrink:0;transition:all .2s}
+.chip.on .dot{background:#C8A96E;border-color:#C8A96E}
+/* toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0D1B2A;color:#fff;padding:11px 22px;border-radius:30px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+/* download panel */
+.dl-panel{background:linear-gradient(135deg,#0D1B2A,#162033);border-radius:14px;padding:22px;margin-bottom:20px;color:#fff}
+.dl-panel h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff;margin-bottom:6px}
+.dl-panel p{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:16px;line-height:1.6}
+@media(max-width:600px){.row2,.row3{grid-template-columns:1fr}.img-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<div class="top">
+  <div class="tlogo">
+    <div class="tbox">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0D1B2A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div><div class="t1">Homearc Reality</div><div class="t2">PROPERTY EDITOR</div></div>
+  </div>
+  <div class="pill"><div class="pill-dot"></div><span id="saveText">All changes saved</span></div>
+</div>
+
+<div class="wrap">
+
+  <!-- INSTRUCTIONS -->
+  <div class="inst">
+    <h2>How to Add Properties</h2>
+    <div class="step"><div class="sn">1</div><div class="st">Add your properties below and upload photos</div></div>
+    <div class="step"><div class="sn">2</div><div class="st">Click <strong>Download listings.js</strong> — a tiny 3KB file downloads</div></div>
+    <div class="step"><div class="sn">3</div><div class="st">Go to <a href="https://github.com/janardhankasa/homearcrealty" target="_blank" style="color:#C8A96E;font-weight:600">your GitHub repo</a> → click <strong>listings.js</strong> → click the <strong>✏️ pencil edit icon</strong> → select all → paste the downloaded file content → Commit</div></div>
+    <div class="step"><div class="sn">4</div><div class="st"><strong>homearcrealty.com</strong> updates in ~30 seconds ✅</div></div>
+    <div class="tip">💡 <strong>Photos:</strong> Upload to <a href="https://imgbb.com" target="_blank">imgbb.com</a> for free → copy the Direct Link → paste in the photo URL boxes below. Much simpler than uploading directly!</div>
+    <div class="success">✅ <strong>No more blank page issues.</strong> The listings file is separate from the website — only 3KB no matter how many properties you add.</div>
+  </div>
+
+  <!-- DOWNLOAD PANEL -->
+  <div class="dl-panel">
+    <h2>⬇ Download listings.js</h2>
+    <p>When ready, download this tiny file and paste its content into GitHub to update your live site.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-gold" onclick="downloadListings()" style="font-size:15px;padding:13px 24px">⬇ Download listings.js</button>
+      <a href="https://homearcrealty.com" target="_blank" class="btn btn-sm" style="background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)">🌐 View Live Site</a>
+    </div>
+  </div>
+
+  <!-- PROPERTIES LIST -->
+  <div class="top-row">
+    <span class="cnt" id="cnt">0 Properties</span>
+    <button class="btn btn-gold" onclick="addProp()">+ Add New Property</button>
+  </div>
+  <div id="list"></div>
+</div>
+
+<script>
+const LOCS=["Mallampet","Bachupally","Gagilapur","Dundigal","Rameshwaram Banda","Patancheru","Miyapur","Kukatpally","Hitech City","Gachibowli","Kondapur"];
+const AMENS=["Swimming Pool","Gymnasium","Clubhouse","24/7 Security","Power Backup","Covered Parking","Children Play Area","Landscaped Gardens","Fully Furnished","Modular Kitchen","Smart Home","Home Theater","Private Pool","Terrace Garden","Servant Quarters","CCTV Security","EV Charging","Concierge","Pet-Friendly","High-Speed Internet","Solar Water Heater","Jogging Track","Jacuzzi","Intercom","Lift / Elevator","Gas Pipeline","Vastu Compliant"];
+const N=10;
+const KEY='ha_listings_v1';
+let props=[], idc=1, saveT=null;
+
+function toast(m,d=2800){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);}
+
+function save(){
+  clearTimeout(saveT);
+  saveT=setTimeout(()=>{
+    try{localStorage.setItem(KEY,JSON.stringify({props,idc}));}catch(e){}
+  },600);
+}
+
+function blank(id){
+  const p={_id:id,title:'',type:'Apartment',listing:'Rent',price:'',location:'Mallampet',
+    bedrooms:'2',bathrooms:'2',area:'',furnished:'Semi Furnished',desc:'',amen:[],
+    videoUrl:'',mapUrl:'',wp:'918019992233',schools:'',hospitals:''};
+  for(let i=1;i<=N;i++) p['img'+i]='';
+  return p;
+}
+
+function addProp(data){
+  const id=idc++;
+  const p=Object.assign(blank(id),data||{},{_id:id});
+  props.push(p);
+  render(); save();
+  setTimeout(()=>toggle(id),50);
+}
+
+function rmProp(id){if(!confirm('Remove this property?'))return; props=props.filter(p=>p._id!==id); render(); save();}
+function dupProp(id){const p=props.find(p=>p._id===id);if(!p)return; const c=JSON.parse(JSON.stringify(p)); c.title+=' (Copy)'; addProp(c);}
+
+function toggle(id){
+  const b=document.getElementById('b'+id), c=document.getElementById('c'+id);
+  if(!b)return;
+  const was=b.classList.contains('open');
+  document.querySelectorAll('.card-body').forEach(x=>x.classList.remove('open'));
+  document.querySelectorAll('.chev').forEach(x=>x.style.transform='');
+  if(!was){b.classList.add('open');c.style.transform='rotate(180deg)';}
+}
+
+function up(id,f,v){const p=props.find(p=>p._id===id);if(!p)return; p[f]=v; updHdr(id); save();}
+
+function updHdr(id){
+  const p=props.find(p=>p._id===id); if(!p)return;
+  const n=document.getElementById('n'+id), m=document.getElementById('m'+id), t=document.getElementById('t'+id);
+  if(n) n.textContent=p.title||'Untitled Property';
+  if(m) m.textContent=[p.type,p.location,p.bedrooms?p.bedrooms+' BHK':''].filter(Boolean).join(' · ');
+  if(t){t.textContent=p.listing==='Buy'?'FOR SALE':'FOR RENT';t.className=p.listing==='Buy'?'tag-buy':'tag-rent';}
+}
+
+function togAmen(pid,a){
+  const p=props.find(p=>p._id===pid);if(!p)return;
+  const i=p.amen.indexOf(a); if(i>-1)p.amen.splice(i,1); else p.amen.push(a);
+  const c=document.getElementById('ch'+pid+'_'+a.replace(/[^a-z0-9]/gi,''));
+  if(c)c.classList.toggle('on'); save();
+}
+
+function toEmbed(u){
+  if(!u)return'';u=u.trim();
+  if(u.includes('youtube.com/embed/'))return u;
+  let id='',m;
+  m=u.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,15})/);if(m)id=m[1];
+  if(!id){m=u.match(/youtu\.be\/([a-zA-Z0-9_-]{6,15})/);if(m)id=m[1];}
+  if(!id){m=u.match(/[?&]v=([a-zA-Z0-9_-]{6,15})/);if(m)id=m[1];}
+  return id?'https://www.youtube.com/embed/'+id:u;
+}
+
+function upVid(id,v){
+  const c=toEmbed(v); const p=props.find(p=>p._id===id); if(p)p.videoUrl=c;
+  if(c&&c!==v){const inp=document.getElementById('vid'+id);if(inp)inp.value=c; toast('✅ YouTube link converted!');}
+  save();
+}
+
+function upMap(id,v){up(id,'mapUrl',v); const p=props.find(p=>p._id===id); if(!p)return;
+  const bar=document.getElementById('mb'+id); const lnk=document.getElementById('ml'+id);
+  if(bar&&v){bar.style.display='block';lnk.href=v;lnk.textContent=v.length>50?v.substring(0,50)+'...':v;}
+  else if(bar)bar.style.display='none';
+}
+
+function autoMap(id){const p=props.find(p=>p._id===id);if(!p)return;
+  const url='https://maps.google.com/?q='+encodeURIComponent(p.location+', Hyderabad');
+  const inp=document.getElementById('map'+id);if(inp){inp.value=url;upMap(id,url);}
+  toast('📍 Map link auto-filled!');
+}
+
+// IMAGE: convert to URL via FileReader — stores as data URL for preview
+// User still needs to upload to imgbb for real use, but we show preview
+async function compressImg(file){
+  return new Promise((res,rej)=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        const mx=700, my=500;
+        if(w>mx){h=Math.round(h*mx/w);w=mx;}
+        if(h>my){w=Math.round(w*my/h);h=my;}
+        const c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        res(c.toDataURL('image/jpeg',0.72));
+      };
+      img.onerror=rej; img.src=e.target.result;
+    };
+    reader.onerror=rej; reader.readAsDataURL(file);
+  });
+}
+
+async function upImg(id,num,input){
+  const file=input.files[0]; if(!file)return;
+  const pr=document.getElementById('pr'+id+'_'+num);
+  if(pr){pr.style.display='block';pr.style.width='50%';}
+  try{
+    const b64=await compressImg(file);
+    const p=props.find(p=>p._id===id); if(p)p['img'+num]=b64;
+    renderSlot(id,num,b64); save();
+    toast('✅ Photo '+num+' added! Remember to also upload to imgbb.com for the live site.');
+  }catch(e){toast('❌ Error loading image');}
+  if(pr){pr.style.width='100%';setTimeout(()=>{pr.style.display='none';pr.style.width='0';},500);}
+}
+
+function rmImg(id,num){const p=props.find(p=>p._id===id);if(p)p['img'+num]=''; renderSlot(id,num,''); save();}
+
+function renderSlot(id,num,src){
+  const slot=document.getElementById('sl'+id+'_'+num); if(!slot)return;
+  const isMain=num===1;
+  const hdr='<div class="islot-hdr"><span>PHOTO '+num+'</span>'+(isMain?'<span class="main-b">MAIN</span>':'')+'</div>';
+  if(src){
+    slot.innerHTML=hdr+'<div class="img-wrap"><img class="img-prev" src="'+src+'"/><button class="img-rm" onclick="rmImg('+id+','+num+')">✕</button></div>';
+  } else {
+    slot.innerHTML=hdr+'<div class="upload-z" onclick="document.getElementById(\'fi'+id+'_'+num+'\').click()"><input type="file" id="fi'+id+'_'+num+'" accept="image/*" style="display:none" onchange="upImg('+id+','+num+',this)"/><div class="uz-icon">📷</div><div class="uz-txt"><strong>Tap to upload</strong>for preview only</div></div><div class="prog" id="pr'+id+'_'+num+'"></div>';
+  }
+}
+
+function render(){
+  const list=document.getElementById('list'), cnt=document.getElementById('cnt');
+  cnt.textContent=props.length+' Propert'+(props.length===1?'y':'ies');
+  if(!props.length){
+    list.innerHTML='<div style="text-align:center;padding:48px;background:#fff;border-radius:14px;border:2px dashed #DDD9D0;color:#9CA3AF"><div style="font-size:42px;margin-bottom:12px">🏠</div><div style="font-size:15px;font-weight:600">No properties yet</div><div style="font-size:13px;margin-top:6px">Click "+ Add New Property" to get started</div></div>';
+    return;
+  }
+  list.innerHTML=props.map((p,i)=>`
+  <div class="card">
+    <div class="card-hdr" onclick="toggle(${p._id})">
+      <div style="display:flex;align-items:center;flex:1">
+        <div class="card-num">${i+1}</div>
+        <div><div class="card-name" id="n${p._id}">${p.title||'Untitled Property'}</div><div class="card-meta" id="m${p._id}">${[p.type,p.location,p.bedrooms?p.bedrooms+' BHK':''].filter(Boolean).join(' · ')}</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span id="t${p._id}" class="${p.listing==='Buy'?'tag-buy':'tag-rent'}">${p.listing==='Buy'?'FOR SALE':'FOR RENT'}</span>
+        <span class="chev" id="c${p._id}">▾</span>
+      </div>
+    </div>
+    <div class="card-body" id="b${p._id}">
+      <div class="sec">Basic Details</div>
+      <label>Property Title</label>
+      <input value="${p.title||''}" placeholder="e.g. 3BHK Apartment for Rent in Bachupally" oninput="up(${p._id},'title',this.value)"/>
+      <div class="row2">
+        <div><label>Type</label><select onchange="up(${p._id},'type',this.value)">${['Apartment','Villa','Gated Community'].map(t=>`<option ${p.type===t?'selected':''}>${t}</option>`).join('')}</select></div>
+        <div><label>Buy or Rent</label><select onchange="up(${p._id},'listing',this.value)"><option ${p.listing==='Buy'?'selected':''}>Buy</option><option ${p.listing==='Rent'?'selected':''}>Rent</option></select></div>
+        <div><label>Price (e.g. Rs.85 Lakhs or Rs.25000 per month)</label><input value="${p.price||''}" placeholder="Rs." oninput="up(${p._id},'price',this.value)"/></div>
+        <div><label>Location</label><select onchange="up(${p._id},'location',this.value)">${LOCS.map(l=>`<option ${p.location===l?'selected':''}>${l}</option>`).join('')}</select></div>
+        <div><label>Bedrooms</label><select onchange="up(${p._id},'bedrooms',this.value)">${['1','2','3','4','5','6'].map(n=>`<option ${p.bedrooms==n?'selected':''}>${n} BHK</option>`).join('')}</select></div>
+        <div><label>Bathrooms</label><select onchange="up(${p._id},'bathrooms',this.value)">${['1','2','3','4','5','6'].map(n=>`<option ${p.bathrooms==n?'selected':''}>${n}</option>`).join('')}</select></div>
+        <div><label>Area (sqft)</label><input type="number" value="${p.area||''}" placeholder="1450" oninput="up(${p._id},'area',this.value)"/></div>
+        <div><label>Furnishing</label><select onchange="up(${p._id},'furnished',this.value)">${['Furnished','Semi Furnished','Unfurnished'].map(f=>`<option ${p.furnished===f?'selected':''}>${f}</option>`).join('')}</select></div>
+      </div>
+      <label>Description</label>
+      <textarea placeholder="Describe the property..." oninput="up(${p._id},'desc',this.value)">${p.desc||''}</textarea>
+
+      <div class="sec">Photos <span style="font-weight:400;text-transform:none;font-size:10px;color:#9CA3AF">— upload for preview, then also upload to imgbb.com and paste the URL</span></div>
+      <div class="img-grid" id="ig${p._id}">
+        ${Array.from({length:N},(_,j)=>{const n=j+1,v=p['img'+n]||'',isMain=n===1;
+          const hdr='<div class="islot-hdr"><span>PHOTO '+n+'</span>'+(isMain?'<span class="main-b">MAIN</span>':'')+'</div>';
+          return '<div class="img-slot" id="sl'+p._id+'_'+n+'">'+(v?hdr+'<div class="img-wrap"><img class="img-prev" src="'+v+'"/><button class="img-rm" onclick="rmImg('+p._id+','+n+')">✕</button></div>':hdr+'<div class="upload-z" onclick="document.getElementById(\'fi'+p._id+'_'+n+'\').click()"><input type="file" id="fi'+p._id+'_'+n+'" accept="image/*" style="display:none" onchange="upImg('+p._id+','+n+',this)"/><div class="uz-icon">📷</div><div class="uz-txt"><strong>Tap to upload</strong>preview only</div></div><div class="prog" id="pr'+p._id+'_'+n+'"></div>')+'</div>';
+        }).join('')}
+      </div>
+      <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400E;margin-top:8px;line-height:1.6">
+        📸 <strong>For photos on your live website:</strong> Upload to <a href="https://imgbb.com" target="_blank" style="color:#C8A96E;font-weight:600">imgbb.com</a> → copy the <em>Direct link</em> → paste into the <strong>Photo URL boxes below</strong> (these URLs go into the listings file)
+      </div>
+      <div class="img-grid" style="margin-top:10px">
+        ${Array.from({length:N},(_,j)=>{const n=j+1;return '<div style="padding:8px;background:#F8F6F1;border-radius:8px;border:1px solid #EDE9E0"><div style="font-size:10px;font-weight:700;color:#9CA3AF;margin-bottom:5px">PHOTO '+n+' URL</div><input style="font-size:12px;padding:7px 9px" value="'+(p['img'+n]||'')+'" placeholder="https://i.ibb.co/..." oninput="up('+p._id+',\'img'+n+'\',this.value)"/></div>';}).join('')}
+      </div>
+
+      <div class="sec">Video Tour</div>
+      <label>YouTube / Shorts Link — auto converted</label>
+      <input id="vid${p._id}" value="${p.videoUrl||''}" placeholder="Paste any YouTube link..." oninput="upVid(${p._id},this.value)"/>
+
+      <div class="sec">Google Maps Location</div>
+      <div style="display:flex;gap:8px">
+        <input id="map${p._id}" value="${p.mapUrl||''}" placeholder="https://maps.google.com/?q=..." style="flex:1" oninput="upMap(${p._id},this.value)"/>
+        <button class="btn-sm" onclick="autoMap(${p._id})">⚡ Auto</button>
+      </div>
+      <div id="mb${p._id}" style="display:${p.mapUrl?'block':'none'};margin-top:6px;background:#F8F6F1;border-radius:8px;padding:8px 12px">
+        <a id="ml${p._id}" href="${p.mapUrl||'#'}" target="_blank" style="font-size:12px;color:#C8A96E">${p.mapUrl||''}</a>
+      </div>
+
+      <div class="sec">Amenities</div>
+      <div class="amen-grid">
+        ${AMENS.map(a=>{const k=a.replace(/[^a-z0-9]/gi,''),on=p.amen.includes(a)?'on':'';return '<div class="chip '+on+'" id="ch'+p._id+'_'+k+'" onclick="togAmen('+p._id+',\''+a+'\')"><span class="dot"></span>'+a+'</div>';}).join('')}
+      </div>
+
+      <div class="sec">Contact & Nearby Places</div>
+      <div class="row3">
+        <div><label>WhatsApp Number</label><input value="${p.wp||'918019992233'}" oninput="up(${p._id},'wp',this.value)"/></div>
+        <div><label>Nearby Schools (comma separated)</label><input value="${p.schools||''}" placeholder="DAV School, St. Marys" oninput="up(${p._id},'schools',this.value)"/></div>
+        <div><label>Nearby Hospitals (comma separated)</label><input value="${p.hospitals||''}" placeholder="Apollo, Care Hospital" oninput="up(${p._id},'hospitals',this.value)"/></div>
+      </div>
+
+      <div class="acts">
+        <button class="btn btn-red" onclick="rmProp(${p._id})">🗑 Remove</button>
+        <button class="btn-sm" onclick="dupProp(${p._id})">⧉ Duplicate</button>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+function safeStr(s){
+  if(!s) return '';
+  return String(s)
+    .replace(/\\/g,'\\\\')
+    .replace(/'/g,"\\'")
+    .replace(/\r?\n/g,' ')
+    .trim();
+}
+
+function downloadListings(){
+  if(!props.length){toast('Add at least one property first!');return;}
+  let out='// Homearc Reality — Property Listings\n';
+  out+='// Edit this file to update properties on homearcrealty.com\n\n';
+  out+='var PROPS = [\n';
+  props.forEach((p,idx)=>{
+    const imgs=[];
+    for(let i=1;i<=N;i++){if(p['img'+i]&&!p['img'+i].startsWith('data:'))imgs.push(p['img'+i]);}
+    if(!imgs.length){
+      imgs.push('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80');
+      imgs.push('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80');
+      imgs.push('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80');
+    }
+    const vid=toEmbed(p.videoUrl)||'https://www.youtube.com/embed/ScMzIvxBSi4';
+    const map=p.mapUrl||('https://maps.google.com/?q='+encodeURIComponent(p.location+', Hyderabad'));
+    const amen=p.amen.length?p.amen:['Power Backup','24/7 Security','Covered Parking'];
+    const sch=p.schools?p.schools.split(',').map(s=>s.trim()).filter(Boolean):['Nearby School'];
+    const hos=p.hospitals?p.hospitals.split(',').map(s=>s.trim()).filter(Boolean):['Nearby Hospital'];
+
+    out+='  {\n';
+    out+='    id: '+(idx+1)+',\n';
+    out+='    title: \''+safeStr(p.title||'Property '+(idx+1))+'\',\n';
+    out+='    type: \''+p.type+'\',\n';
+    out+='    listing: \''+p.listing+'\',\n';
+    out+='    price: \''+safeStr(p.price||'Price on Request')+'\',\n';
+    out+='    location: \''+p.location+'\',\n';
+    out+='    bedrooms: '+(p.bedrooms||2)+',\n';
+    out+='    bathrooms: '+(p.bathrooms||2)+',\n';
+    out+='    area: '+(p.area||1000)+',\n';
+    out+='    furnished: \''+p.furnished+'\',\n';
+    out+='    desc: \''+safeStr(p.desc||'A well-maintained property in '+p.location+'.')+'\',\n';
+    out+='    amen: [\''+amen.map(a=>safeStr(a)).join('\', \'')+'\'],\n';
+    out+='    imgs: [\''+imgs.join('\', \'')+'\'],\n';
+    out+='    video: \''+safeStr(vid)+'\',\n';
+    out+='    mapUrl: \''+safeStr(map)+'\',\n';
+    out+='    nearby: {\n';
+    out+='      schools: [\''+sch.map(s=>safeStr(s)).join('\', \'')+'\'],\n';
+    out+='      hospitals: [\''+hos.map(h=>safeStr(h)).join('\', \'')+'\'\]\n';
+    out+='    },\n';
+    out+='    wp: \''+safeStr(p.wp||'918019992233')+'\'\n';
+    out+='  },\n';
+  });
+  out+='];\n';
+
+  const blob=new Blob([out],{type:'text/javascript'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='listings.js';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+  toast('✅ listings.js downloaded! Upload it to GitHub to go live.',4000);
+}
+
+// Load saved
+try{
+  const d=JSON.parse(localStorage.getItem(KEY)||'{}');
+  if(d.props&&d.props.length){props=d.props;idc=d.idc||props.length+1;}
+}catch(e){}
+
+render();
+</script>
+</body>
+</html>
