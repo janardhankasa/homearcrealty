@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Homearc — Property Manager</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"DM Sans",sans-serif;background:#F4F2EE;min-height:100vh}
+/* LOGIN */
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0D1B2A,#162033)}
+.lcard{background:#fff;border-radius:20px;padding:48px 40px;width:100%;max-width:380px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.3)}
+.llogo{width:50px;height:50px;background:linear-gradient(135deg,#C8A96E,#D9BC82);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.lcard h1{font-family:"Cormorant Garamond",serif;font-size:1.6rem;color:#0D1B2A;margin-bottom:6px}
+.lcard p{font-size:13px;color:#9CA3AF;margin-bottom:28px}
+.lpw{width:100%;border:1.5px solid #E8E4DC;border-radius:10px;padding:13px 16px;font-family:"DM Sans",sans-serif;font-size:15px;text-align:center;margin-bottom:14px}
+.lpw:focus{outline:none;border-color:#C8A96E}
+.lbtn{width:100%;padding:14px;background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-weight:700;font-size:16px;border:none;border-radius:10px;cursor:pointer;font-family:"DM Sans",sans-serif}
+.lerr{color:#dc2626;font-size:13px;margin-top:8px;display:none}
+/* TOPBAR */
+.top{background:#0D1B2A;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.3)}
+.tl{display:flex;align-items:center;gap:10px}
+.tb{width:34px;height:34px;background:linear-gradient(135deg,#C8A96E,#D9BC82);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.tn{font-family:"Cormorant Garamond",serif;font-size:17px;color:#fff;font-weight:700}
+.ts{font-size:10px;color:#C8A96E;letter-spacing:.14em}
+/* BUTTONS */
+.btn{padding:9px 18px;border-radius:8px;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.bg{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A}
+.bg:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,169,110,.4)}
+.bn{background:#0D1B2A;color:#fff}
+.br{background:#fee2e2;color:#dc2626;border:1px solid #fca5a5}
+.bsm{padding:7px 13px;font-size:12px;border-radius:7px;border:1.5px solid #DDD9D0;background:#fff;color:#0D1B2A;font-family:"DM Sans",sans-serif;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.bsm:hover{border-color:#C8A96E;color:#C8A96E}
+.bgh{background:none;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.7);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:"DM Sans",sans-serif;display:inline-flex;align-items:center;gap:6px}
+.bgh:hover{border-color:rgba(255,255,255,.6);color:#fff}
+/* LAYOUT */
+.wrap{max-width:900px;margin:0 auto;padding:24px}
+label{display:block;font-size:11px;font-weight:600;color:#6B7280;letter-spacing:.05em;margin-bottom:4px;text-transform:uppercase;margin-top:14px}
+input,select,textarea{width:100%;border:1.5px solid #E8E4DC;border-radius:8px;padding:9px 12px;font-family:"DM Sans",sans-serif;font-size:14px;color:#1a1a2e;background:#fff;transition:border-color .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#C8A96E;box-shadow:0 0 0 3px rgba(200,169,110,.1)}
+textarea{min-height:80px;resize:vertical}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.sec{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C8A96E;margin:18px 0 8px;padding-bottom:6px;border-bottom:1px solid #F0EDE6}
+/* PROPERTY CARDS */
+.pcard{background:#fff;border-radius:14px;border:1.5px solid #EDE9E0;margin-bottom:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.phdr{padding:16px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.phdr:hover{background:#FAFAF8}
+.pnum{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:10px}
+.ptag-b{background:#0D1B2A;color:#C8A96E;font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px}
+.ptag-r{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px}
+.chev{color:#9CA3AF;transition:transform .25s}
+.pbody{display:none;padding:0 18px 20px;border-top:1px solid #F0EDE6}
+.pbody.open{display:block}
+/* IMAGE URL SLOTS */
+.iurl-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.iurl-slot{background:#F8F6F1;border-radius:8px;padding:8px 10px;border:1px solid #EDE9E0}
+.iurl-label{font-size:10px;font-weight:700;color:#9CA3AF;margin-bottom:5px;letter-spacing:.06em}
+.iurl-input{font-size:12px;padding:7px 9px;border:1.5px solid #E8E4DC;border-radius:6px}
+.ipreview{width:100%;height:70px;object-fit:cover;border-radius:6px;margin-top:6px;display:none}
+/* AMENITY CHIPS */
+.achips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.chip{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:18px;border:1.5px solid #E8E4DC;font-size:13px;cursor:pointer;background:#fff;transition:all .2s}
+.chip.on{background:rgba(200,169,110,.1);border-color:#C8A96E;font-weight:600}
+.cdot{width:8px;height:8px;border-radius:50%;border:2px solid #D5D0C8;flex-shrink:0;transition:all .2s}
+.chip.on .cdot{background:#C8A96E;border-color:#C8A96E}
+.pacts{display:flex;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid #F0EDE6}
+/* PUBLISH */
+.pub-box{background:linear-gradient(135deg,#0D1B2A,#162033);border-radius:14px;padding:22px;margin-bottom:20px}
+.pub-box h2{font-family:"Cormorant Garamond",serif;font-size:1.4rem;color:#fff;margin-bottom:6px}
+.pub-box p{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:16px;line-height:1.55}
+/* PUBLISH MODAL */
+.pov{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center}
+.pov.on{display:flex}
+.pm{background:#fff;border-radius:20px;padding:36px 32px;max-width:400px;width:100%;text-align:center}
+.pm h2{font-family:"Cormorant Garamond",serif;font-size:1.6rem;color:#0D1B2A;margin-bottom:8px}
+.pm p{color:#6B7280;font-size:13px;margin-bottom:16px;line-height:1.6}
+.pstep{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;margin-bottom:7px;text-align:left;font-size:13px;background:#F8F6F1}
+.pstep.active{background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#7A5C1E;font-weight:600}
+.pstep.done{background:#F0FDF4;border:1px solid #BBF7D0;color:#15803D;font-weight:600}
+.pstep.err{background:#FEF2F2;border:1px solid #FECACA;color:#dc2626;font-weight:600}
+.spin{animation:spin .8s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cdown{font-size:36px;font-weight:700;color:#C8A96E;font-family:"Cormorant Garamond",serif;margin:8px 0}
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0D1B2A;color:#fff;padding:11px 22px;border-radius:30px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+/* TOP ROW */
+.toprow{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.cnt{background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#7A5C1E;font-size:13px;font-weight:600;padding:5px 13px;border-radius:18px}
+.tip{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;font-size:12px;color:#1e40af;line-height:1.6;margin-bottom:18px}
+.savepill{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;background:rgba(22,163,74,.15);color:#16a34a;border:1px solid rgba(22,163,74,.3)}
+.sdot{width:7px;height:7px;border-radius:50%;background:#16a34a}
+/* GH SETTINGS */
+.ghcard{background:#fff;border:1px solid #EDE9E0;border-radius:14px;overflow:hidden;margin-bottom:20px}
+.ghcard-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.ghcard-hdr:hover{background:#FAFAF8}
+.ghbody{display:none;padding:0 18px 18px;border-top:1px solid #F0EDE6}
+.ghbody.open{display:block}
+.gstatus{width:8px;height:8px;border-radius:50%;background:#9CA3AF;margin-right:8px}
+.gstatus.ok{background:#16a34a}
+@media(max-width:600px){.g2,.g3{grid-template-columns:1fr}.iurl-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="lcard">
+    <div class="llogo">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0D1B2A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <h1>Homearc Reality</h1>
+    <p>Enter your admin password to manage listings</p>
+    <input type="password" id="pw" class="lpw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="lbtn" onclick="doLogin()">Sign In →</button>
+    <div class="lerr" id="lerr">Incorrect password</div>
+    <div style="margin-top:20px;font-size:12px;color:#9CA3AF">Default: <code style="background:#F8F6F1;padding:2px 7px;border-radius:4px;color:#0D1B2A">Homearc@2024</code></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin" style="display:none">
+  <!-- PUBLISH OVERLAY -->
+  <div class="pov" id="pov">
+    <div class="pm">
+      <div style="font-size:40px;margin-bottom:12px" id="pemi">🚀</div>
+      <h2 id="ptitle">Publishing...</h2>
+      <p id="pmsg">Pushing to GitHub. Netlify auto-deploys in ~30 seconds.</p>
+      <div id="psteps">
+        <div class="pstep" id="ps1"><span style="margin-right:8px">⏳</span>Building website</div>
+        <div class="pstep" id="ps2"><span style="margin-right:8px">⏳</span>Connecting to GitHub</div>
+        <div class="pstep" id="ps3"><span style="margin-right:8px">⏳</span>Uploading file</div>
+        <div class="pstep" id="ps4"><span style="margin-right:8px">⏳</span>Netlify deploying</div>
+      </div>
+      <div id="pcd" style="display:none">
+        <div class="cdown" id="cdnum">35</div>
+        <div style="font-size:13px;color:#6B7280;margin-bottom:16px">seconds until site updates</div>
+        <a href="https://homearcrealty.com" target="_blank" class="btn bg" style="width:100%;justify-content:center;text-decoration:none;display:flex">🌐 Open homearcrealty.com</a>
+        <button class="bsm" style="width:100%;justify-content:center;margin-top:8px" onclick="closePov()">Done</button>
+      </div>
+      <div id="perr" style="display:none">
+        <div id="perrmsg" style="background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:12px;font-size:13px;color:#dc2626;margin-top:8px;text-align:left"></div>
+        <button class="bsm" style="width:100%;justify-content:center;margin-top:12px" onclick="closePov()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPBAR -->
+  <div class="top">
+    <div class="tl">
+      <div class="tb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0D1B2A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div><div class="tn">Homearc Admin</div><div class="ts">PROPERTY MANAGER</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="savepill" id="spill"><div class="sdot"></div><span id="stxt">Saved</span></div>
+      <button class="bgh" onclick="loadFromGH()">⬇ Load from GitHub</button>
+      <button class="btn bg" onclick="publish()" style="font-size:14px">🚀 Publish to Site</button>
+      <button class="bgh" onclick="logout()" style="padding:7px 12px">↩ Logout</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <!-- GITHUB SETTINGS -->
+    <div class="ghcard" id="ghcard">
+      <div class="ghcard-hdr" onclick="toggleGH()">
+        <div style="display:flex;align-items:center;font-weight:700;color:#0D1B2A;font-size:15px">
+          <div class="gstatus" id="gstat"></div>⚙️ GitHub Settings
+          <span id="ghbadge" style="font-size:12px;color:#9CA3AF;font-weight:400;margin-left:8px">— configure once to enable publishing</span>
+        </div>
+        <span id="ghchev" style="color:#9CA3AF;font-size:17px;transition:transform .2s">▾</span>
+      </div>
+      <div class="ghbody open" id="ghbody">
+        <div class="tip" style="margin-top:12px">Fill in your GitHub details once. After that, just click <strong>🚀 Publish to Site</strong> — your listings go live automatically in 30 seconds.</div>
+        <div class="g2" style="margin-top:12px">
+          <div><label>GitHub Username</label><input id="ghu" placeholder="janardhankasa" oninput="saveGH()"/></div>
+          <div><label>Repository Name</label><input id="ghr" placeholder="homearcrealty" oninput="saveGH()"/></div>
+          <div style="grid-column:1/-1"><label>Personal Access Token</label>
+            <div style="display:flex;gap:8px"><input id="ght" type="password" placeholder="ghp_xxxxxxxxxxxx" oninput="saveGH()" style="flex:1"/><button class="bsm" onclick="testGH()">Test</button></div>
+          </div>
+          <div><label>Branch</label><input id="ghbr" value="main" oninput="saveGH()"/></div>
+          <div><label>File path</label><input id="ghf" value="index.html" oninput="saveGH()"/></div>
+        </div>
+        <div id="ghtr" style="display:none;margin-top:10px;font-size:13px;padding:8px 12px;border-radius:8px"></div>
+      </div>
+    </div>
+
+    <!-- PUBLISH PANEL -->
+    <div class="pub-box">
+      <h2>🚀 One-Click Publish</h2>
+      <p>Add or edit your listings below then click Publish — <strong style="color:#C8A96E">homearcrealty.com</strong> updates in ~30 seconds automatically.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn bg" onclick="publish()" style="font-size:15px;padding:13px 24px">🚀 Publish to Site</button>
+        <a href="https://homearcrealty.com" target="_blank" class="bgh btn" style="text-decoration:none">🌐 View Live Site</a>
+      </div>
+    </div>
+
+    <!-- PROPERTIES -->
+    <div class="toprow">
+      <span class="cnt" id="cnt">0 Properties</span>
+      <button class="btn bg" onclick="addProp()">+ Add New Property</button>
+    </div>
+    <div id="plist"></div>
+  </div>
+</div>
+
+<script>
+const SITE_BEFORE = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\"/>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n  <title>Homearc Reality | Find Homes You Always Dreamed Of<\/title>\n  <meta name=\"description\" content=\"Discover luxury apartments and villas for sale and rent near Mallampet, Bachupally, Dundigal &amp; more. Verified properties, best pricing, trusted agents.\"/>\n  <meta name=\"robots\" content=\"index, follow\"/>\n  <meta property=\"og:title\" content=\"Homearc Reality | Find Homes You Always Dreamed Of\"/>\n  <meta property=\"og:image\" content=\"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200\"/>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"/>\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin/>\n  <link href=\"https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap\" rel=\"stylesheet\"/>\n  <style>\n    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}\n    html{scroll-behavior:smooth}\n    body{font-family:'DM Sans',sans-serif;background:#fff;color:#1a1a2e;overflow-x:hidden}\n    :root{--navy:#0D1B2A;--gold:#C8A96E;--gold2:#D9BC82;--cream:#F8F6F1;--border:#EDE9E0}\n    .ff{font-family:'Cormorant Garamond',Georgia,serif}\n    .hero-bg{min-height:100vh;background:linear-gradient(160deg,rgba(13,27,42,.93) 0%,rgba(13,27,42,.72) 55%,rgba(13,27,42,.88) 100%),url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=85') center/cover no-repeat;display:flex;flex-direction:column}\n    .glass{background:rgba(255,255,255,.10);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.18)}\n    .btn-gold{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-weight:600;letter-spacing:.02em;border:none;cursor:pointer;transition:all .3s ease;font-family:'DM Sans',sans-serif}\n    .btn-gold:hover{background:linear-gradient(135deg,#D9BC82,#EAD098);transform:translateY(-2px);box-shadow:0 12px 32px rgba(200,169,110,.45)}\n    .btn-navy{background:#0D1B2A;color:#fff;font-weight:600;border:none;cursor:pointer;transition:all .3s ease;font-family:'DM Sans',sans-serif}\n    .btn-navy:hover{background:#162033;transform:translateY(-2px)}\n    .btn-outline-white{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55);font-weight:600;cursor:pointer;transition:all .3s ease;font-family:'DM Sans',sans-serif}\n    .btn-outline-white:hover{background:rgba(255,255,255,.12)}\n    .btn-wa{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-weight:600;border:none;cursor:pointer;transition:all .3s ease;font-family:'DM Sans',sans-serif}\n    .btn-wa:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(37,211,102,.4)}\n    .prop-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 22px rgba(13,27,42,.07);transition:all .4s ease}\n    .prop-card:hover{transform:translateY(-8px);box-shadow:0 24px 60px rgba(13,27,42,.14)}\n    .prop-img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;position:absolute;top:0;left:0}\n    .prop-card:hover .prop-img{transform:scale(1.06)}\n    .why-card{background:#fff;border-radius:16px;border:1px solid var(--border);transition:all .3s ease;padding:30px 26px}\n    .why-card:hover{border-color:#C8A96E;transform:translateY(-4px);box-shadow:0 16px 40px rgba(200,169,110,.12)}\n    .why-icon{background:rgba(200,169,110,.1);color:#C8A96E;border-radius:14px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;transition:all .3s ease}\n    .why-card:hover .why-icon{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A}\n    .test-card{background:linear-gradient(145deg,#fff 0%,#F8F6F1 100%);border:1px solid var(--border);border-radius:20px;transition:all .3s ease;padding:26px 22px}\n    .test-card:hover{box-shadow:0 16px 40px rgba(13,27,42,.1);border-color:#C8A96E;transform:translateY(-4px)}\n    .badge-buy{background:linear-gradient(135deg,#0D1B2A,#162033);color:#C8A96E;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}\n    .badge-rent{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}\n    .nav{transition:all .3s ease;position:fixed;top:0;left:0;right:0;z-index:50;font-family:'DM Sans',sans-serif}\n    .nav-solid{background:rgba(13,27,42,.97)!important;backdrop-filter:blur(20px);box-shadow:0 4px 30px rgba(0,0,0,.3)}\n    .ftab-on{background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-weight:700}\n    .ftab-off{background:rgba(255,255,255,.15);color:rgba(255,255,255,.85)}\n    .ftab-off:hover{background:rgba(255,255,255,.25);color:#fff}\n    .fsel{border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:14px;background:rgba(255,255,255,.96);color:#1a1a2e;width:100%;cursor:pointer;appearance:none;-webkit-appearance:none}\n    .fsel:focus{outline:none;border-color:#C8A96E}\n    .finput{border:1.5px solid #E8E4DC;border-radius:8px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;background:#fff;color:#1a1a2e;width:100%;transition:border-color .2s}\n    .finput:focus{outline:none;border-color:#C8A96E;box-shadow:0 0 0 3px rgba(200,169,110,.12)}\n    .car-btn{background:rgba(13,27,42,.7);color:#fff;border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:absolute;top:50%;transform:translateY(-50%)}\n    .car-btn:hover{background:#C8A96E}\n    .loc-card{border-radius:16px;overflow:hidden;position:relative;cursor:pointer;transition:all .4s ease;height:258px}\n    .loc-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(13,27,42,.2)}\n    .loc-img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;position:absolute;top:0;left:0}\n    .loc-card:hover .loc-img{transform:scale(1.07)}\n    .loc-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,42,.92) 0%,rgba(13,27,42,.25) 55%,transparent 100%)}\n    .vid-card{border-radius:16px;overflow:hidden;position:relative;cursor:pointer;transition:all .4s ease;height:280px}\n    .vid-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.25)}\n    .vid-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.15) 55%,transparent 100%)}\n    .play-btn{transition:all .3s ease;background:rgba(200,169,110,.85);border-radius:50%;width:64px;height:64px;display:flex;align-items:center;justify-content:center}\n    .vid-card:hover .play-btn{transform:scale(1.15);background:rgba(200,169,110,1)}\n    .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;animation:mFadeIn .2s ease}\n    @keyframes mFadeIn{from{opacity:0}to{opacity:1}}\n    .modal-box{background:#fff;border-radius:20px;max-width:900px;width:100%;max-height:92vh;overflow-y:auto;animation:mSlideUp .3s ease}\n    @keyframes mSlideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}\n    .am-badge{background:rgba(200,169,110,.1);color:#7A5C1E;border:1px solid rgba(200,169,110,.3);border-radius:20px;padding:5px 13px;font-size:13px;display:inline-flex;align-items:center;gap:5px;margin:4px}\n    .wa-float{position:fixed;bottom:26px;right:26px;z-index:999;border-radius:50%;width:58px;height:58px;border:none;cursor:pointer;background:linear-gradient(135deg,#25D366,#128C7E);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,.45);animation:waPulse 2.5s infinite;text-decoration:none}\n    @keyframes waPulse{0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}50%{box-shadow:0 0 0 14px rgba(37,211,102,0)}}\n    .footer-bg{background:linear-gradient(135deg,#0D1B2A 0%,#081422 100%)}\n    .grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:26px}\n    .grid-why{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:22px}\n    .grid-loc{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:22px}\n    .grid-test{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:22px}\n    .grid-vid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}\n    .grid-contact{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}\n    .grid-footer{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px}\n    .section-tag{color:#C8A96E;font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}\n    .section-sub{color:#6B7280;font-size:16px;max-width:540px;margin:0 auto}\n    @media(max-width:900px){\n      .grid-contact{grid-template-columns:1fr!important}\n      .grid-footer{grid-template-columns:1fr 1fr!important}\n      .nav-links,.nav-phone{display:none!important}\n      .mob-menu-btn{display:flex!important}\n      .filter-grid{grid-template-columns:1fr 1fr!important}\n    }\n    @media(max-width:600px){\n      .grid-footer{grid-template-columns:1fr!important}\n      .filter-grid{grid-template-columns:1fr!important}\n      .stats-row{gap:20px!important}\n      .hero-ctas{flex-direction:column;align-items:center}\n      .modal-nearby{grid-template-columns:1fr!important}\n      .modal-ctas{flex-direction:column}\n    }\n    ::-webkit-scrollbar{width:5px}\n    ::-webkit-scrollbar-track{background:#F1EFE9}\n    ::-webkit-scrollbar-thumb{background:#C8A96E;border-radius:10px}\n  <\/style>\n<\/head>\n<body>\n<div id=\"root\"><\/div>\n<script src=\"https://unpkg.com/react@18.3.1/umd/react.production.min.js\" crossorigin><\/script>\n<script src=\"https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js\" crossorigin><\/script>\n<script src=\"https://unpkg.com/@babel/standalone@7.24.7/babel.min.js\"><\/script>\n\n<script>\n// Property listings \u2014 edit directly here, then upload to GitHub\n";
+const SITE_AFTER  = "\n<\/script>\n<script type=\"text/babel\">\n\nconst { useState, useEffect } = React;\n\n// SVG ICONS\nconst Ico=({d,d2,d3,cx,cy,r,pts,size=18,color=\"currentColor\",fill=\"none\",sw=2})=>(\n  <svg width={size} height={size} viewBox=\"0 0 24 24\" fill={fill} stroke={color} strokeWidth={sw} strokeLinecap=\"round\" strokeLinejoin=\"round\">\n    {d&&<path d={d}/>}{d2&&<path d={d2}/>}{d3&&<path d={d3}/>}\n    {cx!==undefined&&<circle cx={cx} cy={cy} r={r}/>}{pts&&<polygon points={pts}/>}\n  <\/svg>\n);\nconst IcoHome=p=><Ico {...p} d=\"m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" d2=\"M9 22V12h6v10\"/>;\nconst IcoBld=p=><Ico {...p} d=\"M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z\" d2=\"M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2\" d3=\"M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2\"/>;\nconst IcoSearch=p=><Ico {...p} d=\"m21 21-4.3-4.3\" cx={11} cy={11} r={8}/>;\nconst IcoPin=p=><Ico {...p} d=\"M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z\" cx={12} cy={10} r={3}/>;\nconst IcoBed=p=><Ico {...p} d=\"M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9\"/>;\nconst IcoBath=p=><Ico {...p} d=\"M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5M2 12h20\"/>;\nconst IcoSq=p=><svg width={p.size||18} height={p.size||18} viewBox=\"0 0 24 24\" fill=\"none\" stroke={p.color||\"currentColor\"} strokeWidth=\"2\" strokeLinecap=\"round\" strokeLinejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><\/svg>;\nconst IcoPhone=p=><Ico {...p} d=\"M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.99 9.18 19.79 19.79 0 0 1 1.92 4.5 2 2 0 0 1 4 2.41l3.07-.07a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z\"/>;\nconst IcoMsg=p=><Ico {...p} d=\"M7.9 20A9 9 0 1 0 4 16.1L2 22Z\"/>;\nconst IcoPlay=p=><Ico {...p} pts=\"5 3 19 12 5 21 5 3\" fill={p.fill||\"none\"}/>;\nconst IcoStar=p=><Ico {...p} pts=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\" fill={p.fill||\"none\"}/>;\nconst IcoChL=p=><Ico {...p} d=\"m15 18-6-6 6-6\"/>;\nconst IcoChR=p=><Ico {...p} d=\"m9 18 6-6-6-6\"/>;\nconst IcoX=p=><Ico {...p} d=\"M18 6 6 18\" d2=\"m6 6 12 12\"/>;\nconst IcoMenu=p=><Ico {...p} d=\"M4 12h16M4 6h16M4 18h16\"/>;\nconst IcoShield=p=><Ico {...p} d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/>;\nconst IcoAward=p=><Ico {...p} d=\"M15.477 12.89 17 22l-5-3-5 3 1.523-9.11\" cx={12} cy={8} r={6}/>;\nconst IcoFile=p=><Ico {...p} d=\"M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2zM14 2v6h6M16 13H8M16 17H8\"/>;\nconst IcoArr=p=><Ico {...p} d=\"M5 12h14\" d2=\"m12 5 7 7-7 7\"/>;\nconst IcoIG=p=><svg width={p.size||18} height={p.size||18} viewBox=\"0 0 24 24\" fill=\"none\" stroke={p.color||\"currentColor\"} strokeWidth=\"2\" strokeLinecap=\"round\" strokeLinejoin=\"round\"><rect x=\"2\" y=\"2\" width=\"20\" height=\"20\" rx=\"5\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/><circle cx=\"17.5\" cy=\"6.5\" r=\".5\" fill={p.color||\"currentColor\"}/><\/svg>;\nconst IcoFB=p=><Ico {...p} d=\"M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z\"/>;\nconst IcoTW=p=><Ico {...p} d=\"M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z\"/>;\nconst IcoYT=p=><Ico {...p} d=\"M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17\" d2=\"m10 15 5-3-5-3z\"/>;\nconst IcoMail=p=><svg width={p.size||18} height={p.size||18} viewBox=\"0 0 24 24\" fill=\"none\" stroke={p.color||\"currentColor\"} strokeWidth=\"2\" strokeLinecap=\"round\" strokeLinejoin=\"round\"><rect x=\"2\" y=\"4\" width=\"20\" height=\"16\" rx=\"2\"/><path d=\"m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7\"/><\/svg>;\nconst IcoEye=p=><Ico {...p} d=\"M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z\" cx={12} cy={12} r={3}/>;\nconst IcoOK=p=><Ico {...p} d=\"M22 11.08V12a10 10 0 1 1-5.93-9.14\" d2=\"m22 4-10 10.01-3-3.01\"/>;\n\n// DATA\nconst LOCS=[\"All Locations\",\"Mallampet\",\"Bachupally\",\"Gagilapur\",\"Dundigal\",\"Rameshwaram Banda\",\"Patancheru\",\"Miyapur\",\"Kukatpally\",\"Hitech City\",\"Gachibowli\",\"Kondapur\"];\nconst BB=[\"Any Budget\",\"Under \u20b950L\",\"\u20b950L\u2013\u20b91Cr\",\"\u20b91Cr\u2013\u20b92Cr\",\"\u20b92Cr\u2013\u20b95Cr\",\"\u20b95Cr+\"];\nconst BR=[\"Any Budget\",\"Under \u20b915K\",\"\u20b915K\u2013\u20b930K\",\"\u20b930K\u2013\u20b960K\",\"\u20b960K\u2013\u20b91L\",\"\u20b91L+\"];\n\nconst LOC_CARDS=[\n  {name:\"Mallampet\",count:38,img:\"https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80\"},\n  {name:\"Bachupally\",count:45,img:\"https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80\"},\n  {name:\"Gagilapur\",count:22,img:\"https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&q=80\"},\n  {name:\"Dundigal\",count:18,img:\"https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=600&q=80\"},\n  {name:\"Rameshwaram Banda\",count:14,img:\"https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80\"},\n  {name:\"Patancheru\",count:29,img:\"https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=80\"},\n];\nconst TESTI=[\n  {name:\"Rajesh Kumar\",role:\"NRI Investor, USA\",stars:5,img:\"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80\",review:\"Homearc made my dream of owning a luxury villa in Hyderabad possible from the US. Their team handled everything \u2014 from documentation to possession \u2014 with remarkable professionalism. Truly world-class service!\"},\n  {name:\"Priya Sharma\",role:\"IT Professional, Gachibowli\",stars:5,img:\"https://images.unsplash.com/photo-1494790108755-2616b612b6e4?w=120&q=80\",review:\"Found my perfect 3BHK through Homearc in just 2 weeks! Incredibly helpful, fully transparent on pricing, and the process was seamless. Highly recommended!\"},\n  {name:\"Venkat & Sunitha\",role:\"Family, Kondapur\",stars:5,img:\"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=120&q=80\",review:\"After months of searching elsewhere, Homearc helped us find the perfect family home in our preferred location and budget. Their understanding of what families need made all the difference.\"},\n  {name:\"Arjun Mehta\",role:\"Real Estate Investor\",stars:5,img:\"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80\",review:\"As an investor I need reliable data and honest advice. Homearc delivers both. I've purchased 3 apartments through them \u2014 every transaction has been flawless.\"},\n];\nconst VIDS=[\n  {title:\"Skyline Residences \u2014 Full Tour\",sub:\"3BHK Luxury Apartment \u00b7 Gachibowli\",thumb:\"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700&q=80\",url:\"https://www.youtube.com/embed/ScMzIvxBSi4\"},\n  {title:\"Emerald Villa \u2014 Walkthrough\",sub:\"4BHK Premium Villa \u00b7 Kokapet\",thumb:\"https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=700&q=80\",url:\"https://www.youtube.com/embed/ScMzIvxBSi4\"},\n  {title:\"Azure Heights \u2014 Community Tour\",sub:\"Premium Apartments \u00b7 Madhapur\",thumb:\"https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=700&q=80\",url:\"https://www.youtube.com/embed/ScMzIvxBSi4\"},\n];\nconst WHY=[\n  {icon:<IcoShield size={26}/>,title:\"Verified Properties\",desc:\"Every listing undergoes rigorous legal and physical verification. No disputed or fraudulent properties \u2014 ever.\"},\n  {icon:<IcoAward size={26}/>,title:\"Best Pricing\",desc:\"We guarantee fair market pricing with complete transparency. No hidden fees, no last-minute surprises.\"},\n  {icon:<IcoStar size={26}/>,title:\"Trusted Agents\",desc:\"Our RERA-certified agents bring deep local expertise and a genuine commitment to your satisfaction.\"},\n  {icon:<IcoPin size={26}/>,title:\"Premium Locations\",desc:\"Curated portfolio across Hyderabad's most sought-after and highest-growth micro-markets.\"},\n  {icon:<IcoFile size={26}/>,title:\"Easy Documentation\",desc:\"We manage all paperwork, registrations, and legal due diligence \u2014 swiftly and seamlessly.\"},\n  {icon:<IcoHome size={26}/>,title:\"Rental Assistance\",desc:\"From tenant verification to lease agreements, end-to-end rental management at no extra cost.\"},\n];\n\n// NAVBAR\nfunction Navbar(){\n  const [sc,setSc]=useState(false);\n  const [op,setOp]=useState(false);\n  useEffect(()=>{const fn=()=>setSc(window.scrollY>60);window.addEventListener(\"scroll\",fn);return()=>window.removeEventListener(\"scroll\",fn);},[]);\n  const go=(id)=>{setOp(false);document.getElementById(id)?.scrollIntoView({behavior:\"smooth\"});};\n  const links=[[\"Properties\",\"properties\"],[\"Locations\",\"locations\"],[\"Why Us\",\"why-us\"],[\"Testimonials\",\"testimonials\"],[\"Contact\",\"contact\"]];\n  return(\n    <nav className={`nav ${sc?\"nav-solid\":\"\"}`}>\n      <div style={{maxWidth:1280,margin:\"0 auto\",padding:\"0 24px\"}}>\n        <div style={{display:\"flex\",alignItems:\"center\",justifyContent:\"space-between\",height:72}}>\n          <div style={{display:\"flex\",alignItems:\"center\",gap:10,cursor:\"pointer\"}} onClick={()=>window.scrollTo({top:0,behavior:\"smooth\"})}>\n            <svg width=\"210\" height=\"54\" viewBox=\"0 0 210 54\" xmlns=\"http://www.w3.org/2000/svg\">\n              <defs><linearGradient id=\"navArc\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" stopColor=\"#C8A96E\"/><stop offset=\"100%\" stopColor=\"#E2C98A\"/><\/linearGradient><\/defs>\n              <path d=\"M6 44 Q28 6 50 44\" stroke=\"url(#navArc)\" strokeWidth=\"3.6\" fill=\"none\" strokeLinecap=\"round\"/>\n              <rect x=\"10\" y=\"44\" width=\"34\" height=\"21\" rx=\"2\" fill=\"none\" stroke=\"#C8A96E\" strokeWidth=\"2.2\"/>\n              <rect x=\"18\" y=\"53\" width=\"18\" height=\"12\" rx=\"1.5\" fill=\"#C8A96E\" opacity=\".65\"/>\n              <circle cx=\"28\" cy=\"3\" r=\"3\" fill=\"#D9BC82\"/>\n              <text x=\"62\" y=\"31\" fontFamily=\"Georgia,serif\" fontSize=\"24\" fontWeight=\"700\" fill=\"#ffffff\" letterSpacing=\"0.5\">HOMEARC<\/text>\n              <text x=\"62\" y=\"48\" fontFamily=\"Georgia,serif\" fontSize=\"14\" fill=\"#C8A96E\" letterSpacing=\"3.5\">REALITY<\/text>\n            <\/svg>\n          <\/div>\n          <div className=\"nav-links\" style={{display:\"flex\",gap:28,alignItems:\"center\"}}>\n            {links.map(([l,id])=><button key={id} onClick={()=>go(id)} style={{background:\"none\",border:\"none\",color:\"rgba(255,255,255,.82)\",fontSize:14,fontWeight:500,cursor:\"pointer\",transition:\"color .2s\"}} onMouseEnter={e=>e.target.style.color=\"#C8A96E\"} onMouseLeave={e=>e.target.style.color=\"rgba(255,255,255,.82)\"}>{l}<\/button>)}\n          <\/div>\n          <div style={{display:\"flex\",gap:12,alignItems:\"center\"}}>\n            <a href=\"tel:+918019992233\" className=\"nav-phone\" style={{display:\"flex\",alignItems:\"center\",gap:6,color:\"#C8A96E\",fontSize:14,fontWeight:600,textDecoration:\"none\"}}><IcoPhone size={15}/> +91 80199 92233<\/a>\n            <button className=\"btn-gold\" onClick={()=>go(\"contact\")} style={{padding:\"10px 20px\",borderRadius:8,fontSize:14}}>Free Consultation<\/button>\n            <button onClick={()=>setOp(!op)} className=\"mob-menu-btn\" style={{background:\"none\",border:\"none\",color:\"#fff\",cursor:\"pointer\",padding:4,display:\"none\"}}>{op?<IcoX size={24}/>:<IcoMenu size={24}/>}<\/button>\n          <\/div>\n        <\/div>\n        {op&&<div style={{background:\"rgba(13,27,42,.98)\",backdropFilter:\"blur(20px)\",borderTop:\"1px solid rgba(200,169,110,.2)\",padding:\"12px 0 20px\"}}>\n          {links.map(([l,id])=><button key={id} onClick={()=>go(id)} style={{display:\"block\",width:\"100%\",textAlign:\"left\",background:\"none\",border:\"none\",color:\"rgba(255,255,255,.82)\",padding:\"12px 0\",fontSize:16,cursor:\"pointer\",borderBottom:\"1px solid rgba(255,255,255,.06)\"}}>{l}<\/button>)}\n          <a href=\"tel:+918019992233\" style={{display:\"flex\",alignItems:\"center\",gap:8,color:\"#C8A96E\",padding:\"14px 0\",fontSize:15,textDecoration:\"none\",fontWeight:600}}><IcoPhone size={16}/> +91 80199 92233<\/a>\n        <\/div>}\n      <\/div>\n    <\/nav>\n  );\n}\n\n// CAROUSEL\nfunction Car({imgs,h}){\n  const [i,si]=useState(0);\n  const prev=e=>{e?.stopPropagation();si((i-1+imgs.length)%imgs.length)};\n  const next=e=>{e?.stopPropagation();si((i+1)%imgs.length)};\n  return(\n    <div style={{position:\"relative\",height:h,overflow:\"hidden\"}}>\n      <img src={imgs[i]} alt=\"\" loading=\"lazy\" className=\"prop-img\"/>\n      {imgs.length>1&&<>\n        <button className=\"car-btn\" onClick={prev} style={{left:10}}><IcoChL size={17}/><\/button>\n        <button className=\"car-btn\" onClick={next} style={{right:10}}><IcoChR size={17}/><\/button>\n        <div style={{position:\"absolute\",bottom:10,left:\"50%\",transform:\"translateX(-50%)\",display:\"flex\",gap:5}}>\n          {imgs.map((_,j)=><button key={j} onClick={e=>{e.stopPropagation();si(j);}} style={{width:j===i?20:6,height:6,borderRadius:3,border:\"none\",cursor:\"pointer\",background:j===i?\"#C8A96E\":\"rgba(255,255,255,.65)\",transition:\"all .2s\"}}/>)}\n        <\/div>\n      <\/>}\n    <\/div>\n  );\n}\n\n// PROP CARD\nfunction PCard({p,onV}){\n  const wa=encodeURIComponent(`Hi! I'm interested in ${p.title} at ${p.location}. Please share more details.`);\n  return(\n    <div className=\"prop-card\">\n      <div style={{position:\"relative\",height:240}}><Car imgs={p.imgs} h={240}/>\n        <span className={p.listing===\"Buy\"?\"badge-buy\":\"badge-rent\"} style={{position:\"absolute\",top:14,left:14,zIndex:5,padding:\"5px 13px\",borderRadius:20}}>{p.listing===\"Buy\"?\"For Sale\":\"For Rent\"}<\/span>\n        <span style={{position:\"absolute\",top:14,right:14,zIndex:5,background:\"rgba(0,0,0,.5)\",backdropFilter:\"blur(8px)\",color:\"#fff\",fontSize:12,padding:\"5px 11px\",borderRadius:20}}>{p.type}<\/span>\n      <\/div>\n      <div style={{padding:\"20px 22px 22px\"}}>\n        <h3 className=\"ff\" style={{fontSize:20,fontWeight:700,color:\"#0D1B2A\",marginBottom:8,lineHeight:1.2}}>{p.title}<\/h3>\n        <div style={{display:\"flex\",alignItems:\"center\",gap:5,marginBottom:12}}><IcoPin size={14} color=\"#C8A96E\"/><span style={{color:\"#6B7280\",fontSize:13}}>{p.location}, Hyderabad<\/span><\/div>\n        <div className=\"ff\" style={{fontSize:27,fontWeight:700,color:\"#C8A96E\",marginBottom:14}}>{p.price}<\/div>\n        <div style={{display:\"flex\",gap:16,paddingBottom:16,borderBottom:\"1px solid #F0EDE6\",marginBottom:16}}>\n          {[[<IcoBed size={14}/>,`${p.bedrooms} BHK`],[<IcoBath size={14}/>,`${p.bathrooms} Bath`],[<IcoSq size={14}/>,`${p.area} sqft`]].map(([ic,tx],j)=>(\n            <div key={j} style={{display:\"flex\",alignItems:\"center\",gap:5,color:\"#4B5563\",fontSize:13}}><span style={{color:\"#9CA3AF\"}}>{ic}<\/span>{tx}<\/div>\n          ))}\n        <\/div>\n        <div style={{display:\"flex\",gap:10}}>\n          <button className=\"btn-navy\" onClick={()=>onV(p)} style={{flex:1,padding:\"11px 0\",borderRadius:8,fontSize:14,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:6}}><IcoEye size={15}/> View Details<\/button>\n          <a href={`https://wa.me/${p.wp}?text=${wa}`} target=\"_blank\" rel=\"noopener noreferrer\" className=\"btn-wa\" style={{flex:1,padding:\"11px 0\",borderRadius:8,fontSize:14,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:6,textDecoration:\"none\"}}><IcoMsg size={15}/> WhatsApp<\/a>\n        <\/div>\n      <\/div>\n    <\/div>\n  );\n}\n\n// PROP MODAL\nfunction PMod({p,onC}){\n  const [ii,sii]=useState(0);\n  const [sv,ssv]=useState(false);\n  useEffect(()=>{document.body.style.overflow=\"hidden\";return()=>{document.body.style.overflow=\"\";};},[]);\n  const wa=encodeURIComponent(`Hi! I'm interested in ${p.title} at ${p.location}. Please share more details.`);\n  return(\n    <div className=\"modal-wrap\" onClick={onC}>\n      <div className=\"modal-box\" onClick={e=>e.stopPropagation()}>\n        <div style={{position:\"relative\"}}>\n          {!sv?(\n            <div style={{position:\"relative\",height:380}}>\n              <img src={p.imgs[ii]} alt=\"\" style={{width:\"100%\",height:\"100%\",objectFit:\"cover\"}}/>\n              <div style={{position:\"absolute\",inset:0,background:\"linear-gradient(to top,rgba(13,27,42,.55) 0%,transparent 50%)\"}}/>\n              <button className=\"car-btn\" onClick={()=>sii((ii-1+p.imgs.length)%p.imgs.length)} style={{left:16,width:44,height:44}}><IcoChL size={20}/><\/button>\n              <button className=\"car-btn\" onClick={()=>sii((ii+1)%p.imgs.length)} style={{right:16,width:44,height:44}}><IcoChR size={20}/><\/button>\n              <span className={p.listing===\"Buy\"?\"badge-buy\":\"badge-rent\"} style={{position:\"absolute\",top:16,left:16,padding:\"6px 14px\",borderRadius:20}}>{p.listing===\"Buy\"?\"For Sale\":\"For Rent\"}<\/span>\n              <button onClick={()=>ssv(true)} style={{position:\"absolute\",bottom:20,right:20,background:\"rgba(200,169,110,.9)\",border:\"none\",borderRadius:8,padding:\"10px 18px\",color:\"#0D1B2A\",fontWeight:700,fontSize:14,cursor:\"pointer\",display:\"flex\",alignItems:\"center\",gap:7,fontFamily:\"'DM Sans',sans-serif\"}}><IcoPlay size={15} fill=\"#0D1B2A\" color=\"#0D1B2A\"/> Watch Video Tour<\/button>\n              <div style={{position:\"absolute\",bottom:20,left:\"50%\",transform:\"translateX(-50%)\",display:\"flex\",gap:6}}>\n                {p.imgs.map((_,j)=><button key={j} onClick={()=>sii(j)} style={{width:j===ii?22:7,height:7,borderRadius:4,border:\"none\",cursor:\"pointer\",background:j===ii?\"#C8A96E\":\"rgba(255,255,255,.6)\",transition:\"all .2s\"}}/>)}\n              <\/div>\n            <\/div>\n          ):(\n            <div style={{height:380,position:\"relative\",background:\"#000\"}}>\n              <iframe src={p.video} title=\"Property Video\" allow=\"autoplay;encrypted-media\" style={{width:\"100%\",height:\"100%\",border:\"none\"}}/>\n              <button onClick={()=>ssv(false)} style={{position:\"absolute\",top:12,right:12,background:\"rgba(0,0,0,.6)\",border:\"none\",borderRadius:\"50%\",width:36,height:36,color:\"#fff\",cursor:\"pointer\",display:\"flex\",alignItems:\"center\",justifyContent:\"center\"}}><IcoX size={18}/><\/button>\n            <\/div>\n          )}\n          <button onClick={onC} style={{position:\"absolute\",top:16,right:16,background:\"rgba(13,27,42,.75)\",backdropFilter:\"blur(8px)\",border:\"none\",borderRadius:\"50%\",width:40,height:40,color:\"#fff\",cursor:\"pointer\",display:\"flex\",alignItems:\"center\",justifyContent:\"center\",zIndex:10}}><IcoX size={20}/><\/button>\n        <\/div>\n        <div style={{padding:\"28px 30px\"}}>\n          <div style={{display:\"flex\",justifyContent:\"space-between\",alignItems:\"flex-start\",flexWrap:\"wrap\",gap:12,marginBottom:20}}>\n            <div><h2 className=\"ff\" style={{fontSize:28,fontWeight:700,color:\"#0D1B2A\",marginBottom:6}}>{p.title}<\/h2><div style={{display:\"flex\",alignItems:\"center\",gap:6,color:\"#6B7280\",fontSize:14}}><IcoPin size={15} color=\"#C8A96E\"/> {p.location}, Hyderabad<\/div><\/div>\n            <div className=\"ff\" style={{fontSize:32,fontWeight:700,color:\"#C8A96E\"}}>{p.price}<\/div>\n          <\/div>\n          <div style={{display:\"flex\",flexWrap:\"wrap\",padding:\"16px 0\",background:\"#F8F6F1\",borderRadius:12,marginBottom:24}}>\n            {[[<IcoBed size={18}/>,\"Bedrooms\",p.bedrooms],[<IcoBath size={18}/>,\"Bathrooms\",p.bathrooms],[<IcoSq size={18}/>,\"Area\",`${p.area} sqft`],[<IcoHome size={18}/>,\"Furnished\",p.furnished]].map(([ic,lb,vl],j)=>(\n              <div key={j} style={{flex:1,minWidth:80,textAlign:\"center\",padding:\"8px 6px\"}}>\n                <div style={{color:\"#C8A96E\",marginBottom:5}}>{ic}<\/div>\n                <div style={{fontSize:12,color:\"#9CA3AF\",marginBottom:3}}>{lb}<\/div>\n                <div style={{fontWeight:700,color:\"#0D1B2A\",fontSize:15}}>{vl}<\/div>\n              <\/div>\n            ))}\n          <\/div>\n          <div style={{marginBottom:24}}><h3 className=\"ff\" style={{fontSize:20,fontWeight:700,color:\"#0D1B2A\",marginBottom:10}}>About this Property<\/h3><p style={{color:\"#4B5563\",lineHeight:1.78,fontSize:15}}>{p.desc}<\/p><\/div>\n          <div style={{marginBottom:24}}><h3 className=\"ff\" style={{fontSize:20,fontWeight:700,color:\"#0D1B2A\",marginBottom:12}}>Amenities<\/h3><div>{p.amen.map(a=><span key={a} className=\"am-badge\"><IcoOK size={12} color=\"#C8A96E\"/>{a}<\/span>)}<\/div><\/div>\n          <div className=\"modal-nearby\" style={{display:\"grid\",gridTemplateColumns:\"1fr 1fr\",gap:14,marginBottom:24}}>\n            {[[\"\ud83c\udfeb Nearby Schools\",p.nearby.schools],[\"\ud83c\udfe5 Nearby Hospitals\",p.nearby.hospitals]].map(([t,its])=>(\n              <div key={t} style={{padding:\"14px 16px\",background:\"#F8F6F1\",borderRadius:10}}><div style={{fontWeight:700,fontSize:14,color:\"#0D1B2A\",marginBottom:8}}>{t}<\/div>{its.map(it=><div key={it} style={{color:\"#4B5563\",fontSize:13,marginBottom:4,display:\"flex\",alignItems:\"center\",gap:5}}><span style={{color:\"#C8A96E\"}}>\u2022<\/span>{it}<\/div>)}<\/div>\n            ))}\n          <\/div>\n          <div style={{marginBottom:24}}><h3 className=\"ff\" style={{fontSize:20,fontWeight:700,color:\"#0D1B2A\",marginBottom:10}}>Location<\/h3><iframe src={`https://maps.google.com/maps?q=${encodeURIComponent(p.location+\", Hyderabad\")}&output=embed`} style={{width:\"100%\",height:220,borderRadius:12,border:\"none\"}} title=\"Map\"/><\/div>\n          <div className=\"modal-ctas\" style={{display:\"flex\",gap:12,flexWrap:\"wrap\"}}>\n            <a href={`https://wa.me/${p.wp}?text=${wa}`} target=\"_blank\" rel=\"noopener noreferrer\" className=\"btn-wa\" style={{flex:1,minWidth:150,padding:\"13px 20px\",borderRadius:10,fontSize:15,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:8,textDecoration:\"none\"}}><IcoMsg size={17}/> WhatsApp Inquiry<\/a>\n            <a href=\"tel:+918019992233\" className=\"btn-gold\" style={{flex:1,minWidth:150,padding:\"13px 20px\",borderRadius:10,fontSize:15,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:8,textDecoration:\"none\"}}><IcoPhone size={17}/> Call Now<\/a>\n            <a href={p.mapUrl} target=\"_blank\" rel=\"noopener noreferrer\" style={{flex:1,minWidth:150,padding:\"13px 20px\",borderRadius:10,fontSize:15,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:8,textDecoration:\"none\",background:\"#F8F6F1\",color:\"#0D1B2A\",fontWeight:600,border:\"1px solid #EDE9E0\"}}><IcoPin size={17} color=\"#C8A96E\"/> View on Maps<\/a>\n          <\/div>\n        <\/div>\n      <\/div>\n    <\/div>\n  );\n}\n\n// HERO\nfunction Hero({onFilter}){\n  const [tab,st]=useState(\"Buy\");\n  const [f,sf]=useState({type:\"\",location:\"\",budget:\"\",bedrooms:\"\",furnished:\"\"});\n  const go=()=>{onFilter({...f,listing:tab});document.getElementById(\"properties\")?.scrollIntoView({behavior:\"smooth\"});};\n  const Lbl=({t})=><label style={{display:\"block\",color:\"rgba(255,255,255,.72)\",fontSize:12,fontWeight:600,letterSpacing:\".07em\",marginBottom:6}}>{t}<\/label>;\n  return(\n    <section className=\"hero-bg\">\n      <div style={{flex:1,display:\"flex\",flexDirection:\"column\",alignItems:\"center\",justifyContent:\"center\",padding:\"120px 24px 36px\",textAlign:\"center\"}}>\n        <div style={{display:\"inline-flex\",alignItems:\"center\",gap:8,background:\"rgba(200,169,110,.14)\",border:\"1px solid rgba(200,169,110,.35)\",borderRadius:40,padding:\"8px 18px\",marginBottom:28}}>\n          <div style={{width:6,height:6,borderRadius:\"50%\",background:\"#C8A96E\"}}/><span style={{color:\"#C8A96E\",fontSize:12,fontWeight:700,letterSpacing:\".12em\"}}>HYDERABAD'S #1 FIND HOMES YOU ALWAYS DREAMED OF<\/span>\n        <\/div>\n        <h1 className=\"ff\" style={{fontSize:\"clamp(2.6rem,5.5vw,4.5rem)\",fontWeight:700,color:\"#fff\",lineHeight:1.14,marginBottom:20}}>\n          Find Your Perfect Home<br/><span style={{background:\"linear-gradient(135deg,#C8A96E,#EAD098)\",WebkitBackgroundClip:\"text\",WebkitTextFillColor:\"transparent\",backgroundClip:\"text\"}}>with Homearc Reality<\/span>\n        <\/h1>\n        <p style={{color:\"rgba(255,255,255,.72)\",fontSize:\"clamp(15px,2vw,18px)\",lineHeight:1.72,maxWidth:580,marginBottom:40}}>Discover verified apartments and villas near Mallampet, Bachupally, Dundigal &amp; surrounding areas. Trusted by families, IT professionals, and investors.<\/p>\n        <div className=\"hero-ctas\" style={{display:\"flex\",gap:16,justifyContent:\"center\",flexWrap:\"wrap\",marginBottom:52}}>\n          <button className=\"btn-gold\" onClick={()=>{st(\"Buy\");go();}} style={{padding:\"14px 32px\",borderRadius:10,fontSize:16,display:\"flex\",alignItems:\"center\",gap:8}}><IcoBld size={18}/> Buy Property<\/button>\n          <button className=\"btn-outline-white\" onClick={()=>{st(\"Rent\");go();}} style={{padding:\"14px 32px\",borderRadius:10,fontSize:16,display:\"flex\",alignItems:\"center\",gap:8}}><IcoHome size={18}/> Rent Property<\/button>\n        <\/div>\n        <div className=\"stats-row\" style={{display:\"flex\",gap:\"clamp(24px,5vw,52px)\",flexWrap:\"wrap\",justifyContent:\"center\",marginBottom:52}}>\n          {[[\"500+\",\"Properties Listed\"],[\"2,000+\",\"Happy Families\"],[\"15+\",\"Years Experience\"],[\"98%\",\"Client Satisfaction\"]].map(([n,l])=>(\n            <div key={l} style={{textAlign:\"center\"}}><div className=\"ff\" style={{fontSize:34,fontWeight:700,color:\"#C8A96E\"}}>{n}<\/div><div style={{color:\"rgba(255,255,255,.6)\",fontSize:13}}>{l}<\/div><\/div>\n          ))}\n        <\/div>\n      <\/div>\n      <div style={{width:\"100%\",maxWidth:1100,margin:\"0 auto\",padding:\"0 24px 64px\"}}>\n        <div className=\"glass\" style={{borderRadius:20,padding:\"26px 30px\"}}>\n          <div style={{display:\"flex\",gap:8,marginBottom:22}}>\n            {[\"Buy\",\"Rent\"].map(t=><button key={t} className={t===tab?\"ftab-on\":\"ftab-off\"} onClick={()=>st(t)} style={{padding:\"10px 28px\",borderRadius:8,fontSize:15,border:\"none\",cursor:\"pointer\",transition:\"all .2s\",fontFamily:\"'DM Sans',sans-serif\"}}>{t}<\/button>)}\n          <\/div>\n          <div className=\"filter-grid\" style={{display:\"grid\",gridTemplateColumns:\"repeat(auto-fit,minmax(145px,1fr))\",gap:12}}>\n            <div><Lbl t=\"PROPERTY TYPE\"/><select className=\"fsel\" value={f.type} onChange={e=>sf({...f,type:e.target.value})}><option value=\"\">All Types<\/option><option>Apartment<\/option><option>Villa<\/option><option>Gated Community<\/option><\/select><\/div>\n            <div><Lbl t=\"LOCATION\"/><select className=\"fsel\" value={f.location} onChange={e=>sf({...f,location:e.target.value})}>{LOCS.map(l=><option key={l}>{l}<\/option>)}<\/select><\/div>\n            <div><Lbl t=\"BUDGET\"/><select className=\"fsel\" value={f.budget} onChange={e=>sf({...f,budget:e.target.value})}>{(tab===\"Buy\"?BB:BR).map(b=><option key={b}>{b}<\/option>)}<\/select><\/div>\n            <div><Lbl t=\"BEDROOMS\"/><select className=\"fsel\" value={f.bedrooms} onChange={e=>sf({...f,bedrooms:e.target.value})}>{[\"Any\",\"1 BHK\",\"2 BHK\",\"3 BHK\",\"4 BHK\",\"4+ BHK\"].map(b=><option key={b}>{b}<\/option>)}<\/select><\/div>\n            <div><Lbl t=\"FURNISHING\"/><select className=\"fsel\" value={f.furnished} onChange={e=>sf({...f,furnished:e.target.value})}>{[\"Any\",\"Furnished\",\"Semi Furnished\",\"Unfurnished\"].map(x=><option key={x}>{x}<\/option>)}<\/select><\/div>\n            <div style={{display:\"flex\",alignItems:\"flex-end\"}}><button className=\"btn-gold\" onClick={go} style={{width:\"100%\",padding:\"12px 0\",borderRadius:8,fontSize:15,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:8}}><IcoSearch size={17}/> Search<\/button><\/div>\n          <\/div>\n        <\/div>\n      <\/div>\n    <\/section>\n  );\n}\n\nfunction SH({tag,title,sub,light=false}){\n  return(\n    <div style={{textAlign:\"center\",marginBottom:52}}>\n      <div className=\"section-tag\">{tag}<\/div>\n      <h2 className=\"ff\" style={{fontSize:\"clamp(2rem,4vw,3rem)\",fontWeight:700,color:light?\"#fff\":\"#0D1B2A\",marginBottom:12}}>{title}<\/h2>\n      {sub&&<p className=\"section-sub\" style={{color:light?\"rgba(255,255,255,.6)\":\"#6B7280\"}}>{sub}<\/p>}\n    <\/div>\n  );\n}\n\nfunction Featured({filters}){\n  const [sel,ssel]=useState(null);\n  const fp=PROPS.filter(p=>{\n    if(filters?.listing&&p.listing!==filters.listing)return false;\n    if(filters?.type&&filters.type!==\"\"&&p.type!==filters.type)return false;\n    if(filters?.location&&filters.location!==\"\"&&filters.location!==\"All Locations\"&&p.location!==filters.location)return false;\n    if(filters?.furnished&&filters.furnished!==\"Any\"&&filters.furnished!==\"\"&&p.furnished!==filters.furnished)return false;\n    return true;\n  });\n  return(\n    <section id=\"properties\" style={{padding:\"80px 24px\",background:\"#F8F6F1\"}}>\n      <div style={{maxWidth:1280,margin:\"0 auto\"}}>\n        <SH tag=\"CURATED LISTINGS\" title=\"Featured Properties\" sub=\"Hand-picked luxury apartments and villas in Hyderabad's most prestigious locations.\"/>\n        {fp.length===0?(\n          <div style={{textAlign:\"center\",padding:\"60px 0\",color:\"#9CA3AF\"}}><IcoHome size={48}/><div style={{fontSize:18,fontWeight:600,marginTop:16}}>No properties match your search.<\/div><div style={{fontSize:14,marginTop:8}}>Try adjusting your filter criteria.<\/div><\/div>\n        ):(\n          <div className=\"grid-3\">{fp.map(p=><PCard key={p.id} p={p} onV={ssel}/>)}<\/div>\n        )}\n      <\/div>\n      {sel&&<PMod p={sel} onC={()=>ssel(null)}/>}\n    <\/section>\n  );\n}\n\nfunction WhyUs(){\n  return(\n    <section id=\"why-us\" style={{padding:\"80px 24px\",background:\"#fff\"}}>\n      <div style={{maxWidth:1280,margin:\"0 auto\"}}>\n        <SH tag=\"OUR PROMISE\" title=\"Why Choose Homearc Reality\" sub=\"We combine deep market expertise with genuine care \u2014 delivering outcomes that exceed expectations.\"/>\n        <div className=\"grid-why\">\n          {WHY.map((c,i)=><div key={i} className=\"why-card\"><div className=\"why-icon\">{c.icon}<\/div><h3 className=\"ff\" style={{fontSize:21,fontWeight:700,color:\"#0D1B2A\",marginBottom:10}}>{c.title}<\/h3><p style={{color:\"#6B7280\",fontSize:14,lineHeight:1.72}}>{c.desc}<\/p><\/div>)}\n        <\/div>\n      <\/div>\n    <\/section>\n  );\n}\n\nfunction Locations(){\n  const sc=()=>document.getElementById(\"properties\")?.scrollIntoView({behavior:\"smooth\"});\n  return(\n    <section id=\"locations\" style={{padding:\"80px 24px\",background:\"#F8F6F1\"}}>\n      <div style={{maxWidth:1280,margin:\"0 auto\"}}>\n        <SH tag=\"EXPLORE BY AREA\" title=\"Popular Locations\" sub=\"Discover premium properties across Hyderabad's fastest-growing neighbourhoods.\"/>\n        <div className=\"grid-loc\">\n          {LOC_CARDS.map((lc,i)=>(\n            <div key={i} className=\"loc-card\">\n              <img src={lc.img} alt={lc.name} loading=\"lazy\" className=\"loc-img\"/>\n              <div className=\"loc-overlay\"/>\n              <div style={{position:\"absolute\",bottom:0,left:0,right:0,padding:\"22px 20px\"}}>\n                <div className=\"ff\" style={{fontSize:24,fontWeight:700,color:\"#fff\",marginBottom:4}}>{lc.name}<\/div>\n                <div style={{color:\"#C8A96E\",fontSize:13,fontWeight:600,marginBottom:14}}>{lc.count} Properties<\/div>\n                <button onClick={sc} style={{background:\"transparent\",border:\"1.5px solid rgba(200,169,110,.7)\",color:\"#C8A96E\",padding:\"7px 17px\",borderRadius:20,fontSize:13,fontWeight:600,cursor:\"pointer\",display:\"flex\",alignItems:\"center\",gap:6,transition:\"all .2s\",fontFamily:\"'DM Sans',sans-serif\"}} onMouseEnter={e=>{e.currentTarget.style.background=\"#C8A96E\";e.currentTarget.style.color=\"#0D1B2A\";}} onMouseLeave={e=>{e.currentTarget.style.background=\"transparent\";e.currentTarget.style.color=\"#C8A96E\";}}>Explore <IcoArr size={14}/><\/button>\n              <\/div>\n            <\/div>\n          ))}\n        <\/div>\n      <\/div>\n    <\/section>\n  );\n}\n\nfunction Testi(){\n  return(\n    <section id=\"testimonials\" style={{padding:\"80px 24px\",background:\"#fff\"}}>\n      <div style={{maxWidth:1100,margin:\"0 auto\"}}>\n        <SH tag=\"CLIENT STORIES\" title=\"What Our Clients Say\"/>\n        <div className=\"grid-test\">\n          {TESTI.map((t,i)=>(\n            <div key={i} className=\"test-card\">\n              <div style={{display:\"flex\",gap:3,marginBottom:14}}>{Array.from({length:t.stars}).map((_,j)=><IcoStar key={j} size={15} fill=\"#C8A96E\" color=\"#C8A96E\"/>)}<\/div>\n              <p style={{color:\"#4B5563\",fontSize:14,lineHeight:1.78,fontStyle:\"italic\",marginBottom:20}}>\"{t.review}\"<\/p>\n              <div style={{display:\"flex\",alignItems:\"center\",gap:12}}>\n                <img src={t.img} alt={t.name} loading=\"lazy\" style={{width:48,height:48,borderRadius:\"50%\",objectFit:\"cover\",border:\"2px solid #C8A96E\"}}/>\n                <div><div style={{fontWeight:700,color:\"#0D1B2A\",fontSize:15}}>{t.name}<\/div><div style={{color:\"#C8A96E\",fontSize:12}}>{t.role}<\/div><\/div>\n              <\/div>\n            <\/div>\n          ))}\n        <\/div>\n      <\/div>\n    <\/section>\n  );\n}\n\nfunction Videos(){\n  const [av,sav]=useState(null);\n  return(\n    <section style={{padding:\"80px 24px\",background:\"#0D1B2A\"}}>\n      <div style={{maxWidth:1280,margin:\"0 auto\"}}>\n        <SH light tag=\"VIRTUAL TOURS\" title=\"Property Video Showcase\" sub=\"Explore our properties from the comfort of your home with immersive video walkthroughs.\"/>\n        <div className=\"grid-vid\">\n          {VIDS.map((v,i)=>(\n            <div key={i} className=\"vid-card\" onClick={()=>sav(v)}>\n              <img src={v.thumb} alt={v.title} loading=\"lazy\" style={{position:\"absolute\",top:0,left:0,width:\"100%\",height:\"100%\",objectFit:\"cover\"}}/>\n              <div className=\"vid-overlay\"/>\n              <div style={{position:\"absolute\",inset:0,display:\"flex\",alignItems:\"center\",justifyContent:\"center\"}}><div className=\"play-btn\"><IcoPlay size={26} fill=\"#fff\" color=\"#fff\"/><\/div><\/div>\n              <div style={{position:\"absolute\",bottom:0,left:0,right:0,padding:\"20px 20px\"}}>\n                <div className=\"ff\" style={{fontSize:20,fontWeight:700,color:\"#fff\",marginBottom:4}}>{v.title}<\/div>\n                <div style={{color:\"#C8A96E\",fontSize:13}}>{v.sub}<\/div>\n              <\/div>\n            <\/div>\n          ))}\n        <\/div>\n      <\/div>\n      {av&&<div className=\"modal-wrap\" onClick={()=>sav(null)}><div style={{background:\"#000\",borderRadius:16,maxWidth:860,width:\"100%\",position:\"relative\"}} onClick={e=>e.stopPropagation()}><button onClick={()=>sav(null)} style={{position:\"absolute\",top:-42,right:0,background:\"transparent\",border:\"none\",color:\"#fff\",cursor:\"pointer\",fontSize:14,display:\"flex\",alignItems:\"center\",gap:6,fontFamily:\"'DM Sans',sans-serif\"}}><IcoX size={18}/> Close<\/button><iframe src={av.url} title={av.title} allow=\"autoplay;encrypted-media\" style={{width:\"100%\",height:480,borderRadius:16,border:\"none\"}}/><\/div><\/div>}\n    <\/section>\n  );\n}\n\nfunction Lead(){\n  const [f,sf]=useState({name:\"\",phone:\"\",email:\"\",interested:\"Buy\",location:\"\",budget:\"\"});\n  const [done,sd]=useState(false);\n  const set=(k,v)=>sf(p=>({...p,[k]:v}));\n  const sub=()=>{if(!f.name||!f.phone){alert(\"Please fill in your name and phone number.\");return;}sd(true);};\n  const wa=encodeURIComponent(`Hi! I'm looking for a property to ${f.interested}${f.location?\" in \"+f.location:\"\"}. Budget: ${f.budget||\"flexible\"}.`);\n  return(\n    <section id=\"contact\" style={{padding:\"80px 24px\",background:\"#F8F6F1\"}}>\n      <div style={{maxWidth:1080,margin:\"0 auto\"}}>\n        <div className=\"grid-contact\">\n          <div>\n            <div className=\"section-tag\">GET IN TOUCH<\/div>\n            <h2 className=\"ff\" style={{fontSize:\"clamp(2rem,3.5vw,2.8rem)\",fontWeight:700,color:\"#0D1B2A\",marginBottom:16,lineHeight:1.22}}>Find Your Dream Home Today<\/h2>\n            <p style={{color:\"#6B7280\",fontSize:15,lineHeight:1.76,marginBottom:34}}>Share your requirements and our expert advisors will call you back within 2 hours. Free consultation, no obligations \u2014 ever.<\/p>\n            <div style={{display:\"flex\",flexDirection:\"column\",gap:16}}>\n              {[[<IcoPhone size={20}/>,\"Call Us\",\"+91 80199 92233\",\"tel:+918019992233\"],[<IcoMsg size={20}/>,\"WhatsApp\",\"Chat Instantly\",`https://wa.me/918019992233?text=${wa}`],[<IcoMail size={20}/>,\"Email\",\"homearcreality@gmail.com\",\"mailto:homearcreality@gmail.com\"],[<IcoPin size={20}/>,\"Office\",\"Kasas Kala Kunj, Praneeth Nature Bounty, Hyderabad\",\"#\"]].map(([ic,lb,vl,hr],i)=>(\n                <a key={i} href={hr} target={hr.startsWith(\"http\")?\"_blank\":\"_self\"} rel=\"noopener noreferrer\"\n                  style={{display:\"flex\",alignItems:\"center\",gap:14,textDecoration:\"none\",padding:\"14px 18px\",background:\"#fff\",borderRadius:12,border:\"1px solid #EDE9E0\",transition:\"all .2s\"}}\n                  onMouseEnter={e=>{e.currentTarget.style.borderColor=\"#C8A96E\";e.currentTarget.style.boxShadow=\"0 8px 20px rgba(200,169,110,.1)\";}}\n                  onMouseLeave={e=>{e.currentTarget.style.borderColor=\"#EDE9E0\";e.currentTarget.style.boxShadow=\"none\";}}>\n                  <div style={{width:44,height:44,borderRadius:10,background:\"rgba(200,169,110,.1)\",display:\"flex\",alignItems:\"center\",justifyContent:\"center\",color:\"#C8A96E\",flexShrink:0}}>{ic}<\/div>\n                  <div><div style={{color:\"#9CA3AF\",fontSize:12,fontWeight:600}}>{lb}<\/div><div style={{color:\"#0D1B2A\",fontWeight:700,fontSize:14}}>{vl}<\/div><\/div>\n                <\/a>\n              ))}\n            <\/div>\n          <\/div>\n          <div style={{background:\"#fff\",borderRadius:20,padding:\"34px 30px\",boxShadow:\"0 8px 40px rgba(13,27,42,.07)\",border:\"1px solid #EDE9E0\"}}>\n            {done?(\n              <div style={{textAlign:\"center\",padding:\"40px 0\"}}>\n                <div style={{fontSize:56,marginBottom:16}}>\ud83c\udf89<\/div>\n                <h3 className=\"ff\" style={{fontSize:26,fontWeight:700,color:\"#0D1B2A\",marginBottom:10}}>Thank You!<\/h3>\n                <p style={{color:\"#6B7280\",lineHeight:1.72}}>Our advisor will contact you within 2 hours.<\/p>\n                <a href={`https://wa.me/918019992233?text=${wa}`} target=\"_blank\" rel=\"noopener noreferrer\" className=\"btn-wa\" style={{display:\"inline-flex\",alignItems:\"center\",gap:8,marginTop:24,padding:\"13px 28px\",borderRadius:10,fontSize:15,textDecoration:\"none\"}}><IcoMsg size={18}/> Chat on WhatsApp<\/a>\n              <\/div>\n            ):(\n              <>\n                <h3 className=\"ff\" style={{fontSize:24,fontWeight:700,color:\"#0D1B2A\",marginBottom:22}}>Free Consultation Request<\/h3>\n                <div style={{display:\"flex\",flexDirection:\"column\",gap:14}}>\n                  <input className=\"finput\" placeholder=\"Full Name *\" value={f.name} onChange={e=>set(\"name\",e.target.value)}/>\n                  <input className=\"finput\" placeholder=\"Phone Number *\" type=\"tel\" value={f.phone} onChange={e=>set(\"phone\",e.target.value)}/>\n                  <input className=\"finput\" placeholder=\"Email Address\" type=\"email\" value={f.email} onChange={e=>set(\"email\",e.target.value)}/>\n                  <div>\n                    <label style={{fontSize:13,color:\"#6B7280\",fontWeight:600,display:\"block\",marginBottom:8}}>Interested In<\/label>\n                    <div style={{display:\"flex\",gap:10}}>\n                      {[\"Buy\",\"Rent\"].map(opt=><button key={opt} onClick={()=>set(\"interested\",opt)} style={{flex:1,padding:\"11px 0\",borderRadius:8,border:`1.5px solid ${f.interested===opt?\"#C8A96E\":\"#E8E4DC\"}`,background:f.interested===opt?\"rgba(200,169,110,.08)\":\"#fff\",color:f.interested===opt?\"#C8A96E\":\"#6B7280\",fontWeight:600,fontSize:14,cursor:\"pointer\",transition:\"all .2s\",fontFamily:\"'DM Sans',sans-serif\"}}>{opt}<\/button>)}\n                    <\/div>\n                  <\/div>\n                  <select className=\"finput\" style={{cursor:\"pointer\",appearance:\"none\"}} value={f.location} onChange={e=>set(\"location\",e.target.value)}><option value=\"\">Preferred Location<\/option>{LOCS.slice(1).map(l=><option key={l}>{l}<\/option>)}<\/select>\n                  <select className=\"finput\" style={{cursor:\"pointer\",appearance:\"none\"}} value={f.budget} onChange={e=>set(\"budget\",e.target.value)}><option value=\"\">Budget Range<\/option>{(f.interested===\"Buy\"?BB:BR).slice(1).map(b=><option key={b}>{b}<\/option>)}<\/select>\n                  <button className=\"btn-gold\" onClick={sub} style={{padding:\"14px 0\",borderRadius:10,fontSize:16,width:\"100%\",marginTop:2}}>Get Free Consultation<\/button>\n                  <div style={{display:\"flex\",gap:10}}>\n                    <a href={`https://wa.me/918019992233?text=${wa}`} target=\"_blank\" rel=\"noopener noreferrer\" className=\"btn-wa\" style={{flex:1,padding:\"12px 0\",borderRadius:10,fontSize:14,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:7,textDecoration:\"none\"}}><IcoMsg size={16}/> WhatsApp<\/a>\n                    <a href=\"tel:+918019992233\" className=\"btn-navy\" style={{flex:1,padding:\"12px 0\",borderRadius:10,fontSize:14,display:\"flex\",alignItems:\"center\",justifyContent:\"center\",gap:7,textDecoration:\"none\"}}><IcoPhone size={16}/> Call Us<\/a>\n                  <\/div>\n                <\/div>\n              <\/>\n            )}\n          <\/div>\n        <\/div>\n      <\/div>\n    <\/section>\n  );\n}\n\nfunction Footer(){\n  const y=new Date().getFullYear();\n  const hov=(e,on)=>{e.currentTarget.style.color=on?\"#C8A96E\":\"rgba(255,255,255,.58)\";};\n  return(\n    <footer className=\"footer-bg\" style={{padding:\"60px 24px 0\",color:\"rgba(255,255,255,.62)\",fontFamily:\"'DM Sans',sans-serif\"}}>\n      <div style={{maxWidth:1280,margin:\"0 auto\"}}>\n        <div className=\"grid-footer\" style={{marginBottom:48}}>\n          <div>\n            <div style={{display:\"flex\",alignItems:\"center\",gap:10,marginBottom:16}}>\n              <svg width=\"210\" height=\"54\" viewBox=\"0 0 210 54\" xmlns=\"http://www.w3.org/2000/svg\">\n                <defs><linearGradient id=\"footArc\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" stopColor=\"#C8A96E\"/><stop offset=\"100%\" stopColor=\"#E2C98A\"/><\/linearGradient><\/defs>\n                <path d=\"M6 44 Q28 6 50 44\" stroke=\"url(#footArc)\" strokeWidth=\"3.6\" fill=\"none\" strokeLinecap=\"round\"/>\n                <rect x=\"10\" y=\"44\" width=\"34\" height=\"21\" rx=\"2\" fill=\"none\" stroke=\"#C8A96E\" strokeWidth=\"2.2\"/>\n                <rect x=\"18\" y=\"53\" width=\"18\" height=\"12\" rx=\"1.5\" fill=\"#C8A96E\" opacity=\".65\"/>\n                <circle cx=\"28\" cy=\"3\" r=\"3\" fill=\"#D9BC82\"/>\n                <text x=\"62\" y=\"31\" fontFamily=\"Georgia,serif\" fontSize=\"24\" fontWeight=\"700\" fill=\"#ffffff\" letterSpacing=\"0.5\">HOMEARC<\/text>\n                <text x=\"62\" y=\"48\" fontFamily=\"Georgia,serif\" fontSize=\"14\" fill=\"#C8A96E\" letterSpacing=\"3.5\">REALITY<\/text>\n              <\/svg>\n            <\/div>\n            <p style={{fontSize:14,lineHeight:1.8,marginBottom:22,maxWidth:280}}>Trusted real estate experts near Mallampet, Bachupally &amp; Dundigal. We help families, investors &amp; professionals find homes they always dreamed of.<\/p>\n            <div style={{display:\"flex\",gap:10}}>\n              {[[<IcoFB size={17}/>,\"#\"],[<IcoIG size={17}/>,\"#\"],[<IcoTW size={17}/>,\"#\"],[<IcoYT size={17}/>,\"#\"]].map(([ic,hr],i)=>(\n                <a key={i} href={hr} target=\"_blank\" rel=\"noopener noreferrer\" style={{width:38,height:38,borderRadius:8,background:\"rgba(255,255,255,.08)\",display:\"flex\",alignItems:\"center\",justifyContent:\"center\",color:\"rgba(255,255,255,.7)\",textDecoration:\"none\",transition:\"all .2s\"}} onMouseEnter={e=>{e.currentTarget.style.background=\"#C8A96E\";e.currentTarget.style.color=\"#0D1B2A\";}} onMouseLeave={e=>{e.currentTarget.style.background=\"rgba(255,255,255,.08)\";e.currentTarget.style.color=\"rgba(255,255,255,.7)\";}}>{ic}<\/a>\n              ))}\n            <\/div>\n          <\/div>\n          <div>\n            <div style={{color:\"#fff\",fontWeight:700,fontSize:15,marginBottom:16}}>Quick Links<\/div>\n            {[\"Properties\",\"Apartments for Sale\",\"Villas for Sale\",\"Apartments for Rent\",\"Villas for Rent\",\"Contact Us\"].map(l=><a key={l} href=\"#\" style={{display:\"block\",color:\"rgba(255,255,255,.58)\",fontSize:14,marginBottom:10,textDecoration:\"none\",transition:\"color .2s\"}} onMouseEnter={e=>hov(e,true)} onMouseLeave={e=>hov(e,false)}>{l}<\/a>)}\n          <\/div>\n          <div>\n            <div style={{color:\"#fff\",fontWeight:700,fontSize:15,marginBottom:16}}>Top Locations<\/div>\n            {LOCS.slice(1,8).map(l=><a key={l} href=\"#\" style={{display:\"block\",color:\"rgba(255,255,255,.58)\",fontSize:14,marginBottom:10,textDecoration:\"none\",transition:\"color .2s\"}} onMouseEnter={e=>hov(e,true)} onMouseLeave={e=>hov(e,false)}>{l}<\/a>)}\n          <\/div>\n          <div>\n            <div style={{color:\"#fff\",fontWeight:700,fontSize:15,marginBottom:16}}>Contact Info<\/div>\n            {[[<IcoPin size={15}/>,\"Kasas Kala Kunj, Praneeth Nature Bounty, Near Mallampet ORR Exit 4A, Hyderabad \u2014 500043\"],[<IcoPhone size={15}/>,\" +91 80199 92233\"],[<IcoMail size={15}/>,\"homearcreality@gmail.com\"]].map(([ic,tx],i)=>(\n              <div key={i} style={{display:\"flex\",gap:10,marginBottom:14,alignItems:\"flex-start\"}}><span style={{color:\"#C8A96E\",marginTop:2,flexShrink:0}}>{ic}<\/span><span style={{fontSize:14,lineHeight:1.52}}>{tx}<\/span><\/div>\n            ))}\n            <div style={{marginTop:20,padding:\"12px 15px\",background:\"rgba(200,169,110,.09)\",borderRadius:10,border:\"1px solid rgba(200,169,110,.2)\"}}>\n              <div style={{color:\"#C8A96E\",fontSize:12,fontWeight:600,marginBottom:5}}>Office Hours<\/div>\n              <div style={{fontSize:13}}>Mon \u2013 Sat: 9:00 AM \u2013 7:00 PM<\/div>\n              <div style={{fontSize:13}}>Sunday: 10:00 AM \u2013 4:00 PM<\/div>\n            <\/div>\n          <\/div>\n        <\/div>\n        <div style={{borderTop:\"1px solid rgba(255,255,255,.08)\",padding:\"18px 0\",display:\"flex\",justifyContent:\"space-between\",alignItems:\"center\",flexWrap:\"wrap\",gap:12}}>\n          <div style={{fontSize:13}}>\u00a9 {y} Homearc Reality. All rights reserved.<\/div>\n          <div style={{display:\"flex\",gap:22}}>{[\"Privacy Policy\",\"Terms of Service\",\"Sitemap\"].map(l=><a key={l} href=\"#\" style={{color:\"rgba(255,255,255,.45)\",fontSize:13,textDecoration:\"none\"}}>{l}<\/a>)}<\/div>\n        <\/div>\n      <\/div>\n    <\/footer>\n  );\n}\n\nfunction App(){\n  const [filters,sf]=useState(null);\n  return(\n    <>\n      <Navbar/>\n      <main>\n        <Hero onFilter={sf}/>\n        <Featured filters={filters}/>\n        <WhyUs/>\n        <Locations/>\n        <Testi/>\n        <Videos/>\n        <Lead/>\n      <\/main>\n      <Footer/>\n      <a href=\"https://wa.me/918019992233?text=Hi! I found Homearc Reality online and I'm looking for a property. Can you help me?\" target=\"_blank\" rel=\"noopener noreferrer\" className=\"wa-float\" title=\"Chat on WhatsApp\">\n        <IcoMsg size={28} fill=\"#fff\" color=\"#fff\"/>\n      <\/a>\n    <\/>\n  );\n}\n\nReactDOM.createRoot(document.getElementById('root')).render(<App/>);\n<\/script>\n<\/body>\n<\/html>\n";
+const PW_B64 = "SG9tZWFyY0AyMDI0";
+const LOCS = ["Mallampet","Bachupally","Gagilapur","Dundigal","Rameshwaram Banda","Patancheru","Miyapur","Kukatpally","Hitech City","Gachibowli","Kondapur"];
+const AMENS = ["Swimming Pool","Gymnasium","Clubhouse","24/7 Security","Power Backup","Covered Parking","Children Play Area","Landscaped Gardens","Fully Furnished","Modular Kitchen","Smart Home","Home Theater","Private Pool","Terrace Garden","Servant Quarters","CCTV Security","EV Charging","Concierge","Pet-Friendly","High-Speed Internet","Solar Water Heater","Jogging Track","Jacuzzi","Intercom","Lift / Elevator","Gas Pipeline","Vastu Compliant"];
+const N = 10;
+const SK = "ha_v4";
+const GK = "ha_gh_v2";
+const FB = ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80","https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80","https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80"];
+const FV = "https://www.youtube.com/embed/ScMzIvxBSi4";
+
+let props=[], idc=1, saveT=null;
+
+// LOGIN
+function doLogin(){
+  const pw=document.getElementById("pw").value;
+  if(btoa(unescape(encodeURIComponent(pw)))===PW_B64){
+    sessionStorage.setItem("ha","1");
+    document.getElementById("login").style.display="none";
+    document.getElementById("admin").style.display="block";
+    init();
+  } else {
+    document.getElementById("lerr").style.display="block";
+    document.getElementById("pw").value="";
+  }
+}
+function logout(){sessionStorage.removeItem("ha");document.getElementById("admin").style.display="none";document.getElementById("login").style.display="flex";}
+document.addEventListener("DOMContentLoaded",()=>{if(sessionStorage.getItem("ha")==="1"){document.getElementById("login").style.display="none";document.getElementById("admin").style.display="block";init();}});
+
+// GITHUB SETTINGS
+function saveGH(){
+  const s={u:document.getElementById("ghu").value,r:document.getElementById("ghr").value,t:document.getElementById("ght").value,b:document.getElementById("ghbr").value||"main",f:document.getElementById("ghf").value||"index.html"};
+  localStorage.setItem(GK,JSON.stringify(s)); updGHStatus();
+}
+function getGH(){try{return JSON.parse(localStorage.getItem(GK)||"{}");}catch(e){return {};}}
+function loadGHSettings(){
+  const s=getGH();
+  if(s.u)document.getElementById("ghu").value=s.u;
+  if(s.r)document.getElementById("ghr").value=s.r;
+  if(s.t)document.getElementById("ght").value=s.t;
+  if(s.b)document.getElementById("ghbr").value=s.b;
+  if(s.f)document.getElementById("ghf").value=s.f;
+  updGHStatus();
+  if(s.u&&s.r&&s.t){document.getElementById("ghbody").classList.remove("open");document.getElementById("ghchev").style.transform="rotate(180deg)";}
+}
+function updGHStatus(){
+  const s=getGH(), ok=s.u&&s.r&&s.t;
+  document.getElementById("gstat").className="gstatus"+(ok?" ok":"");
+  document.getElementById("ghbadge").textContent=ok?"— connected ✓":"— configure once to enable publishing";
+  document.getElementById("ghbadge").style.color=ok?"#16a34a":"#9CA3AF";
+}
+function toggleGH(){
+  const b=document.getElementById("ghbody"),c=document.getElementById("ghchev");
+  const open=b.classList.contains("open"); b.classList.toggle("open",!open);
+  c.style.transform=open?"":"rotate(180deg)";
+}
+async function testGH(){
+  const s=getGH(), el=document.getElementById("ghtr");
+  el.style.display="block"; el.style.background="#EFF6FF"; el.style.border="1px solid #BFDBFE"; el.style.color="#1e40af";
+  el.textContent="Testing...";
+  try{
+    const r=await fetch("https://api.github.com/repos/"+s.u+"/"+s.r,{headers:{Authorization:"Bearer "+s.t,Accept:"application/vnd.github.v3+json"}});
+    const d=await r.json();
+    if(r.ok){el.style.background="#F0FDF4";el.style.border="1px solid #BBF7D0";el.style.color="#15803D";el.textContent="✅ Connected to "+d.full_name+" — ready to publish!";updGHStatus();setTimeout(()=>{document.getElementById("ghbody").classList.remove("open");document.getElementById("ghchev").style.transform="rotate(180deg)";},1500);}
+    else{el.style.background="#FEF2F2";el.style.border="1px solid #FECACA";el.style.color="#dc2626";el.textContent="❌ "+(d.message||"Check username, repo and token");}
+  }catch(e){el.style.background="#FEF2F2";el.style.border="1px solid #FECACA";el.style.color="#dc2626";el.textContent="❌ Network error";}
+}
+
+// LOAD FROM GITHUB
+async function loadFromGH(){
+  const s=getGH();
+  if(!s.u||!s.r||!s.t){toast("⚙️ Configure GitHub settings first");toggleGH();return;}
+  toast("⏳ Loading from GitHub...");
+  try{
+    const url="https://raw.githubusercontent.com/"+s.u+"/"+s.r+"/"+(s.b||"main")+"/"+(s.f||"index.html")+"?t="+Date.now();
+    const r=await fetch(url);
+    if(!r.ok) throw new Error("File not found");
+    const html=await r.text();
+    const ps=html.indexOf("const PROPS=[");
+    if(ps===-1) throw new Error("No PROPS found");
+    const pe=html.indexOf("];",ps)+2;
+    const loaded=new Function("return "+html.substring(ps,pe).replace("const PROPS=","").replace(/;$/,""))();
+    if(!Array.isArray(loaded)) throw new Error("Parse error");
+    props=loaded.map((p,i)=>{
+      const ep=blank(idc++);
+      Object.assign(ep,{title:p.title||"",type:p.type||"Apartment",listing:p.listing||"Rent",price:p.price||"",location:p.location||"Mallampet",bedrooms:String(p.bedrooms||2),bathrooms:String(p.bathrooms||2),area:String(p.area||""),furnished:p.furnished||"Semi Furnished",desc:p.desc||"",amen:p.amen||[],videoUrl:p.video||"",mapUrl:p.mapUrl||"",wp:p.wp||"918019992233",schools:((p.nearby&&p.nearby.schools)||[]).join(", "),hospitals:((p.nearby&&p.nearby.hospitals)||[]).join(", ")});
+      if(p.imgs) p.imgs.forEach((img,j)=>{if(j<N)ep["img"+(j+1)]=img;});
+      return ep;
+    });
+    render(); scheduleSave();
+    toast("✅ "+loaded.length+" listings loaded!");
+  }catch(e){toast("❌ "+e.message);}
+}
+
+// SAVE
+function scheduleSave(){
+  setSpill("saving"); clearTimeout(saveT);
+  saveT=setTimeout(()=>{try{localStorage.setItem(SK,JSON.stringify({props,idc}));}catch(e){}setSpill("saved");},600);
+}
+function setSpill(s){
+  const p=document.getElementById("spill"),t=document.getElementById("stxt"),d=p.querySelector(".sdot");
+  if(s==="saved"){p.style.background="rgba(22,163,74,.15)";p.style.color="#16a34a";p.style.borderColor="rgba(22,163,74,.3)";d.style.background="#16a34a";t.textContent="All changes saved";}
+  else{p.style.background="rgba(200,169,110,.15)";p.style.color="#92400e";p.style.borderColor="rgba(200,169,110,.3)";d.style.background="#C8A96E";t.textContent="Saving...";}
+}
+
+// TOAST
+function toast(m,d=2800){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),d);}
+
+// PROP CRUD
+function blank(id){
+  const p={_id:id,title:"",type:"Apartment",listing:"Rent",price:"",location:"Mallampet",bedrooms:"2",bathrooms:"2",area:"",furnished:"Semi Furnished",desc:"",amen:[],videoUrl:"",mapUrl:"",wp:"918019992233",schools:"",hospitals:""};
+  for(let i=1;i<=N;i++) p["img"+i]="";
+  return p;
+}
+function addProp(data){const id=idc++;const p=Object.assign(blank(id),data||{},{_id:id});props.push(p);render();scheduleSave();setTimeout(()=>toggleP(id),50);}
+function rmProp(id){if(!confirm("Remove this property?"))return;props=props.filter(p=>p._id!==id);render();scheduleSave();}
+function dupProp(id){const p=props.find(p=>p._id===id);if(!p)return;const c=JSON.parse(JSON.stringify(p));c.title+=" (Copy)";addProp(c);}
+
+function toggleP(id){
+  const b=document.getElementById("pb"+id),c=document.getElementById("pc"+id);
+  if(!b)return;const was=b.classList.contains("open");
+  document.querySelectorAll(".pbody").forEach(x=>x.classList.remove("open"));
+  document.querySelectorAll(".chev").forEach(x=>x.style.transform="");
+  if(!was){b.classList.add("open");c.style.transform="rotate(180deg)";}
+}
+
+function up(id,f,v){const p=props.find(p=>p._id===id);if(!p)return;p[f]=v;updHdr(id);scheduleSave();}
+function updHdr(id){
+  const p=props.find(p=>p._id===id);if(!p)return;
+  const n=document.getElementById("pn"+id),m=document.getElementById("pm"+id),t=document.getElementById("pt"+id);
+  if(n)n.textContent=p.title||"Untitled";
+  if(m)m.textContent=[p.type,p.location,p.bedrooms?p.bedrooms+" BHK":""].filter(Boolean).join(" · ");
+  if(t){t.textContent=p.listing==="Buy"?"FOR SALE":"FOR RENT";t.className=p.listing==="Buy"?"ptag-b":"ptag-r";}
+}
+function togAmen(pid,a){
+  const p=props.find(p=>p._id===pid);if(!p)return;
+  const i=p.amen.indexOf(a);if(i>-1)p.amen.splice(i,1);else p.amen.push(a);
+  const c=document.getElementById("ac"+pid+"_"+a.replace(/[^a-z0-9]/gi,""));
+  if(c)c.classList.toggle("on");scheduleSave();
+}
+function toEmbed(u){
+  if(!u)return"";u=u.trim();
+  if(u.includes("youtube.com/embed/"))return u;
+  let id="",m;
+  m=u.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,15})/);if(m)id=m[1];
+  if(!id){m=u.match(/youtu\.be\/([a-zA-Z0-9_-]{6,15})/);if(m)id=m[1];}
+  if(!id){m=u.match(/[?&]v=([a-zA-Z0-9_-]{6,15})/);if(m)id=m[1];}
+  return id?"https://www.youtube.com/embed/"+id:u;
+}
+function upVid(id,v){const c=toEmbed(v);const p=props.find(p=>p._id===id);if(p)p.videoUrl=c;if(c&&c!==v){const i=document.getElementById("vi"+id);if(i)i.value=c;toast("✅ YouTube link converted!");}scheduleSave();}
+function upMap(id,v){up(id,"mapUrl",v);const bar=document.getElementById("mb"+id);const lnk=document.getElementById("ml"+id);if(bar&&v.trim()){bar.style.display="block";if(lnk){lnk.href=v;lnk.textContent=v.length>50?v.substring(0,50)+"...":v;}}else if(bar)bar.style.display="none";}
+function autoMap(id){const p=props.find(p=>p._id===id);if(!p)return;const url="https://maps.google.com/?q="+encodeURIComponent(p.location+", Hyderabad");const i=document.getElementById("mi"+id);if(i){i.value=url;upMap(id,url);}toast("📍 Map link auto-filled!");}
+function upImgUrl(id,num,v){const p=props.find(p=>p._id===id);if(p)p["img"+num]=v;const prev=document.getElementById("ip"+id+"_"+num);if(prev){if(v.trim()){prev.src=v;prev.style.display="block";}else prev.style.display="none";}scheduleSave();}
+
+// RENDER
+function render(){
+  const list=document.getElementById("plist"),cnt=document.getElementById("cnt");
+  cnt.textContent=props.length+" Propert"+(props.length===1?"y":"ies");
+  if(!props.length){list.innerHTML="<div style='text-align:center;padding:48px;background:#fff;border-radius:14px;border:2px dashed #DDD9D0;color:#9CA3AF'><div style='font-size:42px;margin-bottom:12px'>🏠</div><div style='font-size:15px;font-weight:600'>No properties yet</div><div style='font-size:13px;margin-top:6px'>Click &quot;+ Add New Property&quot; to get started</div></div>";return;}
+  list.innerHTML=props.map((p,i)=>`
+  <div class="pcard">
+    <div class="phdr" onclick="toggleP(${p._id})">
+      <div style="display:flex;align-items:center;flex:1"><div class="pnum">${i+1}</div><div><div style="font-weight:600;color:#0D1B2A" id="pn${p._id}">${p.title||"Untitled"}</div><div style="font-size:12px;color:#9CA3AF;margin-top:2px" id="pm${p._id}">${[p.type,p.location,p.bedrooms?p.bedrooms+" BHK":""].filter(Boolean).join(" · ")}</div></div></div>
+      <div style="display:flex;align-items:center;gap:9px"><span id="pt${p._id}" class="${p.listing==="Buy"?"ptag-b":"ptag-r"}">${p.listing==="Buy"?"FOR SALE":"FOR RENT"}</span><span class="chev" id="pc${p._id}">▾</span></div>
+    </div>
+    <div class="pbody" id="pb${p._id}">
+      <div class="sec">Basic Details</div>
+      <label>Property Title</label>
+      <input value="${p.title||""}" placeholder="e.g. Luxury 3BHK Independent Floor" oninput="up(${p._id},'title',this.value)"/>
+      <div class="g2">
+        <div><label>Type</label><select onchange="up(${p._id},'type',this.value)">${["Apartment","Villa","Gated Community"].map(t=>`<option ${p.type===t?"selected":""}>${t}</option>`).join("")}</select></div>
+        <div><label>Buy or Rent</label><select onchange="up(${p._id},'listing',this.value)"><option ${p.listing==="Buy"?"selected":""}>Buy</option><option ${p.listing==="Rent"?"selected":""}>Rent</option></select></div>
+        <div><label>Price</label><input value="${p.price||""}" placeholder="INR 38000/mo or Rs.85 Lakhs" oninput="up(${p._id},'price',this.value)"/></div>
+        <div><label>Location</label><select onchange="up(${p._id},'location',this.value)">${LOCS.map(l=>`<option ${p.location===l?"selected":""}>${l}</option>`).join("")}</select></div>
+        <div><label>Bedrooms</label><select onchange="up(${p._id},'bedrooms',this.value)">${["1","2","3","4","5","6"].map(n=>`<option ${p.bedrooms==n?"selected":""}>${n} BHK</option>`).join("")}</select></div>
+        <div><label>Bathrooms</label><select onchange="up(${p._id},'bathrooms',this.value)">${["1","2","3","4","5","6"].map(n=>`<option ${p.bathrooms==n?"selected":""}>${n}</option>`).join("")}</select></div>
+        <div><label>Area (sqft)</label><input type="number" value="${p.area||""}" placeholder="1450" oninput="up(${p._id},'area',this.value)"/></div>
+        <div><label>Furnishing</label><select onchange="up(${p._id},'furnished',this.value)">${["Furnished","Semi Furnished","Unfurnished"].map(f=>`<option ${p.furnished===f?"selected":""}>${f}</option>`).join("")}</select></div>
+      </div>
+      <label>Description</label>
+      <textarea placeholder="Describe the property..." oninput="up(${p._id},'desc',this.value)">${p.desc||""}</textarea>
+
+      <div class="sec">Property Photos — paste imgbb Direct Links</div>
+      <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400E;margin-bottom:10px;line-height:1.65">
+        📸 Upload photos to <a href="https://imgbb.com" target="_blank" style="color:#C8A96E;font-weight:600">imgbb.com</a> → right-click photo → Copy image address → paste below. Links start with <code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px">https://i.ibb.co/</code>
+      </div>
+      <div class="iurl-grid">
+        ${Array.from({length:N},(_,j)=>{const n=j+1,v=p["img"+n]||"",isMain=n===1;return `<div class="iurl-slot"><div class="iurl-label">PHOTO ${n}${isMain?" — MAIN":""}</div><input class="iurl-input" value="${v}" placeholder="https://i.ibb.co/..." oninput="upImgUrl(${p._id},${n},this.value)"/>${v?`<img id="ip${p._id}_${n}" class="ipreview" style="display:block" src="${v}" onerror="this.style.display='none'">`:`<img id="ip${p._id}_${n}" class="ipreview">`}</div>`;}).join("")}
+      </div>
+
+      <div class="sec">Video Tour</div>
+      <label>YouTube / Shorts link — auto converted</label>
+      <input id="vi${p._id}" value="${p.videoUrl||""}" placeholder="Paste any YouTube link..." oninput="upVid(${p._id},this.value)"/>
+
+      <div class="sec">Google Maps Location</div>
+      <div style="display:flex;gap:8px">
+        <input id="mi${p._id}" value="${p.mapUrl||""}" placeholder="https://maps.google.com/?q=..." style="flex:1" oninput="upMap(${p._id},this.value)"/>
+        <button class="bsm" onclick="autoMap(${p._id})">⚡ Auto</button>
+      </div>
+      <div id="mb${p._id}" style="display:${p.mapUrl?"block":"none"};margin-top:6px;background:#F8F6F1;border-radius:8px;padding:8px 12px">
+        <a id="ml${p._id}" href="${p.mapUrl||"#"}" target="_blank" style="font-size:12px;color:#C8A96E;word-break:break-all">${p.mapUrl||""}</a>
+      </div>
+
+      <div class="sec">Amenities — click to select</div>
+      <div class="achips">
+        ${AMENS.map(a=>{const k=a.replace(/[^a-z0-9]/gi,""),on=p.amen.includes(a)?"on":"";return`<div class="chip ${on}" id="ac${p._id}_${k}" onclick="togAmen(${p._id},'${a}')"><span class="cdot"></span>${a}</div>`;}).join("")}
+      </div>
+
+      <div class="sec">Contact & Nearby</div>
+      <div class="g3">
+        <div><label>WhatsApp (with country code)</label><input value="${p.wp||"918019992233"}" oninput="up(${p._id},'wp',this.value)"/></div>
+        <div><label>Nearby Schools (comma separated)</label><input value="${p.schools||""}" placeholder="DAV School, St. Marys" oninput="up(${p._id},'schools',this.value)"/></div>
+        <div><label>Nearby Hospitals (comma separated)</label><input value="${p.hospitals||""}" placeholder="Apollo, Care Hospital" oninput="up(${p._id},'hospitals',this.value)"/></div>
+      </div>
+
+      <div class="pacts">
+        <button class="btn br" onclick="rmProp(${p._id})">🗑 Remove</button>
+        <button class="bsm" onclick="dupProp(${p._id})">⧉ Duplicate</button>
+      </div>
+    </div>
+  </div>`).join("");
+}
+
+// BUILD HTML
+function safeS(s){
+  if(!s)return"";
+  return String(s).split("\\").join("\\\\").split('"').join('\\"').split("\r").join("").split("\n").join(" ").trim();
+}
+function buildHtml(){
+  let code="const PROPS=[\n";
+  props.forEach(function(p,idx){
+    const imgs=[];
+    for(let i=1;i<=N;i++){if(p["img"+i]&&p["img"+i].trim())imgs.push(p["img"+i].trim());}
+    if(!imgs.length)imgs.push(FB[0],FB[1],FB[2]);
+    else if(imgs.length===1){imgs.push(FB[1],FB[2]);}
+    else if(imgs.length===2)imgs.push(FB[2]);
+    const vid=toEmbed(p.videoUrl)||FV;
+    const map=p.mapUrl||("https://maps.google.com/?q="+encodeURIComponent(p.location+", Hyderabad"));
+    const amen=p.amen.length?p.amen:["Power Backup","24/7 Security","Covered Parking"];
+    const sch=p.schools?p.schools.split(",").map(function(s){return s.trim();}).filter(Boolean):["Nearby School"];
+    const hos=p.hospitals?p.hospitals.split(",").map(function(s){return s.trim();}).filter(Boolean):["Nearby Hospital"];
+    code+="  {id:"+(idx+1)+",";
+    code+='title:"'+safeS(p.title||"Property "+(idx+1))+'",';
+    code+='type:"'+p.type+'",listing:"'+p.listing+'",';
+    code+='price:"'+safeS(p.price||"Price on Request")+'",';
+    code+='location:"'+p.location+'",';
+    code+="bedrooms:"+(p.bedrooms||2)+",bathrooms:"+(p.bathrooms||2)+",";
+    code+="area:"+(p.area||1000)+',furnished:"'+p.furnished+'",\n';
+    code+='   desc:"'+safeS(p.desc||"A property in "+p.location)+'",\n';
+    code+="   amen:["+amen.map(function(a){return'"'+safeS(a)+'"';}).join(",")+"],\n";
+    code+="   imgs:["+imgs.map(function(u){return'"'+safeS(u)+'"';}).join(",")+"],\n";
+    code+='   video:"'+safeS(vid)+'",mapUrl:"'+safeS(map)+'",\n';
+    code+="   nearby:{schools:["+sch.map(function(s){return'"'+safeS(s)+'"';}).join(",")+"],";
+    code+="hospitals:["+hos.map(function(h){return'"'+safeS(h)+'"';}).join(",")+"]},";
+    code+='wp:"'+(p.wp||"918019992233")+'"}, \n';
+  });
+  code+="];";
+  return SITE_BEFORE+code+SITE_AFTER;
+}
+
+// PUBLISH
+async function publish(){
+  const s=getGH();
+  if(!s.u||!s.r||!s.t){toast("⚙️ Configure GitHub settings first");toggleGH();return;}
+  if(!props.length){toast("Add at least one property first!");return;}
+  const ov=document.getElementById("pov"); ov.classList.add("on");
+  document.getElementById("psteps").style.display="block";
+  document.getElementById("pcd").style.display="none";
+  document.getElementById("perr").style.display="none";
+  document.getElementById("ptitle").textContent="Publishing...";
+  document.getElementById("pmsg").textContent="Pushing to GitHub. Netlify auto-deploys in ~30 seconds.";
+  document.getElementById("pemi").textContent="🚀";
+  setPS(1,"");setPS(2,"");setPS(3,"");setPS(4,"");
+
+  try{
+    setPS(1,"active");
+    const html=buildHtml();
+    setPS(1,"done");
+
+    setPS(2,"active");
+    const shaR=await fetch("https://api.github.com/repos/"+s.u+"/"+s.r+"/contents/"+(s.f||"index.html"),{headers:{Authorization:"Bearer "+s.t,Accept:"application/vnd.github.v3+json"}});
+    let sha=null;
+    if(shaR.ok){const d=await shaR.json();sha=d.sha;}
+    setPS(2,"done");
+
+    setPS(3,"active");
+    const bytes=new TextEncoder().encode(html);
+    let bin="";
+    for(let i=0;i<bytes.length;i+=8192){const chunk=bytes.subarray(i,i+8192);bin+=String.fromCharCode.apply(null,chunk);}
+    const b64=btoa(bin);
+    const body={message:"Update listings — "+new Date().toLocaleString("en-IN"),content:b64,branch:s.b||"main"};
+    if(sha)body.sha=sha;
+    const upR=await fetch("https://api.github.com/repos/"+s.u+"/"+s.r+"/contents/"+(s.f||"index.html"),{method:"PUT",headers:{Authorization:"Bearer "+s.t,Accept:"application/vnd.github.v3+json","Content-Type":"application/json"},body:JSON.stringify(body)});
+    if(!upR.ok){const err=await upR.json();throw new Error(err.message||"Upload failed");}
+    setPS(3,"done");setPS(4,"active");
+
+    document.getElementById("psteps").style.display="none";
+    document.getElementById("ptitle").textContent="Published! 🎉";
+    document.getElementById("pmsg").textContent="Netlify is deploying your site...";
+    document.getElementById("pemi").textContent="✅";
+    document.getElementById("pcd").style.display="block";
+    setPS(4,"done");
+    let t=35;
+    const ct=setInterval(function(){t--;document.getElementById("cdnum").textContent=t;if(t<=0){clearInterval(ct);document.getElementById("cdnum").textContent="Live!";}},1000);
+  }catch(e){
+    document.getElementById("psteps").style.display="none";
+    document.getElementById("perr").style.display="block";
+    document.getElementById("perrmsg").textContent="❌ "+e.message+" — Check your GitHub token has repo write access.";
+    document.getElementById("ptitle").textContent="Failed";
+    document.getElementById("pemi").textContent="⚠️";
+  }
+}
+function setPS(n,state){
+  const el=document.getElementById("ps"+n);if(!el)return;
+  const labels={1:"Building website",2:"Connecting to GitHub",3:"Uploading file",4:"Netlify deploying"};
+  el.className="pstep"+(state?" "+state:"");
+  el.innerHTML="<span style='margin-right:8px'>"+(state==="active"?"<span class=spin>⟳</span>":state==="done"?"✅":state==="err"?"❌":"⏳")+"</span>"+labels[n];
+}
+function closePov(){document.getElementById("pov").classList.remove("on");}
+
+// INIT
+function init(){
+  loadGHSettings();
+  try{const d=JSON.parse(localStorage.getItem(SK)||"{}");if(d.props&&d.props.length){props=d.props;idc=d.idc||props.length+1;render();setSpill("saved");return;}}catch(e){}
+  render();setSpill("saved");
+}
+</script>
+</body>
+</html>
