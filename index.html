@@ -278,7 +278,7 @@ function PCard({p,onV}){
       <div style={{padding:"20px 22px 22px"}}>
         <h3 className="ff" style={{fontSize:20,fontWeight:700,color:"#0D1B2A",marginBottom:8,lineHeight:1.2}}>{p.title}</h3>
         <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:12}}><IcoPin size={14} color="#C8A96E"/><span style={{color:"#6B7280",fontSize:13}}>{p.location}, Hyderabad</span></div>
-        <div className="ff" style={{fontSize:27,fontWeight:700,color:"#C8A96E",marginBottom:14}}>{p.price}</div>
+        <div className="ff" style={{fontSize:27,fontWeight:700,color:"#C8A96E",marginBottom:14,fontFamily:"'DM Sans',sans-serif",fontVariantNumeric:"lining-nums"}}>{p.price}</div>
         <div style={{display:"flex",gap:16,paddingBottom:16,borderBottom:"1px solid #F0EDE6",marginBottom:16}}>
           {[[<IcoBed size={14}/>,`${p.bedrooms} BHK`],[<IcoBath size={14}/>,`${p.bathrooms} Bath`],[<IcoSq size={14}/>,`${p.area} sqft`]].map(([ic,tx],j)=>(
             <div key={j} style={{display:"flex",alignItems:"center",gap:5,color:"#4B5563",fontSize:13}}><span style={{color:"#9CA3AF"}}>{ic}</span>{tx}</div>
@@ -330,7 +330,7 @@ function PMod({p,onC}){
         <div style={{padding:"28px 30px"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:12,marginBottom:20}}>
             <div><h2 className="ff" style={{fontSize:28,fontWeight:700,color:"#0D1B2A",marginBottom:6}}>{p.title}</h2><div style={{display:"flex",alignItems:"center",gap:6,color:"#6B7280",fontSize:14}}><IcoPin size={15} color="#C8A96E"/> {p.location}, Hyderabad</div></div>
-            <div className="ff" style={{fontSize:32,fontWeight:700,color:"#C8A96E"}}>{p.price}</div>
+            <div className="ff" style={{fontSize:32,fontWeight:700,color:"#C8A96E",fontFamily:"'DM Sans',sans-serif",fontVariantNumeric:"lining-nums"}}>{p.price}</div>
           </div>
           <div style={{display:"flex",flexWrap:"wrap",padding:"16px 0",background:"#F8F6F1",borderRadius:12,marginBottom:24}}>
             {[[<IcoBed size={18}/>,"Bedrooms",p.bedrooms],[<IcoBath size={18}/>,"Bathrooms",p.bathrooms],[<IcoSq size={18}/>,"Area",`${p.area} sqft`],[<IcoHome size={18}/>,"Furnished",p.furnished]].map(([ic,lb,vl],j)=>(
@@ -362,7 +362,7 @@ function PMod({p,onC}){
 
 // HERO
 function Hero({onFilter}){
-  const [tab,st]=useState("Buy");
+  const [tab,st]=useState("Rent");
   const [f,sf]=useState({type:"",location:"",budget:"",bedrooms:"",furnished:""});
   const go=()=>{onFilter({...f,listing:tab});document.getElementById("properties")?.scrollIntoView({behavior:"smooth"});};
   const Lbl=({t})=><label style={{display:"block",color:"rgba(255,255,255,.72)",fontSize:12,fontWeight:600,letterSpacing:".07em",marginBottom:6}}>{t}</label>;
