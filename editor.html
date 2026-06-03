@@ -328,11 +328,17 @@ function rmProp(id){if(!confirm("Remove this property?"))return;props=props.filt
 function dupProp(id){const p=props.find(p=>p._id===id);if(!p)return;const c=JSON.parse(JSON.stringify(p));c.title+=" (Copy)";addProp(c);}
 
 function toggleP(id){
-  const b=document.getElementById("pb"+id),c=document.getElementById("pc"+id);
-  if(!b)return;const was=b.classList.contains("open");
-  document.querySelectorAll(".pbody").forEach(x=>x.classList.remove("open"));
-  document.querySelectorAll(".chev").forEach(x=>x.style.transform="");
-  if(!was){b.classList.add("open");c.style.transform="rotate(180deg)";}
+  try{
+    const b=document.getElementById("pb"+id),c=document.getElementById("pc"+id);
+    if(!b){console.log("body not found for id:",id); return;}
+    const was=b.classList.contains("open");
+    document.querySelectorAll(".pbody").forEach(x=>x.classList.remove("open"));
+    document.querySelectorAll(".chev").forEach(x=>x.style.transform="");
+    if(!was){b.classList.add("open");if(c)c.style.transform="rotate(180deg)";
+      // Scroll into view on mobile
+      setTimeout(()=>b.scrollIntoView({behavior:"smooth",block:"start"}),100);
+    }
+  }catch(e){console.error("toggleP error:",e);}
 }
 
 function up(id,f,v){const p=props.find(p=>p._id===id);if(!p)return;p[f]=v;updHdr(id);scheduleSave();}
@@ -370,9 +376,13 @@ function render(){
   if(!props.length){list.innerHTML="<div style='text-align:center;padding:48px;background:#fff;border-radius:14px;border:2px dashed #DDD9D0;color:#9CA3AF'><div style='font-size:42px;margin-bottom:12px'>🏠</div><div style='font-size:15px;font-weight:600'>No properties yet</div><div style='font-size:13px;margin-top:6px'>Click &quot;+ Add New Property&quot; to get started</div></div>";return;}
   list.innerHTML=props.map((p,i)=>`
   <div class="pcard">
-    <div class="phdr" onclick="toggleP(${p._id})">
+    <div class="phdr" onclick="toggleP(${p._id})" style="cursor:pointer">
       <div style="display:flex;align-items:center;flex:1"><div class="pnum">${i+1}</div><div><div style="font-weight:600;color:#0D1B2A" id="pn${p._id}">${p.title||"Untitled"}</div><div style="font-size:12px;color:#9CA3AF;margin-top:2px" id="pm${p._id}">${[p.type,p.location,p.bedrooms?p.bedrooms+" BHK":""].filter(Boolean).join(" · ")}</div></div></div>
-      <div style="display:flex;align-items:center;gap:9px"><span id="pt${p._id}" class="${p.listing==="Buy"?"ptag-b":"ptag-r"}">${p.listing==="Buy"?"FOR SALE":"FOR RENT"}</span><span class="chev" id="pc${p._id}">▾</span></div>
+      <div style="display:flex;align-items:center;gap:9px">
+        <span id="pt${p._id}" class="${p.listing==="Buy"?"ptag-b":"ptag-r"}">${p.listing==="Buy"?"FOR SALE":"FOR RENT"}</span>
+        <button onclick="event.stopPropagation();toggleP(${p._id})" style="background:linear-gradient(135deg,#C8A96E,#D9BC82);border:none;color:#0D1B2A;font-weight:700;font-size:12px;padding:6px 14px;border-radius:8px;cursor:pointer;font-family:DM Sans,sans-serif">✏️ Edit</button>
+        <span class="chev" id="pc${p._id}">▾</span>
+      </div>
     </div>
     <div class="pbody" id="pb${p._id}">
       <div class="sec">Basic Details</div>
@@ -532,7 +542,18 @@ function closePov(){document.getElementById("pov").classList.remove("on");}
 // INIT
 function init(){
   loadGHSettings();
-  try{const d=JSON.parse(localStorage.getItem(SK)||"{}");if(d.props&&d.props.length){props=d.props;idc=d.idc||props.length+1;render();setSpill("saved");return;}}catch(e){}
+  try{
+    const d=JSON.parse(localStorage.getItem(SK)||"{}");
+    if(d.props&&d.props.length){
+      // Ensure every prop has _id set
+      props=d.props.map((p,i)=>{
+        if(!p._id) p._id = idc++;
+        return p;
+      });
+      idc=d.idc||props.length+1;
+      render();setSpill("saved");return;
+    }
+  }catch(e){console.error("Load error:",e);}
   render();setSpill("saved");
 }
 </script>
