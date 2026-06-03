@@ -95,7 +95,17 @@
     ::-webkit-scrollbar{width:5px}
     ::-webkit-scrollbar-track{background:#F1EFE9}
     ::-webkit-scrollbar-thumb{background:#C8A96E;border-radius:10px}
-  </style>
+  
+/* Force DM Sans lining numerals everywhere */
+.ff, [class*="price"], span, div {
+  font-variant-numeric: lining-nums;
+}
+.num, .price-text {
+  font-family: "DM Sans", sans-serif !important;
+  font-variant-numeric: lining-nums !important;
+  font-feature-settings: "lnum" 1 !important;
+}
+</style>
 </head>
 <body>
 <div id="root"></div>
@@ -281,7 +291,7 @@ function PCard({p,onV}){
         <div className="ff" style={{fontSize:27,fontWeight:700,color:"#C8A96E",marginBottom:14,fontFamily:"'DM Sans',sans-serif",fontVariantNumeric:"lining-nums"}}>{p.price}</div>
         <div style={{display:"flex",gap:16,paddingBottom:16,borderBottom:"1px solid #F0EDE6",marginBottom:16}}>
           {[[<IcoBed size={14}/>,`${p.bedrooms} BHK`],[<IcoBath size={14}/>,`${p.bathrooms} Bath`],[<IcoSq size={14}/>,`${p.area} sqft`]].map(([ic,tx],j)=>(
-            <div key={j} style={{display:"flex",alignItems:"center",gap:5,color:"#4B5563",fontSize:13}}><span style={{color:"#9CA3AF"}}>{ic}</span>{tx}</div>
+            <div key={j} style={{display:"flex",alignItems:"center",gap:5,color:"#4B5563",fontSize:13,fontFamily:"'DM Sans',sans-serif",fontVariantNumeric:"lining-nums"}}><span style={{color:"#9CA3AF"}}>{ic}</span>{tx}</div>
           ))}
         </div>
         <div style={{display:"flex",gap:10}}>
@@ -337,7 +347,7 @@ function PMod({p,onC}){
               <div key={j} style={{flex:1,minWidth:80,textAlign:"center",padding:"8px 6px"}}>
                 <div style={{color:"#C8A96E",marginBottom:5}}>{ic}</div>
                 <div style={{fontSize:12,color:"#9CA3AF",marginBottom:3}}>{lb}</div>
-                <div style={{fontWeight:700,color:"#0D1B2A",fontSize:15}}>{vl}</div>
+                <div style={{fontWeight:700,color:"#0D1B2A",fontSize:15,fontFamily:"'DM Sans',sans-serif",fontVariantNumeric:"lining-nums"}}>{vl}</div>
               </div>
             ))}
           </div>
