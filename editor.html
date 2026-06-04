@@ -505,14 +505,18 @@ async function publish(){
     setPS(2,"done");
 
     setPS(3,"active");
-    const bytes=new TextEncoder().encode(html);
-    let bin="";
-    for(let i=0;i<bytes.length;i+=8192){const chunk=bytes.subarray(i,i+8192);bin+=String.fromCharCode.apply(null,chunk);}
-    const b64=btoa(bin);
+    // Reliable UTF-8 to base64 encoding
+    const b64=btoa(unescape(encodeURIComponent(html)));
     const body={message:"Update listings — "+new Date().toLocaleString("en-IN"),content:b64,branch:s.b||"main"};
     if(sha)body.sha=sha;
     const upR=await fetch("https://api.github.com/repos/"+s.u+"/"+s.r+"/contents/"+(s.f||"index.html"),{method:"PUT",headers:{Authorization:"token "+s.t,Accept:"application/vnd.github.v3+json","Content-Type":"application/json"},body:JSON.stringify(body)});
-    if(!upR.ok){const err=await upR.json();throw new Error(err.message||"Upload failed");}
+    if(!upR.ok){
+      let errMsg="Upload failed";
+      try{const err=await upR.json();errMsg=err.message||errMsg;}catch(e){}
+      throw new Error("GitHub returned HTTP "+upR.status+": "+errMsg);
+    }
+    const upData=await upR.json();
+    console.log("✅ Published successfully:",upData.content?.name);
     setPS(3,"done");setPS(4,"active");
 
     document.getElementById("psteps").style.display="none";
