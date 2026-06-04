@@ -270,11 +270,11 @@ async function testGH(){
   el.style.display="block"; el.style.background="#EFF6FF"; el.style.border="1px solid #BFDBFE"; el.style.color="#1e40af";
   el.textContent="Testing...";
   try{
-    const r=await fetch("https://api.github.com/repos/"+s.u+"/"+s.r,{headers:{Authorization:"Bearer "+s.t,Accept:"application/vnd.github.v3+json"}});
+    const r=await fetch("https://api.github.com/user",{headers:{Authorization:"token "+s.t,Accept:"application/vnd.github.v3+json","X-Requested-With":"XMLHttpRequest"}});
     const d=await r.json();
     if(r.ok){el.style.background="#F0FDF4";el.style.border="1px solid #BBF7D0";el.style.color="#15803D";el.textContent="✅ Connected to "+d.full_name+" — ready to publish!";updGHStatus();setTimeout(()=>{document.getElementById("ghbody").classList.remove("open");document.getElementById("ghchev").style.transform="rotate(180deg)";},1500);}
-    else{el.style.background="#FEF2F2";el.style.border="1px solid #FECACA";el.style.color="#dc2626";el.textContent="❌ "+(d.message||"Check username, repo and token");}
-  }catch(e){el.style.background="#FEF2F2";el.style.border="1px solid #FECACA";el.style.color="#dc2626";el.textContent="❌ Network error";}
+    else{el.style.background="#FEF2F2";el.style.border="1px solid #FECACA";el.style.color="#dc2626";el.textContent="❌ HTTP "+r.status+": "+(d.message||"Check username, repo and token");}
+  }catch(e){el.style.background="#FEF2F2";el.style.border="1px solid #FECACA";el.style.color="#dc2626";el.textContent="❌ Network error: "+e.message+" — Try disabling browser extensions or VPN";}
 }
 
 // LOAD FROM GITHUB
@@ -499,7 +499,7 @@ async function publish(){
     setPS(1,"done");
 
     setPS(2,"active");
-    const shaR=await fetch("https://api.github.com/repos/"+s.u+"/"+s.r+"/contents/"+(s.f||"index.html"),{headers:{Authorization:"Bearer "+s.t,Accept:"application/vnd.github.v3+json"}});
+    const shaR=await fetch("https://api.github.com/repos/"+s.u+"/"+s.r+"/contents/"+(s.f||"index.html"),{headers:{Authorization:"token "+s.t,Accept:"application/vnd.github.v3+json"}});
     let sha=null;
     if(shaR.ok){const d=await shaR.json();sha=d.sha;}
     setPS(2,"done");
@@ -511,7 +511,7 @@ async function publish(){
     const b64=btoa(bin);
     const body={message:"Update listings — "+new Date().toLocaleString("en-IN"),content:b64,branch:s.b||"main"};
     if(sha)body.sha=sha;
-    const upR=await fetch("https://api.github.com/repos/"+s.u+"/"+s.r+"/contents/"+(s.f||"index.html"),{method:"PUT",headers:{Authorization:"Bearer "+s.t,Accept:"application/vnd.github.v3+json","Content-Type":"application/json"},body:JSON.stringify(body)});
+    const upR=await fetch("https://api.github.com/repos/"+s.u+"/"+s.r+"/contents/"+(s.f||"index.html"),{method:"PUT",headers:{Authorization:"token "+s.t,Accept:"application/vnd.github.v3+json","Content-Type":"application/json"},body:JSON.stringify(body)});
     if(!upR.ok){const err=await upR.json();throw new Error(err.message||"Upload failed");}
     setPS(3,"done");setPS(4,"active");
 
