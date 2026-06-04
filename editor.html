@@ -190,9 +190,19 @@ textarea{min-height:80px;resize:vertical}
     </div>
 
     <!-- PUBLISH PANEL -->
+    <!-- DOWNLOAD PANEL - PRIMARY METHOD -->
+    <div style="background:#fff;border:2px solid #C8A96E;border-radius:14px;padding:22px;margin-bottom:16px">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#0D1B2A;margin-bottom:6px">⬇ Download & Upload — Always Works</h2>
+      <p style="font-size:13px;color:#6B7280;margin-bottom:16px;line-height:1.6">Download your listings as a complete website file, then upload to GitHub. <strong>Takes 60 seconds. Works every time. No token needed.</strong></p>
+      <button onclick="downloadSite()" style="background:linear-gradient(135deg,#C8A96E,#D9BC82);color:#0D1B2A;font-weight:700;font-size:15px;padding:13px 24px;border:none;border-radius:10px;cursor:pointer;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:8px;margin-bottom:12px">⬇ Download index.html</button>
+      <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px 14px;font-size:12px;color:#15803D;line-height:1.7">
+        <strong>After downloading:</strong> Go to <a href="https://github.com/janardhankasa/homearcrealty/upload/main" target="_blank" style="color:#15803D;font-weight:700">github.com/janardhankasa/homearcrealty/upload/main</a> → drag the file → Commit changes → site updates in 30 seconds ✅
+      </div>
+    </div>
+    <!-- PUBLISH PANEL - BONUS IF IT WORKS -->
     <div class="pub-box">
-      <h2>🚀 One-Click Publish</h2>
-      <p>Add or edit your listings below then click Publish — <strong style="color:#C8A96E">homearcrealty.com</strong> updates in ~30 seconds automatically.</p>
+      <h2>🚀 One-Click Publish <span style="font-size:12px;font-weight:400;opacity:.6">(requires GitHub token)</span></h2>
+      <p>If GitHub is connected, this publishes automatically in ~30 seconds.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <button class="btn bg" onclick="publish()" style="font-size:15px;padding:13px 24px">🚀 Publish to Site</button>
         <a href="https://homearcrealty.com" target="_blank" class="bgh btn" style="text-decoration:none">🌐 View Live Site</a>
@@ -447,6 +457,18 @@ function safeS(s){
   if(!s)return"";
   return String(s).split("\\").join("\\\\").split('"').join('\\"').split("\r").join("").split("\n").join(" ").trim();
 }
+function downloadSite(){
+  if(!props.length){toast("Add at least one property first!");return;}
+  const html=buildHtml();
+  const blob=new Blob([html],{type:"text/html"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download="index.html";
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+  toast("✅ index.html downloaded! Now upload it to GitHub.",5000);
+}
+
 function buildHtml(){
   let code="const PROPS=[\n";
   props.forEach(function(p,idx){
