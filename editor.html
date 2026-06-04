@@ -470,34 +470,34 @@ function downloadSite(){
 }
 
 function buildHtml(){
-  let code="const PROPS=[\n";
+  // Use JSON.stringify for ALL values - handles any special character safely
+  let code='const PROPS=[\n';
   props.forEach(function(p,idx){
     const imgs=[];
-    for(let i=1;i<=N;i++){if(p["img"+i]&&p["img"+i].trim())imgs.push(p["img"+i].trim());}
-    if(!imgs.length)imgs.push(FB[0],FB[1],FB[2]);
-    else if(imgs.length===1){imgs.push(FB[1],FB[2]);}
-    else if(imgs.length===2)imgs.push(FB[2]);
-    const vid=toEmbed(p.videoUrl)||FV;
-    const map=p.mapUrl||("https://maps.google.com/?q="+encodeURIComponent(p.location+", Hyderabad"));
-    const amen=p.amen.length?p.amen:["Power Backup","24/7 Security","Covered Parking"];
-    const sch=p.schools?p.schools.split(",").map(function(s){return s.trim();}).filter(Boolean):["Nearby School"];
-    const hos=p.hospitals?p.hospitals.split(",").map(function(s){return s.trim();}).filter(Boolean):["Nearby Hospital"];
-    code+="  {id:"+(idx+1)+",";
-    code+='title:"'+safeS(p.title||"Property "+(idx+1))+'",';
-    code+='type:"'+p.type+'",listing:"'+p.listing+'",';
-    code+='price:"'+safeS(p.price||"Price on Request")+'",';
-    code+='location:"'+p.location+'",';
-    code+="bedrooms:"+(p.bedrooms||2)+",bathrooms:"+(p.bathrooms||2)+",";
-    code+="area:"+(p.area||1000)+',furnished:"'+p.furnished+'",\n';
-    code+='   desc:"'+safeS(p.desc||"A property in "+p.location)+'",\n';
-    code+="   amen:["+amen.map(function(a){return'"'+safeS(a)+'"';}).join(",")+"],\n";
-    code+="   imgs:["+imgs.map(function(u){return'"'+safeS(u)+'"';}).join(",")+"],\n";
-    code+='   video:"'+safeS(vid)+'",mapUrl:"'+safeS(map)+'",\n';
-    code+="   nearby:{schools:["+sch.map(function(s){return'"'+safeS(s)+'"';}).join(",")+"],";
-    code+="hospitals:["+hos.map(function(h){return'"'+safeS(h)+'"';}).join(",")+"]},";
-    code+='wp:"'+(p.wp||"918019992233")+'"}, \n';
+    for(let i=1;i<=N;i++){if(p['img'+i]&&p['img'+i].trim()&&!p['img'+i].startsWith('data:'))imgs.push(p['img'+i].trim());}
+    if(!imgs.length){imgs.push('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80','https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80');}
+    else if(imgs.length===1){imgs.push('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80','https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80');}
+    else if(imgs.length===2) imgs.push('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80');
+    const vid=toEmbed(p.videoUrl)||'https://www.youtube.com/embed/ScMzIvxBSi4';
+    const map=p.mapUrl||('https://maps.google.com/?q='+encodeURIComponent(p.location+', Hyderabad'));
+    const amen=p.amen.length?p.amen:['Power Backup','24/7 Security','Covered Parking'];
+    const sch=p.schools?p.schools.split(',').map(function(s){return s.trim();}).filter(Boolean):['Nearby School'];
+    const hos=p.hospitals?p.hospitals.split(',').map(function(s){return s.trim();}).filter(Boolean):['Nearby Hospital'];
+    code+='  {id:'+(idx+1)+',';
+    code+='title:'+JSON.stringify(p.title||'Property '+(idx+1))+',';
+    code+='type:'+JSON.stringify(p.type)+',listing:'+JSON.stringify(p.listing)+',';
+    code+='price:'+JSON.stringify(p.price||'Price on Request')+',';
+    code+='location:'+JSON.stringify(p.location)+',';
+    code+='bedrooms:'+(p.bedrooms||2)+',bathrooms:'+(p.bathrooms||2)+',';
+    code+='area:'+(p.area||1000)+',furnished:'+JSON.stringify(p.furnished)+',\n';
+    code+='   desc:'+JSON.stringify(p.desc||'A property in '+p.location)+',\n';
+    code+='   amen:'+JSON.stringify(amen)+',\n';
+    code+='   imgs:'+JSON.stringify(imgs)+',\n';
+    code+='   video:'+JSON.stringify(vid)+',mapUrl:'+JSON.stringify(map)+',\n';
+    code+='   nearby:{schools:'+JSON.stringify(sch)+',hospitals:'+JSON.stringify(hos)+'},';
+    code+='wp:'+JSON.stringify(p.wp||'918019992233')+'},\n';
   });
-  code+="];";
+  code+='];';
   return SITE_BEFORE+code+SITE_AFTER;
 }
 

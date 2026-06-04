@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Homearc Reality | Find Homes You Always Dreamed Of</title>
+  <title>Homearc Realty | Find Homes You Always Dreamed Of</title>
   <meta name="description" content="Discover luxury apartments and villas for sale and rent near Mallampet, Bachupally, Dundigal &amp; more. Verified properties, best pricing, trusted agents."/>
   <meta name="robots" content="index, follow"/>
-  <meta property="og:title" content="Homearc Reality | Find Homes You Always Dreamed Of"/>
+  <meta property="og:title" content="Homearc Realty | Find Homes You Always Dreamed Of"/>
   <meta property="og:image" content="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -95,7 +95,17 @@
     ::-webkit-scrollbar{width:5px}
     ::-webkit-scrollbar-track{background:#F1EFE9}
     ::-webkit-scrollbar-thumb{background:#C8A96E;border-radius:10px}
-  </style>
+  
+/* Force DM Sans lining numerals everywhere */
+.ff, [class*="price"], span, div {
+  font-variant-numeric: lining-nums;
+}
+.num, .price-text {
+  font-family: "DM Sans", sans-serif !important;
+  font-variant-numeric: lining-nums !important;
+  font-feature-settings: "lnum" 1 !important;
+}
+</style>
 </head>
 <body>
 <div id="root"></div>
@@ -106,24 +116,28 @@
 <script>
 // Property listings — edit directly here, then upload to GitHub
 const PROPS=[
-  {id:1,title:"3 BHK LUXURY FLAT-Mallampet ORR exit 4A",type:"Apartment",listing:"Rent",price:"38000",location:"Mallampet",bedrooms:3 BHK,bathrooms:4,area:3000,furnished:"Semi Furnished",
-   desc:"xperience upscale living at its finest! This stunning 3000 sq ft, 3BHK  luxury builder floor apartment is now available for rent — Mallampet, just minutes  from ORR Exit 4A.  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 🏠 PROPERTY HIGHLIGHTS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ✅ Property Type   : Independent Builder Floor (Single Flat Per Floor) ✅ Configuration   : 3 BHK | 4 Bathrooms ✅ Total Area      : 3000 Sq Ft — Super Spacious ✅ Floor           : 2nd Floor ✅ Bedrooms        : 3 Large Bedrooms with Ample Natural Light ✅ Bathrooms       : 4 Modern Bathrooms ✅ Kitchen         : Open Modular Kitchen + Separate Store Room ✅ Pooja Room      : Dedicated Pooja Room ✅ Utility Area    : Huge Utility Space ✅ Balconies       : 2 Massive Balconies with Scenic Open Views ✅ Privacy         : Only One Flat Per Floor — No Shared Corridors!",
-   amen:["Covered Parking","Power Backup","24/7 Security","Modular Kitchen","CCTV Security","Lift / Elevator","Vastu Compliant"],
-   imgs:["https://i.ibb.co/JVczqHH/Whats-App-Image-2026-05-15-at-11-41-04-AM-1.jpg","https://i.ibb.co/prR82b8t/Whats-App-Image-2026-05-15-at-11-41-04-AM-3.jpg","https://i.ibb.co/gFtC2p7p/Whats-App-Image-2026-05-15-at-11-41-04-AM.jpg","https://i.ibb.co/KpSP1GpR/Whats-App-Image-2026-05-15-at-11-41-10-AM-1.jpg","https://i.ibb.co/vr5Xb8x/original-bc769c04-a35f-42f2-b20f-8c2853add347-DSCN3236-3.jpg","https://i.ibb.co/1J9RPVtX/20260602-163131.jpg","https://i.ibb.co/G4wGnGjw/20260602-163203.jpg","https://i.ibb.co/sJXtFnQh/20260602-163257.jpg","https://i.ibb.co/Xfm8W7Y5/20260602-163400.jpg","https://i.ibb.co/XZvkRhgS/20260602-163523.jpg"],
-   video:"https://www.youtube.com/embed/6dB2C8u1P3M",mapUrl:"https://maps.app.goo.gl/EZaq6BroTLKKrjkz5",
-   nearby:{schools:["Pallavi","Academic Heights","Oakridge","Delhi Public school","Shikara","Gitanjali","Silver Oaks"],hospitals:["Mamta Academy of Medical Sciences","SLG Hospitals","Holistic"]},wp:"918019992233"}, 
-  {id:2,title:"2 BHK at Bachupally",type:"Apartment",listing:"Rent",price:"20000",location:"Bachupally",bedrooms:2,bathrooms:2,area:1000,furnished:"Semi Furnished",
-   desc:"2 bhk, 1150 sft, 3 rd floor, independent partment, with secuirity , watchman and cctv installed.",
-   amen:["Power Backup","Covered Parking","CCTV Security","Lift / Elevator","Vastu Compliant"],
-   imgs:["https://i.ibb.co/cSQBhT9V/Whats-App-Image-2026-05-15-at-11-41-08-AM-1.jpg","https://i.ibb.co/nMW9WhRX/Whats-App-Image-2026-05-15-at-11-41-08-AM.jpg","https://i.ibb.co/ds8jjzWG/Whats-App-Image-2026-05-15-at-11-41-09-AM-2.jpg"],
-   video:"https://www.youtube.com/embed/bEUxkzhA0MM",mapUrl:"https://maps.app.goo.gl/R4qaLigaaaDUfx8J9",
-   nearby:{schools:["Nearby School"],hospitals:["Nearby Hospital"]},wp:"918019992233"}, 
-  {id:3,title:"2 BHK MALLAMPET KVR VALLEY",type:"Apartment",listing:"Rent",price:"16000",location:"Mallampet",bedrooms:2,bathrooms:2,area:1200,furnished:"Semi Furnished",
-   desc:"2 BHK , SEMI FURNISHED, ON 3RD FLOOR, CORNER FLAT, EAST FACE, INTERIORS DONE,",
-   amen:["24/7 Security","Power Backup","Covered Parking","Modular Kitchen","CCTV Security","Lift / Elevator"],
-   imgs:["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80","https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80","https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80"],
-   video:"https://www.youtube.com/embed/ScMzIvxBSi4",mapUrl:"https://maps.app.goo.gl/427jY66CKqsL4DYG9",
-   nearby:{schools:["Nearby School"],hospitals:["Nearby Hospital"]},wp:"918019992233"}, 
+  {id:1,
+   title:"Luxury 3BHK Independent Floor",
+   type:"Apartment",listing:"Rent",price:"INR 38,000/mo",
+   location:"Mallampet",bedrooms:3,bathrooms:4,area:3000,furnished:"Semi Furnished",
+   desc:"Luxury 3BHK independent builder floor near Mallampet ORR Exit 4A. Your entire floor, your complete privacy — no shared corridors, no shared neighbours. High-end luxury interiors, large balconies with open views, dedicated pooja room and utility area. Only 1 unit available — serious inquiries only.",
+   amen:["Covered Parking","Power Backup","24/7 Security","Children Play Area","Jogging Track","Solar Water Heater","CCTV Security","Intercom"],
+   imgs:["https://i.ibb.co/JVczqHH/Whats-App-Image-2026-05-15-at-11-41-04-AM-1.jpg","https://i.ibb.co/M5CDsnqR/Whats-App-Image-2026-05-15-at-11-41-04-AM-2.jpg","https://i.ibb.co/vr5Xb8x/original-bc769c04-a35f-42f2-b20f-8c2853add347-DSCN3236-3.jpg","https://i.ibb.co/hJsvLP6H/Whats-App-Image-2026-05-15-at-11-41-10-AM.jpg","https://i.ibb.co/prR82b8t/Whats-App-Image-2026-05-15-at-11-41-04-AM-3.jpg","https://i.ibb.co/Rk71WWhW/Whats-App-Image-2026-05-15-at-11-41-05-AM.jpg","https://i.ibb.co/cc1nqrWf/Whats-App-Image-2026-05-15-at-11-41-06-AM.jpg"],
+   video:"https://youtube.com/shorts/6dB2C8u1P3M",
+   mapUrl:"https://maps.app.goo.gl/EZaq6BroTLKKrjkz5",
+   nearby:{schools:["Pallavi School","Academic Heights International School","Oakridge International School"],hospitals:["Mamta Academy of Medical Sciences"]},
+   wp:"918019992233"},
+  {id:2,
+   title:"2 BHK at Bachupally",
+   type:"Apartment",listing:"Rent",price:"INR 20,000/mo",
+   location:"Bachupally",bedrooms:2,bathrooms:2,area:1450,furnished:"Semi Furnished",
+   desc:"2 BHK, 1450 sqft, 3rd floor independent apartment at Bachupally with security, watchman and CCTV installed. Well maintained with modern interiors.",
+   amen:["Covered Parking","Power Backup","CCTV Security","Lift / Elevator","Vastu Compliant"],
+   imgs:["https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=800&q=80","https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80","https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80"],
+   video:"https://www.youtube.com/embed/bEUxkzhAOMM",
+   mapUrl:"https://maps.app.goo.gl/R4qaLigaaaDUfx8J9",
+   nearby:{schools:["DAV School","St. Marys"],hospitals:["Apollo Hospital","Care Hospital"]},
+   wp:"918019992233"},
 ];
 </script>
 <script type="text/babel">
@@ -176,17 +190,89 @@ const LOC_CARDS=[
   {name:"Dundigal",count:18,img:"https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=600&q=80"},
   {name:"Rameshwaram Banda",count:14,img:"https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80"},
   {name:"Patancheru",count:29,img:"https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=80"},
+  {id:2,
+   title:"2 BHK Apartment for Rent",
+   type:"Apartment",
+   listing:"Rent",
+   price:"Price on Request",
+   location:"Bachupally",
+   bedrooms:2,
+   bathrooms:2,
+   area:1200,
+   furnished:"Semi Furnished",
+   desc:"A well-maintained 2BHK apartment in Bachupally with modern interiors and excellent connectivity to Hitech City and Gachibowli. Ideal for IT professionals and working couples.",
+   amen:["Covered Parking","Power Backup","24/7 Security","Gymnasium","Swimming Pool"],
+   imgs:[
+     "https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=800&q=80",
+     "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80",
+     "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80"
+   ],
+   video:"https://youtube.com/shorts/6dB2C8u1P3M",
+   mapUrl:"https://maps.google.com/?q=Bachupally,Hyderabad",
+   nearby:{
+     schools:["Nearby Schools"],
+     hospitals:["Nearby Hospitals"]
+   },
+   wp:"918019992233"},
 ];
 const TESTI=[
   {name:"Rajesh Kumar",role:"NRI Investor, USA",stars:5,img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80",review:"Homearc made my dream of owning a luxury villa in Hyderabad possible from the US. Their team handled everything — from documentation to possession — with remarkable professionalism. Truly world-class service!"},
   {name:"Priya Sharma",role:"IT Professional, Gachibowli",stars:5,img:"https://images.unsplash.com/photo-1494790108755-2616b612b6e4?w=120&q=80",review:"Found my perfect 3BHK through Homearc in just 2 weeks! Incredibly helpful, fully transparent on pricing, and the process was seamless. Highly recommended!"},
   {name:"Venkat & Sunitha",role:"Family, Kondapur",stars:5,img:"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=120&q=80",review:"After months of searching elsewhere, Homearc helped us find the perfect family home in our preferred location and budget. Their understanding of what families need made all the difference."},
   {name:"Arjun Mehta",role:"Real Estate Investor",stars:5,img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80",review:"As an investor I need reliable data and honest advice. Homearc delivers both. I've purchased 3 apartments through them — every transaction has been flawless."},
+  {id:2,
+   title:"2 BHK Apartment for Rent",
+   type:"Apartment",
+   listing:"Rent",
+   price:"Price on Request",
+   location:"Bachupally",
+   bedrooms:2,
+   bathrooms:2,
+   area:1200,
+   furnished:"Semi Furnished",
+   desc:"A well-maintained 2BHK apartment in Bachupally with modern interiors and excellent connectivity to Hitech City and Gachibowli. Ideal for IT professionals and working couples.",
+   amen:["Covered Parking","Power Backup","24/7 Security","Gymnasium","Swimming Pool"],
+   imgs:[
+     "https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=800&q=80",
+     "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80",
+     "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80"
+   ],
+   video:"https://youtube.com/shorts/6dB2C8u1P3M",
+   mapUrl:"https://maps.google.com/?q=Bachupally,Hyderabad",
+   nearby:{
+     schools:["Nearby Schools"],
+     hospitals:["Nearby Hospitals"]
+   },
+   wp:"918019992233"},
 ];
 const VIDS=[
-  {title:"Skyline Residences — Full Tour",sub:"3BHK Luxury Apartment · Gachibowli",thumb:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700&q=80",url:"https://www.youtube.com/embed/ScMzIvxBSi4"},
-  {title:"Emerald Villa — Walkthrough",sub:"4BHK Premium Villa · Kokapet",thumb:"https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=700&q=80",url:"https://www.youtube.com/embed/ScMzIvxBSi4"},
-  {title:"Azure Heights — Community Tour",sub:"Premium Apartments · Madhapur",thumb:"https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=700&q=80",url:"https://www.youtube.com/embed/ScMzIvxBSi4"},
+  {title:"Skyline Residences — Full Tour",sub:"3BHK Luxury Apartment · Gachibowli",thumb:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700&q=80",url:"https://www.youtube.com/embed/6dB2C8u1P3M"},
+  {title:"Emerald Villa — Walkthrough",sub:"4BHK Premium Villa · Kokapet",thumb:"https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=700&q=80",url:"https://www.youtube.com/embed/6dB2C8u1P3M"},
+  {title:"Azure Heights — Community Tour",sub:"Premium Apartments · Madhapur",thumb:"https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=700&q=80",url:"https://www.youtube.com/embed/6dB2C8u1P3M"},
+  {id:2,
+   title:"2 BHK Apartment for Rent",
+   type:"Apartment",
+   listing:"Rent",
+   price:"Price on Request",
+   location:"Bachupally",
+   bedrooms:2,
+   bathrooms:2,
+   area:1200,
+   furnished:"Semi Furnished",
+   desc:"A well-maintained 2BHK apartment in Bachupally with modern interiors and excellent connectivity to Hitech City and Gachibowli. Ideal for IT professionals and working couples.",
+   amen:["Covered Parking","Power Backup","24/7 Security","Gymnasium","Swimming Pool"],
+   imgs:[
+     "https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=800&q=80",
+     "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80",
+     "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80"
+   ],
+   video:"https://youtube.com/shorts/6dB2C8u1P3M",
+   mapUrl:"https://maps.google.com/?q=Bachupally,Hyderabad",
+   nearby:{
+     schools:["Nearby Schools"],
+     hospitals:["Nearby Hospitals"]
+   },
+   wp:"918019992233"},
 ];
 const WHY=[
   {icon:<IcoShield size={26}/>,title:"Verified Properties",desc:"Every listing undergoes rigorous legal and physical verification. No disputed or fraudulent properties — ever."},
@@ -195,6 +281,30 @@ const WHY=[
   {icon:<IcoPin size={26}/>,title:"Premium Locations",desc:"Curated portfolio across Hyderabad's most sought-after and highest-growth micro-markets."},
   {icon:<IcoFile size={26}/>,title:"Easy Documentation",desc:"We manage all paperwork, registrations, and legal due diligence — swiftly and seamlessly."},
   {icon:<IcoHome size={26}/>,title:"Rental Assistance",desc:"From tenant verification to lease agreements, end-to-end rental management at no extra cost."},
+  {id:2,
+   title:"2 BHK Apartment for Rent",
+   type:"Apartment",
+   listing:"Rent",
+   price:"Price on Request",
+   location:"Bachupally",
+   bedrooms:2,
+   bathrooms:2,
+   area:1200,
+   furnished:"Semi Furnished",
+   desc:"A well-maintained 2BHK apartment in Bachupally with modern interiors and excellent connectivity to Hitech City and Gachibowli. Ideal for IT professionals and working couples.",
+   amen:["Covered Parking","Power Backup","24/7 Security","Gymnasium","Swimming Pool"],
+   imgs:[
+     "https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=800&q=80",
+     "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80",
+     "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80"
+   ],
+   video:"https://youtube.com/shorts/6dB2C8u1P3M",
+   mapUrl:"https://maps.google.com/?q=Bachupally,Hyderabad",
+   nearby:{
+     schools:["Nearby Schools"],
+     hospitals:["Nearby Hospitals"]
+   },
+   wp:"918019992233"},
 ];
 
 // NAVBAR
@@ -216,7 +326,7 @@ function Navbar(){
               <rect x="18" y="53" width="18" height="12" rx="1.5" fill="#C8A96E" opacity=".65"/>
               <circle cx="28" cy="3" r="3" fill="#D9BC82"/>
               <text x="62" y="31" fontFamily="Georgia,serif" fontSize="24" fontWeight="700" fill="#ffffff" letterSpacing="0.5">HOMEARC</text>
-              <text x="62" y="48" fontFamily="Georgia,serif" fontSize="14" fill="#C8A96E" letterSpacing="3.5">REALITY</text>
+              <text x="62" y="48" fontFamily="Georgia,serif" fontSize="14" fill="#C8A96E" letterSpacing="3.5">REALTY</text>
             </svg>
           </div>
           <div className="nav-links" style={{display:"flex",gap:28,alignItems:"center"}}>
@@ -268,10 +378,10 @@ function PCard({p,onV}){
       <div style={{padding:"20px 22px 22px"}}>
         <h3 className="ff" style={{fontSize:20,fontWeight:700,color:"#0D1B2A",marginBottom:8,lineHeight:1.2}}>{p.title}</h3>
         <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:12}}><IcoPin size={14} color="#C8A96E"/><span style={{color:"#6B7280",fontSize:13}}>{p.location}, Hyderabad</span></div>
-        <div className="ff" style={{fontSize:27,fontWeight:700,color:"#C8A96E",marginBottom:14}}>{p.price}</div>
+        <div className="ff" style={{fontSize:27,fontWeight:700,color:"#C8A96E",marginBottom:14,fontFamily:"'DM Sans',sans-serif",fontVariantNumeric:"lining-nums"}}>{p.price}</div>
         <div style={{display:"flex",gap:16,paddingBottom:16,borderBottom:"1px solid #F0EDE6",marginBottom:16}}>
           {[[<IcoBed size={14}/>,`${p.bedrooms} BHK`],[<IcoBath size={14}/>,`${p.bathrooms} Bath`],[<IcoSq size={14}/>,`${p.area} sqft`]].map(([ic,tx],j)=>(
-            <div key={j} style={{display:"flex",alignItems:"center",gap:5,color:"#4B5563",fontSize:13}}><span style={{color:"#9CA3AF"}}>{ic}</span>{tx}</div>
+            <div key={j} style={{display:"flex",alignItems:"center",gap:5,color:"#4B5563",fontSize:13,fontFamily:"'DM Sans',sans-serif",fontVariantNumeric:"lining-nums"}}><span style={{color:"#9CA3AF"}}>{ic}</span>{tx}</div>
           ))}
         </div>
         <div style={{display:"flex",gap:10}}>
@@ -307,7 +417,11 @@ function PMod({p,onC}){
             </div>
           ):(
             <div style={{height:380,position:"relative",background:"#000"}}>
-              <iframe src={p.video} title="Property Video" allow="autoplay;encrypted-media" style={{width:"100%",height:"100%",border:"none"}}/>
+              <a href={p.video} target="_blank" rel="noopener noreferrer" style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"14px",background:"linear-gradient(135deg,#FF0000,#cc0000)",color:"#fff",width:"100%",height:"100%",textDecoration:"none",borderRadius:"0"}}>
+                <span style={{fontSize:"52px",lineHeight:1}}>▶</span>
+                <span style={{fontSize:"16px",fontWeight:"700",letterSpacing:".03em"}}>Watch Property Video</span>
+                <span style={{fontSize:"12px",opacity:.75}}>Opens on YouTube</span>
+              </a>
               <button onClick={()=>ssv(false)} style={{position:"absolute",top:12,right:12,background:"rgba(0,0,0,.6)",border:"none",borderRadius:"50%",width:36,height:36,color:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><IcoX size={18}/></button>
             </div>
           )}
@@ -316,14 +430,14 @@ function PMod({p,onC}){
         <div style={{padding:"28px 30px"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:12,marginBottom:20}}>
             <div><h2 className="ff" style={{fontSize:28,fontWeight:700,color:"#0D1B2A",marginBottom:6}}>{p.title}</h2><div style={{display:"flex",alignItems:"center",gap:6,color:"#6B7280",fontSize:14}}><IcoPin size={15} color="#C8A96E"/> {p.location}, Hyderabad</div></div>
-            <div className="ff" style={{fontSize:32,fontWeight:700,color:"#C8A96E"}}>{p.price}</div>
+            <div className="ff" style={{fontSize:32,fontWeight:700,color:"#C8A96E",fontFamily:"'DM Sans',sans-serif",fontVariantNumeric:"lining-nums"}}>{p.price}</div>
           </div>
           <div style={{display:"flex",flexWrap:"wrap",padding:"16px 0",background:"#F8F6F1",borderRadius:12,marginBottom:24}}>
             {[[<IcoBed size={18}/>,"Bedrooms",p.bedrooms],[<IcoBath size={18}/>,"Bathrooms",p.bathrooms],[<IcoSq size={18}/>,"Area",`${p.area} sqft`],[<IcoHome size={18}/>,"Furnished",p.furnished]].map(([ic,lb,vl],j)=>(
               <div key={j} style={{flex:1,minWidth:80,textAlign:"center",padding:"8px 6px"}}>
                 <div style={{color:"#C8A96E",marginBottom:5}}>{ic}</div>
                 <div style={{fontSize:12,color:"#9CA3AF",marginBottom:3}}>{lb}</div>
-                <div style={{fontWeight:700,color:"#0D1B2A",fontSize:15}}>{vl}</div>
+                <div style={{fontWeight:700,color:"#0D1B2A",fontSize:15,fontFamily:"'DM Sans',sans-serif",fontVariantNumeric:"lining-nums"}}>{vl}</div>
               </div>
             ))}
           </div>
@@ -348,7 +462,7 @@ function PMod({p,onC}){
 
 // HERO
 function Hero({onFilter}){
-  const [tab,st]=useState("Buy");
+  const [tab,st]=useState("Rent");
   const [f,sf]=useState({type:"",location:"",budget:"",bedrooms:"",furnished:""});
   const go=()=>{onFilter({...f,listing:tab});document.getElementById("properties")?.scrollIntoView({behavior:"smooth"});};
   const Lbl=({t})=><label style={{display:"block",color:"rgba(255,255,255,.72)",fontSize:12,fontWeight:600,letterSpacing:".07em",marginBottom:6}}>{t}</label>;
@@ -359,7 +473,7 @@ function Hero({onFilter}){
           <div style={{width:6,height:6,borderRadius:"50%",background:"#C8A96E"}}/><span style={{color:"#C8A96E",fontSize:12,fontWeight:700,letterSpacing:".12em"}}>HYDERABAD'S #1 FIND HOMES YOU ALWAYS DREAMED OF</span>
         </div>
         <h1 className="ff" style={{fontSize:"clamp(2.6rem,5.5vw,4.5rem)",fontWeight:700,color:"#fff",lineHeight:1.14,marginBottom:20}}>
-          Find Your Perfect Home<br/><span style={{background:"linear-gradient(135deg,#C8A96E,#EAD098)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>with Homearc Reality</span>
+          Find Your Perfect Home<br/><span style={{background:"linear-gradient(135deg,#C8A96E,#EAD098)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>with Homearc Realty</span>
         </h1>
         <p style={{color:"rgba(255,255,255,.72)",fontSize:"clamp(15px,2vw,18px)",lineHeight:1.72,maxWidth:580,marginBottom:40}}>Discover verified apartments and villas near Mallampet, Bachupally, Dundigal &amp; surrounding areas. Trusted by families, IT professionals, and investors.</p>
         <div className="hero-ctas" style={{display:"flex",gap:16,justifyContent:"center",flexWrap:"wrap",marginBottom:52}}>
@@ -429,7 +543,7 @@ function WhyUs(){
   return(
     <section id="why-us" style={{padding:"80px 24px",background:"#fff"}}>
       <div style={{maxWidth:1280,margin:"0 auto"}}>
-        <SH tag="OUR PROMISE" title="Why Choose Homearc Reality" sub="We combine deep market expertise with genuine care — delivering outcomes that exceed expectations."/>
+        <SH tag="OUR PROMISE" title="Why Choose Homearc Realty" sub="We combine deep market expertise with genuine care — delivering outcomes that exceed expectations."/>
         <div className="grid-why">
           {WHY.map((c,i)=><div key={i} className="why-card"><div className="why-icon">{c.icon}</div><h3 className="ff" style={{fontSize:21,fontWeight:700,color:"#0D1B2A",marginBottom:10}}>{c.title}</h3><p style={{color:"#6B7280",fontSize:14,lineHeight:1.72}}>{c.desc}</p></div>)}
         </div>
@@ -589,7 +703,7 @@ function Footer(){
                 <rect x="18" y="53" width="18" height="12" rx="1.5" fill="#C8A96E" opacity=".65"/>
                 <circle cx="28" cy="3" r="3" fill="#D9BC82"/>
                 <text x="62" y="31" fontFamily="Georgia,serif" fontSize="24" fontWeight="700" fill="#ffffff" letterSpacing="0.5">HOMEARC</text>
-                <text x="62" y="48" fontFamily="Georgia,serif" fontSize="14" fill="#C8A96E" letterSpacing="3.5">REALITY</text>
+                <text x="62" y="48" fontFamily="Georgia,serif" fontSize="14" fill="#C8A96E" letterSpacing="3.5">REALTY</text>
               </svg>
             </div>
             <p style={{fontSize:14,lineHeight:1.8,marginBottom:22,maxWidth:280}}>Trusted real estate experts near Mallampet, Bachupally &amp; Dundigal. We help families, investors &amp; professionals find homes they always dreamed of.</p>
@@ -620,7 +734,7 @@ function Footer(){
           </div>
         </div>
         <div style={{borderTop:"1px solid rgba(255,255,255,.08)",padding:"18px 0",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12}}>
-          <div style={{fontSize:13}}>© {y} Homearc Reality. All rights reserved.</div>
+          <div style={{fontSize:13}}>© {y} Homearc Realty. All rights reserved.</div>
           <div style={{display:"flex",gap:22}}>{["Privacy Policy","Terms of Service","Sitemap"].map(l=><a key={l} href="#" style={{color:"rgba(255,255,255,.45)",fontSize:13,textDecoration:"none"}}>{l}</a>)}</div>
         </div>
       </div>
@@ -643,7 +757,7 @@ function App(){
         <Lead/>
       </main>
       <Footer/>
-      <a href="https://wa.me/918019992233?text=Hi! I found Homearc Reality online and I'm looking for a property. Can you help me?" target="_blank" rel="noopener noreferrer" className="wa-float" title="Chat on WhatsApp">
+      <a href="https://wa.me/918019992233?text=Hi! I found Homearc Realty online and I'm looking for a property. Can you help me?" target="_blank" rel="noopener noreferrer" className="wa-float" title="Chat on WhatsApp">
         <IcoMsg size={28} fill="#fff" color="#fff"/>
       </a>
     </>
