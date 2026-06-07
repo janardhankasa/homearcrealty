@@ -178,7 +178,7 @@ function loadGH(){
     var loaded=new Function("return "+html.substring(ps,pe).replace("const PROPS=",""))();
     props=loaded.map(function(p){
       var ep=blank(idc++);
-      Object.assign(ep,{title:p.title||"",type:p.type||"Apartment",listing:p.listing||"Rent",price:p.price||"",location:p.location||"Mallampet",bedrooms:String(p.bedrooms||2),bathrooms:String(p.bathrooms||2),area:String(p.area||""),furnished:p.furnished||"Semi Furnished",desc:p.desc||"",amen:p.amen||[],videoUrl:p.video||"",mapUrl:p.mapUrl||"",wp:p.wp||"918019992233",schools:((p.nearby&&p.nearby.schools)||[]).join(", "),hospitals:((p.nearby&&p.nearby.hospitals)||[]).join(", ")});
+      Object.assign(ep,{title:p.title||"",type:p.type||"Apartment",listing:p.listing||"Rent",price:p.price||"",location:p.location||"Mallampet",bedrooms:String(p.bedrooms||2),bathrooms:String(p.bathrooms||2),area:String(p.area||""),furnished:p.furnished||"Semi Furnished",desc:p.desc||"",amen:p.amen||[],videoUrl:p.video||"",videoShort:p.videoShort||"",mapUrl:p.mapUrl||"",wp:p.wp||"918019992233",schools:((p.nearby&&p.nearby.schools)||[]).join(", "),hospitals:((p.nearby&&p.nearby.hospitals)||[]).join(", ")});
       if(p.imgs)p.imgs.forEach(function(u,j){if(j<N)ep["img"+(j+1)]=u;});
       return ep;
     });
@@ -189,7 +189,7 @@ function loadGH(){
 function doSave(){clearTimeout(saveT);saveT=setTimeout(function(){try{localStorage.setItem(SK,JSON.stringify({props:props,idc:idc}));}catch(e){}},500);}
 
 function blank(id){
-  var p={_id:id,title:"",type:"Apartment",listing:"Rent",price:"",location:"Mallampet",bedrooms:"2",bathrooms:"2",area:"",furnished:"Semi Furnished",desc:"",amen:[],videoUrl:"",mapUrl:"",wp:"918019992233",schools:"",hospitals:""};
+  var p={_id:id,title:"",type:"Apartment",listing:"Rent",price:"",location:"Mallampet",bedrooms:"2",bathrooms:"2",area:"",furnished:"Semi Furnished",desc:"",amen:[],videoUrl:"",videoShort:"",mapUrl:"",wp:"918019992233",schools:"",hospitals:""};
   for(var i=1;i<=N;i++)p["img"+i]="";
   return p;
 }
@@ -267,7 +267,9 @@ function render(){
       h+="</div>";
     }
     h+="</div>";
-    h+="<div class='sec'>Video</div><label>YouTube link (Shorts ok)</label><input type='text' value='"+esc(p.videoUrl)+"' placeholder='https://youtube.com/shorts/...' oninput='upP("+p._id+",&quot;videoUrl&quot;,this.value)'/>";
+    h+="<div class='sec'>Video</div>";
+    h+="<label>Full Video Link (embeds on website)</label><input type='text' value='"+esc(p.videoUrl)+"' placeholder='https://youtu.be/... or https://www.youtube.com/watch?v=...' oninput='upP("+p._id+",&quot;videoUrl&quot;,this.value)'/>";
+    h+="<label>Shorts Link (opens YouTube — for ads)</label><input type='text' value='"+esc(p.videoShort||"")+"' placeholder='https://youtube.com/shorts/...' oninput='upP("+p._id+",&quot;videoShort&quot;,this.value)'/>";
     h+="<div class='sec'>Google Maps</div><div style='display:flex;gap:8px'><input type='text' class='mapinp' value='"+esc(p.mapUrl)+"' placeholder='https://maps.app.goo.gl/...' style='flex:1' oninput='upP("+p._id+",&quot;mapUrl&quot;,this.value)'/><button class='bs' onclick='autoMap("+p._id+")'>Auto</button></div>";
     h+="<div class='sec'>Amenities</div><div class='achips'>";
     for(var ai=0;ai<AMENS.length;ai++){var a=AMENS[ai],k=a.replace(/[^a-z0-9]/gi,""),on=p.amen.indexOf(a)>-1?" on":"";h+="<div class='chip"+on+"' id='ac"+p._id+k+"' onclick='togA("+p._id+",&quot;"+a+"&quot;)'>"+a+"</div>";}
@@ -312,7 +314,7 @@ function buildHtml(){
     code+="   desc:"+JSON.stringify(p.desc||"")+",\n";
     code+="   amen:"+JSON.stringify(amen)+",\n";
     code+="   imgs:"+JSON.stringify(imgs)+",\n";
-    code+="   video:"+JSON.stringify(vid)+",mapUrl:"+JSON.stringify(map)+",\n";
+    code+="   video:"+JSON.stringify(vid)+",videoShort:"+JSON.stringify(p.videoShort||"")+",mapUrl:"+JSON.stringify(map)+",\n";
     code+="   nearby:{schools:"+JSON.stringify(sch)+",hospitals:"+JSON.stringify(hos)+"},";
     code+="wp:"+JSON.stringify(p.wp||"918019992233")+"},\n";
   }
