@@ -117,18 +117,28 @@
 <script>
 // Property listings — edit directly here, then upload to GitHub
 const PROPS=[
-  {id:1,title:"Luxury 3BHK Independent Floor",type:"Apartment",listing:"Rent",price:"INR 38,000/mo",location:"Mallampet",bedrooms:3,bathrooms:4,area:3000,furnished:"Semi Furnished",
+  {id:1,
+   title:"Luxury 3BHK Independent Floor",
+   type:"Apartment",listing:"Rent",price:"INR 38,000/mo",
+   location:"Mallampet",bedrooms:3,bathrooms:4,area:3000,furnished:"Semi Furnished",
    desc:"Luxury 3BHK independent builder floor near Mallampet ORR Exit 4A. Your entire floor, your complete privacy — no shared corridors, no shared neighbours. High-end luxury interiors, large balconies with open views, dedicated pooja room and utility area. Only 1 unit available — serious inquiries only.",
    amen:["Covered Parking","Power Backup","24/7 Security","Children Play Area","Jogging Track","Solar Water Heater","CCTV Security","Intercom"],
-   imgs:["https://i.ibb.co/RTdcmKjB/201-LIVING-ROOM.jpg","https://i.ibb.co/7dxpVbB6/201-LIVING-2.jpg","https://i.ibb.co/vr5Xb8x/original-bc769c04-a35f-42f2-b20f-8c2853add347-DSCN3236-3.jpg","https://i.ibb.co/hJVDWN5t/201-MBR.jpg","https://i.ibb.co/RG2fRk7b/201-POWDER-ROOM.jpg","https://i.ibb.co/WWm365L2/201-KITCHEN.jpg","https://i.ibb.co/cSxxbrfH/201-CBR.jpg","https://i.ibb.co/9kbmX0b1/201-CBR-1.jpg","https://i.ibb.co/84YsQMSK/201-UTILITY.jpg","https://i.ibb.co/t0ysW5V/KASAS-KK.jpg"],
-   video:"https://www.youtube.com/embed/gqrgtZB0A7Q",videoShort:"https://youtube.com/shorts/KJgTobx7I_k",mapUrl:"https://maps.app.goo.gl/EZaq6BroTLKKrjkz5",
-   nearby:{schools:["Pallavi School","Academic Heights International School","Oakridge International School"],hospitals:["Mamta Academy of Medical Sciences"]},wp:"918019992233"},
-  {id:2,title:"2 BHK at Bachupally",type:"Apartment",listing:"Rent",price:"INR 20,000/mo",location:"Bachupally",bedrooms:2,bathrooms:2,area:1450,furnished:"Semi Furnished",
+   imgs:["https://i.ibb.co/JVczqHH/Whats-App-Image-2026-05-15-at-11-41-04-AM-1.jpg","https://i.ibb.co/M5CDsnqR/Whats-App-Image-2026-05-15-at-11-41-04-AM-2.jpg","https://i.ibb.co/vr5Xb8x/original-bc769c04-a35f-42f2-b20f-8c2853add347-DSCN3236-3.jpg","https://i.ibb.co/hJsvLP6H/Whats-App-Image-2026-05-15-at-11-41-10-AM.jpg","https://i.ibb.co/prR82b8t/Whats-App-Image-2026-05-15-at-11-41-04-AM-3.jpg","https://i.ibb.co/Rk71WWhW/Whats-App-Image-2026-05-15-at-11-41-05-AM.jpg","https://i.ibb.co/cc1nqrWf/Whats-App-Image-2026-05-15-at-11-41-06-AM.jpg"],
+   video:"https://www.youtube.com/embed/gqrgtZB0A7Q",
+   mapUrl:"https://maps.app.goo.gl/EZaq6BroTLKKrjkz5",
+   nearby:{schools:["Pallavi School","Academic Heights International School","Oakridge International School"],hospitals:["Mamta Academy of Medical Sciences"]},
+   wp:"918019992233"},
+  {id:2,
+   title:"2 BHK at Bachupally",
+   type:"Apartment",listing:"Rent",price:"INR 20,000/mo",
+   location:"Bachupally",bedrooms:2,bathrooms:2,area:1450,furnished:"Semi Furnished",
    desc:"2 BHK, 1450 sqft, 3rd floor independent apartment at Bachupally with security, watchman and CCTV installed. Well maintained with modern interiors.",
    amen:["Covered Parking","Power Backup","CCTV Security","Lift / Elevator","Vastu Compliant"],
    imgs:["https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=800&q=80","https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80","https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80"],
-   video:"https://www.youtube.com/embed/gqrgtZB0A7Q",videoShort:"",mapUrl:"https://maps.app.goo.gl/R4qaLigaaaDUfx8J9",
-   nearby:{schools:["DAV School","St. Marys"],hospitals:["Apollo Hospital","Care Hospital"]},wp:"918019992233"},
+   video:"https://www.youtube.com/embed/bEUxkzhAOMM",
+   mapUrl:"https://maps.app.goo.gl/R4qaLigaaaDUfx8J9",
+   nearby:{schools:["DAV School","St. Marys"],hospitals:["Apollo Hospital","Care Hospital"]},
+   wp:"918019992233"},
 ];
 </script>
 <script type="text/babel">
@@ -310,15 +320,17 @@ function Navbar(){
       <div style={{maxWidth:1280,margin:"0 auto",padding:"0 24px"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",height:72}}>
           <div style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer"}} onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}>
-            <svg width="210" height="54" viewBox="0 0 210 54" xmlns="http://www.w3.org/2000/svg">
-              <defs><linearGradient id="navArc" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#C8A96E"/><stop offset="100%" stopColor="#E2C98A"/></linearGradient></defs>
-              <path d="M6 44 Q28 6 50 44" stroke="url(#navArc)" strokeWidth="3.6" fill="none" strokeLinecap="round"/>
-              <rect x="10" y="44" width="34" height="21" rx="2" fill="none" stroke="#C8A96E" strokeWidth="2.2"/>
-              <rect x="18" y="53" width="18" height="12" rx="1.5" fill="#C8A96E" opacity=".65"/>
-              <circle cx="28" cy="3" r="3" fill="#D9BC82"/>
-              <text x="62" y="31" fontFamily="Georgia,serif" fontSize="24" fontWeight="700" fill="#ffffff" letterSpacing="0.5">HOMEARC</text>
-              <text x="62" y="48" fontFamily="Georgia,serif" fontSize="14" fill="#C8A96E" letterSpacing="3.5">REALTY</text>
-            </svg>
+            <svg width="160" height="44" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <path d="M110,360 L110,210 Q110,80 250,80 Q390,80 390,210 L390,360" fill="none" stroke="#C9A84C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="250,58 265,82 235,82" fill="#C9A84C"/>
+  <rect x="175" y="268" width="150" height="100" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round"/>
+  <polygon points="163,268 250,195 337,268" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round"/>
+  <rect x="218" y="300" width="64" height="68" fill="none" stroke="#C9A84C" stroke-width="6" stroke-linejoin="round"/>
+  <line x1="88" y1="372" x2="412" y2="372" stroke="#C9A84C" stroke-width="5" stroke-linecap="round"/>
+  <text x="250" y="418" font-family="Georgia,serif" font-size="44" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">HOMEARC</text>
+  <line x1="100" y1="428" x2="400" y2="428" stroke="#C9A84C" stroke-width="1" opacity="0.5"/>
+  <text x="250" y="458" font-family="Arial,sans-serif" font-size="18" font-weight="300" fill="#C9A84C" text-anchor="middle" letter-spacing="8">REALTY</text>
+</svg>
           </div>
           <div className="nav-links" style={{display:"flex",gap:28,alignItems:"center"}}>
             {links.map(([l,id])=><button key={id} onClick={()=>go(id)} style={{background:"none",border:"none",color:"rgba(255,255,255,.82)",fontSize:14,fontWeight:500,cursor:"pointer",transition:"color .2s"}} onMouseEnter={e=>e.target.style.color="#C8A96E"} onMouseLeave={e=>e.target.style.color="rgba(255,255,255,.82)"}>{l}</button>)}
@@ -475,7 +487,7 @@ function Hero({onFilter}){
           <button className="btn-outline-white" onClick={()=>{st("Rent");go();}} style={{padding:"14px 32px",borderRadius:10,fontSize:16,display:"flex",alignItems:"center",gap:8}}><IcoHome size={18}/> Rent Property</button>
         </div>
         <div className="stats-row" style={{display:"flex",gap:"clamp(24px,5vw,52px)",flexWrap:"wrap",justifyContent:"center",marginBottom:52}}>
-          {[["500+","Properties Listed"],["2,000+","Happy Families"],["15+","Years Experience"],["98%","Client Satisfaction"]].map(([n,l])=>(
+          {[["10+","Properties Listed"],["50+","Happy Families"],["3+","Years Experience"],["100%","Client Satisfaction"]].map(([n,l])=>(
             <div key={l} style={{textAlign:"center"}}><div className="ff" style={{fontSize:34,fontWeight:700,color:"#C8A96E"}}>{n}</div><div style={{color:"rgba(255,255,255,.6)",fontSize:13}}>{l}</div></div>
           ))}
         </div>
@@ -690,15 +702,17 @@ function Footer(){
         <div className="grid-footer" style={{marginBottom:48}}>
           <div>
             <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
-              <svg width="210" height="54" viewBox="0 0 210 54" xmlns="http://www.w3.org/2000/svg">
-                <defs><linearGradient id="footArc" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#C8A96E"/><stop offset="100%" stopColor="#E2C98A"/></linearGradient></defs>
-                <path d="M6 44 Q28 6 50 44" stroke="url(#footArc)" strokeWidth="3.6" fill="none" strokeLinecap="round"/>
-                <rect x="10" y="44" width="34" height="21" rx="2" fill="none" stroke="#C8A96E" strokeWidth="2.2"/>
-                <rect x="18" y="53" width="18" height="12" rx="1.5" fill="#C8A96E" opacity=".65"/>
-                <circle cx="28" cy="3" r="3" fill="#D9BC82"/>
-                <text x="62" y="31" fontFamily="Georgia,serif" fontSize="24" fontWeight="700" fill="#ffffff" letterSpacing="0.5">HOMEARC</text>
-                <text x="62" y="48" fontFamily="Georgia,serif" fontSize="14" fill="#C8A96E" letterSpacing="3.5">REALTY</text>
-              </svg>
+              <svg width="160" height="44" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <path d="M110,360 L110,210 Q110,80 250,80 Q390,80 390,210 L390,360" fill="none" stroke="#C9A84C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="250,58 265,82 235,82" fill="#C9A84C"/>
+  <rect x="175" y="268" width="150" height="100" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round"/>
+  <polygon points="163,268 250,195 337,268" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round"/>
+  <rect x="218" y="300" width="64" height="68" fill="none" stroke="#C9A84C" stroke-width="6" stroke-linejoin="round"/>
+  <line x1="88" y1="372" x2="412" y2="372" stroke="#C9A84C" stroke-width="5" stroke-linecap="round"/>
+  <text x="250" y="418" font-family="Georgia,serif" font-size="44" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">HOMEARC</text>
+  <line x1="100" y1="428" x2="400" y2="428" stroke="#C9A84C" stroke-width="1" opacity="0.5"/>
+  <text x="250" y="458" font-family="Arial,sans-serif" font-size="18" font-weight="300" fill="#C9A84C" text-anchor="middle" letter-spacing="8">REALTY</text>
+</svg>
             </div>
             <p style={{fontSize:14,lineHeight:1.8,marginBottom:22,maxWidth:280}}>Trusted real estate experts near Mallampet, Bachupally &amp; Dundigal. We help families, investors &amp; professionals find homes they always dreamed of.</p>
             <div style={{display:"flex",gap:10}}>
